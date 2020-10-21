@@ -1,2 +1,14 @@
-/node_modules/
+# Misc
+node_modules/
 __pycache__/
+.pytest_cache/
+.mypy_cache/
+
+# Database
+*.db
+
+# Notes
+TODO
+
+# For MacOS
+.DS_Store
