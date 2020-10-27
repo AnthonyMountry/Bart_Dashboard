@@ -4,7 +4,7 @@ An internal analytics dashboard and project management system for BART.
 
 ## Development
 * Install python 3
-* Setup a virtual environment if you want (recommended for dependency management but still optional)
+* (optional) Setup a virtual environment if you want (recommended for dependency management but still optional)
     * `python -m venv <your-environment-name>`
     * `<your-environment-name>/bin/activate` (for mac and linux)
 * Install dependencies
