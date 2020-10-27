@@ -1,29 +1,30 @@
 import os
-from flask import Flask
-from flask import request
+from flask import Flask, request, send_from_directory
 import sqlite3
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 app.config['ENV'] = os.getenv('ENV') or 'dev' # dev is default
 db = sqlite3.connect('db/dashboard.db')
 
 
-@app.route('/')
-def home():
-    # TODO return the actual homepage
-    return '<h1>insert graph here lol</h1>'
+@app.route('/', defaults={'path': None})
+@app.route('/<path>', methods=['GET'])
+def home(path):
+    if not path:
+        path = 'index.html'
+    return send_from_directory('../public', path)
 
 
 @app.route('/api/test', methods=['GET', 'POST'])
 def api_test():
     r = request
-
     print(r.headers)
     if r.is_json:
         print('data:', r.get_json(force=True))
     else:
         print('this is not json:', r.data)
+    print(r.files)
     return {'key': 'value'}
 
 
@@ -60,10 +61,9 @@ def asset(assetnum):
         return result
     else:
         # insert the new asset into the db
-        db.exectute(
+        db.execute(
             '''
             INSERT INTO assets_table
             ... whatever the rest of this query is...''',
             (assetnum, ),
         )
-

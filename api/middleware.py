@@ -1,9 +1,8 @@
+import os
 from functools import wraps
 from flask import request
 
-
-valid_file_exts = {'xlsx', 'csv'}
-
+valid_file_exts = {'xlsx', 'xls', 'csv'}
 
 def spreadsheet_required(handler):
     """Checks that the file-upload request has a spreadsheet
@@ -32,6 +31,5 @@ def spreadsheet_required(handler):
         _, ext = os.path.splitext(f.filename)
         if ext not in valid_file_exts:
             return {'error': 'invalid file type'}
-        return handlers(*args, **kwargs)
+        return handler(*args, **kwargs)
     return inner
-
