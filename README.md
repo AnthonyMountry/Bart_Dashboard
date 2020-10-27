@@ -13,11 +13,11 @@ pip install -r requirements.txt
 ```
 * Run the backend
 ```
-flask run
+FLASK_APP=api/app.py flask run
 ```
 or
 ```
-python -m flask run
+FLASK_APP=api/app.py python -m flask run
 ```
 * Other steps coming soon...
 

@@ -6,9 +6,12 @@ __pycache__/
 
 # Database
 *.db
+*.xlsx
+*.csv
 
 # Notes
 TODO
 
 # For MacOS
 .DS_Store
+

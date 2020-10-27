@@ -18,8 +18,6 @@ def home():
 @app.route('/api/test', methods=['GET', 'POST'])
 def api_test():
     r = request
-    # print(dir(request))
-    # print()
 
     print(r.headers)
     if r.is_json:
