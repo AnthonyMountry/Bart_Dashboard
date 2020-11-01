@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
-</head>
-<body>
-  <h1>Dashboard and stuff</h1>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
+  </head>
+  <body>
+    <h1>Dashboard and stuff</h1>
 
-  <form enctype="multipart/form-data">
-    <input type="file" id="fileUpload" name="filename">
-    <input type="submit">
-  </form>
+    <form enctype="multipart/form-data" method="POST" action="/api/upload">
+      <input
+       type="file"
+       id="fileUpload"
+       name="file"
+       accept=".csv,.xls,.xlsx,.xlsm"
+      >
+      <input type="submit" id="fileUploadSubmit">
+    </form>
 
-<script src="index.js"></script>
-</body>
+    <script src="index.js"></script>
+  </body>
 </html>

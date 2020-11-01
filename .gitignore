@@ -11,8 +11,10 @@ __pycache__/
 *.csv
 *.zip
 /db/bart_data
+/db/*.sh
 
 # Notes
+*.pdf
 TODO
 
 # For MacOS
