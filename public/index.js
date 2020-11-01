@@ -2,42 +2,50 @@
 (() => {
   document
     .getElementById("fileUpload")
-    .addEventListener("change", readFile, false);
+    .addEventListener("change", readAndUpload, false);
+  document
+    .getElementById("fileUploadSubmit")
+    .addEventListener("click", (e) => e.preventDefault());
 })();
 
-function readFile() {
-  const file = this.files[0]; // get the first file object
-  const reader = new FileReader();
-  var bytes_read = 0; // here for tracking progress
-  reader.readAsText(file, "utf-8");
+const BASE_URL = "http://127.0.0.1:5000";
 
-  // onload is triggered when the file
-  // is finished being read
-  reader.onload = (e) => {
-    console.log("reader.onload", e);
-    console.log("data:", e.target.result);
-    // TODO 1. put data in the ready state
-    //      2. upload the data when submit is pressed
+function readAndUpload() {
+  const file = this.files[0]; // get the first file object
+  const button = document.getElementById("fileUploadSubmit");
+  console.log(file);
+
+  const handleUpload = (e) => {
+    var t0 = performance.now();
+    e.preventDefault(); // prevent redirect
+    upload(file); // upload the data
+    document.getElementById("fileUpload").value = null; // clear the filename
+    button.removeEventListener("click", handleUpload); // remove the event listener
+    console.log(`uploaded '${file.name}' after ${performance.now() - t0}ms`);
   };
-  reader.onerror = (e) => {
-    console.log("Error:", e);
-    // TODO display error on page
-  };
-  reader.onprogress = (e) => {
-    bytes_read += e.total;
-    console.log("read", bytes_read, "bytes");
-    // TODO loading bar
-  };
+  // add a callback to the "submit" button
+  button.addEventListener("click", handleUpload);
 }
 
-function upload(url, data) {
-  fetch(url, {
+function upload(file) {
+  // TODO gzip data before sending
+  var form = new FormData();
+  var url = new URL(BASE_URL + "/api/upload");
+
+  form.append("file", file);
+  url.search = new URLSearchParams({
+    filename: file.name,
+    type: "<fill this in>",
+  });
+
+  return fetch(url, {
     method: "POST",
-    headers: {
-      "Content-Type": contentTypes["xlsx"],
-    },
-    body: data,
-  }).then((resp) => resp.json());
+    body: form,
+  })
+    .then((resp) => resp.json())
+    .catch((err) => {
+      console.log("Caught Fetch Error: ", err);
+    });
 }
 
 const contentTypes = {

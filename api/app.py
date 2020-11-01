@@ -1,11 +1,29 @@
 import os
-from flask import Flask, request, send_from_directory
 import sqlite3
+import traceback
 
-app = Flask(__name__, static_url_path='')
+import pyexcel
+from flask import (
+    Flask,
+    request,
+    send_from_directory,
+)
+
+app = Flask(__name__)
 
 app.config['ENV'] = os.getenv('ENV') or 'dev' # dev is default
 db = sqlite3.connect('db/dashboard.db')
+
+DEBUG = True
+
+VALID_CONTENT_TYPES = {
+    "application/vnd.ms-excel",
+    "application/vnd.ms-excel.sheet.macroEnabled.12",
+    "application/vnd.ms-excel.template.macroEnabled.12",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
+    "text/csv",
+}
 
 
 @app.route('/', defaults={'path': None})
@@ -28,21 +46,18 @@ def api_test():
     return {'key': 'value'}
 
 
-@app.route('/api/upload<filename>', methods=['POST'])
-def handle_uploads(filename):
-    if 'file' not in request.files:
-        # TODO send back an error
-        pass
+@app.route('/api/upload', methods=['POST'])
+def handle_uploads():
+    '''handle_uploads handles the spreadsheet file uploads'''
     f = request.files['file']
+    if f.content_type not in VALID_CONTENT_TYPES:
+        return {"error": "Unknown content type"}, 400
     if not f.filename:
-        # TODO send back an error
-        pass
-    if not f.filename.endswith('.xlsx') or not f.filename.endswith('.csv'):
-        # TODO send back an error
-        pass
-    # now do stuff with the file
-    f.save(filename)
-    # or read the file into a db or whatever
+        return {"error": "No filename"}
+    ext = f.filename.split('.')[-1]
+    book = pyexcel.get_book(file_type=ext, file_content=f.read())
+    # TODO do stuff with sheet
+    return {'success': f'{f.filename} uploaded successfully'}, 200 # status "ok"
 
 
 @app.route('/api/asset/<assetnum>', methods=['GET', 'POST'])
@@ -67,3 +82,21 @@ def asset(assetnum):
             ... whatever the rest of this query is...''',
             (assetnum, ),
         )
+
+
+def _json_exception(e: Exception, status_code=500):
+    if DEBUG:
+        return {
+            'error': 'internal server error',
+            'debug': str(e),
+            'type': type(e).__name__,
+            'traceback': ''.join(traceback.format_tb(e.__traceback__)),
+        }
+    else:
+        return {
+            'error': 'internal server error',
+            'statuscode': status_code,
+        }
+
+if __name__ == '__main__':
+    app.run('0.0.0.0', 5000)
