@@ -124,44 +124,44 @@ def ListMPU():
 #MPU post IDs
 @app.route('/api/mpu', methods=['POST'])
 def create_new_mpu():
-        # insert the new asset into the db
-        result = db.execute(
-            '''
-            INSERT INTO mpu
-            ... whatever the rest of this query is...''',
-            (id, ),
-        )
+    # insert the new asset into the db
+    result = db.execute(
+        '''
+        INSERT INTO mpu
+        ... whatever the rest of this query is...''',
+        (id, ),
+    )
 
 
 #MPU get IDs
 @app.route('/api/mpu/<id>', methods=['GET'])
 def get_mpu(id):
-        #get MPUS with ID
-        result = db.execute(
-           '''
-            SELECT *
-            FROM mpu
-            WHERE
-                id = ?''',
-            (id, ),
-        )
-        return result
+    #get MPUS with ID
+    result = db.execute(
+       '''
+        SELECT *
+        FROM mpu
+        WHERE
+            id = ?''',
+        (id, ),
+    )
+    return result
 
 #Delete MPU by IDs
 @app.route('/api/mpu/<id>', methods=['DELETE'])
 def del_mpu(id):
-        #Delete ID
-        result = db.execute(
-            #TODO remove ID
-        )
+    #Delete ID
+    result = db.execute(
+        #TODO remove ID
+    )
 
 #MPU PUT IDs
 @app.route('/api/mpu/<id>', methods=['PUT'])
 def put_mpu(id):
-        #Put MPUs
-            result = db.execute(
-            #TODO PUT ID
-        )
+    #Put MPUs
+        result = db.execute(
+        #TODO PUT ID
+    )
 
 #MPU Milestones
 #MPU Post Milestones

@@ -1,22 +1,27 @@
 -- Assets
 -- Files: Fares NonRevVehicles/* and Power/POWER Meter Data (all).xlsx
+CREATE TABLE asset (
+    num         INT,
+    bartdept    VARCHAR(16),
+    description VARCHAR(128),
+    status      VARCHAR(28)
+);
+
+-- Files: Fares NonRevVehicles/* and Power/POWER Meter Data (all).xlsx
 CREATE TABLE meter_reading (
-    bartdept      varchar(8),
-    assetnum      INT NOT NULL PRIMARY KEY,
-    description   VARCHAR(128),
-    status        VARCHAR(28),
+    assetnum      INT,
     metername     VARCHAR(28),
     readingsource VARCHAR(28),
     reading       INT,
     delta         INT,
-    readingdate   DATE,
-    enterdate     DATE
+    readingdate   date,
+    enterdate     date
 );
 
 -- Work orders
 -- File: Power/POWER WOs 9-22-2018 to 9-21-2020.xlsx
 CREATE TABLE power_work_order (
-    wonum                 INT NOT NULL PRIMARY KEY, -- work order number
+    wonum                 INT NOT NULL, -- work order number
     description           VARCHAR(128),
     detail_description    VARCHAR(128),
     -- TODO most of the "alias" column has INTs but some look like "64-14-19150-2704"
@@ -74,22 +79,20 @@ CREATE TABLE mpu_selection_criteria (
     rr_funded       BOOLEAN,
     fta_funded      BOOLEAN,
     program_manager VARCHAR(128),
-    -- I hate this, if someone
-    -- thinks of something better
-    -- please tell me
-    crit1       INT,
-    crit2       INT,
-    crit3       INT,
-    crit4       INT,
-    crit5       INT,
-    crit6       INT,
-    crit7       INT,
-    crit8       INT,
-    crit9       INT,
-    crit10      INT,
-    crit11      INT,
-    crit12      INT,
-    total_score INT
+
+    Performance_Against_Commitments INT,
+    External_Commitment             INT,
+    Dependency_On_Other_Projects    INT,
+    Environmental_Conditions        INT,
+    Public_Impact                   INT,
+    Amt_Of_BART_Row_Reqd            INT,
+    Req_for_Specialized_Equipment   INT,
+    Earned_Val_or_Forecase          INT,
+    Changes_Scope_Sched_Deadlines   INT,
+    Budget                          INT,
+    CNI_Ranking                     INT,
+    Proj_Documentation              INT,
+    total_score                     INT
 );
 
 -- See file 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsx'
@@ -130,7 +133,7 @@ CREATE TABLE mpu_expiring_funds (
 -- File: Monthy Project Updates - MPU/MPU_July 20_20200820.xlsm
 CREATE TABLE mpu_milestones (
     id            VARCHAR(14) NOT NULL,
-    name          VARCHAR(128),
+    name          VARCHAR(128), -- TODO this is reapeated data, can be found in mpu table
     phase         VARCHAR(32),
     task          VARCHAR(32),
     schedule_code VARCHAR(20),
