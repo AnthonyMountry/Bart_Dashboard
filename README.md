@@ -84,7 +84,11 @@ Example response:
 
 ### Assets
 
-_TODO_
+**GET** `/api/assets` List assets.
+
+**GET** `/api/asset/<id>` Get an asset by ID.
+
+**GET** `/api/asset/<id>/readings` Get asset readings.
 
 ---
 
@@ -107,14 +111,18 @@ _TODO_
 
 ## TODO
 
-- [ ] Authentication and authorization, see [this tutorial](https://dev.to/paurakhsharma/flask-rest-api-part-3-authentication-and-authorization-5935)
+- [ ] Replace the MPU spreadsheets with a page on the dashboard
+  - if they want to
 - [ ] Full database design and implementation
 - [ ] write a script that will populate the development database with the data from the excel spreadsheets
+- [ ] Authentication and authorization, see [this tutorial](https://dev.to/paurakhsharma/flask-rest-api-part-3-authentication-and-authorization-5935)
+  - use `flask_bcrypt` for hashing passwords
+  - add different permission levels for BART employees
 - [ ] Pick between server side rendering or client side rendering
   - If we go with client side rendering, React or Angular are tools we could use
-
 * [x] Use [pyexcel](https://github.com/pyexcel/pyexcel) for in-memory excel
       spreadsheets
   - Look at [this tutorial](http://docs.pyexcel.org/en/latest/tutorial06.html)
 
 - [this project](https://github.com/gothinkster/flask-realworld-example-app) is a fat flask example app
+- [more tutorials](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
