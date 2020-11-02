@@ -1,17 +1,13 @@
-import os
 import sqlite3
-import traceback
 
-import pyexcel
 from flask import (
     Flask,
     request,
     send_from_directory,
 )
+import pyexcel
 
-app = Flask(__name__)
-
-app.config['ENV'] = os.getenv('ENV') or 'dev' # dev is default
+app = Flask(__name__, static_url_path='/public')
 db = sqlite3.connect('db/dashboard.db')
 
 DEBUG = True
@@ -29,6 +25,9 @@ VALID_CONTENT_TYPES = {
 @app.route('/', defaults={'path': None})
 @app.route('/<path>', methods=['GET'])
 def home(path):
+    '''
+    return the home page and any other public files
+    '''
     if not path:
         path = 'index.html'
     return send_from_directory('../public', path)
@@ -36,14 +35,7 @@ def home(path):
 
 @app.route('/api/test', methods=['GET', 'POST'])
 def api_test():
-    r = request
-    print(r.headers)
-    if r.is_json:
-        print('data:', r.get_json(force=True))
-    else:
-        print('this is not json:', r.data)
-    print(r.files)
-    return {'key': 'value'}
+    return {'db': repr(db), 'app': repr(app)}
 
 
 @app.route('/api/upload', methods=['POST'])
@@ -53,50 +45,171 @@ def handle_uploads():
     if f.content_type not in VALID_CONTENT_TYPES:
         return {"error": "Unknown content type"}, 400
     if not f.filename:
-        return {"error": "No filename"}
+        return {"error": "No filename"}, 400
     ext = f.filename.split('.')[-1]
     book = pyexcel.get_book(file_type=ext, file_content=f.read())
     # TODO do stuff with sheet
     return {'success': f'{f.filename} uploaded successfully'}, 200 # status "ok"
 
 
-@app.route('/api/asset/<assetnum>', methods=['GET', 'POST'])
-def asset(assetnum):
-    # TODO finish these sql queries
+@app.route('/api/asset/<assetnum>', methods=['GET'])
+def get_asset(assetnum):
+    result = db.execute(
+        '''
+        SELECT *
+        FROM assets_table
+        WHERE
+            assetnum = ?''',
+        (assetnum, ),
+    )
+    raise NotImplemented
+
+
+@app.route('/api/asset', methods=['POST'])
+def create_asset():
+    raise NotImplemented
+
+
+@app.route('/api/asset/<assetnum>/readings', methods=['GET'])
+def asset_readings(assetnum):
+    result = db.execute('''
+        SELECT reading FROM meter_reading
+        WHERE assetnum = ?''', (assetnum, ))
+    data = []
+    for row in result:
+        data.append(row[0])
+    return {'readings': data}
+
+#Workorder API
+
+#MPU Post Workorder
+@app.route('/api/workorder/<id>', methods=['POST'])
+def post_workorder(id):
+    raise NotImplemented
+
+#MPU get Workorder
+@app.route('/api/workorder/<id>', methods=['GET'])
+def get_workorder(id):
+    raise NotImplemented
+
+#MPU Delete Workorder
+@app.route('/api/workorder/<id>', methods=['DELETE'])
+def del_workorder(id):
+    raise NotImplemented
+
+#MPU Put Workorder
+@app.route('/api/workorder/<id>', methods=['PUT'])
+def put_workorder(id):
+    raise NotImplemented
+
+# Start of code things for MPU
+
+#MPU
+#MPU list
+@app.route('/api/mpu', methods=['GET'])
+def ListMPU():
     if request.method == 'GET':
-        # get the asset and set it back
+        #get the list of MPUS
+        result = db.execute(
+            # TODO list the MPU data
+            'select * from mpu'
+        )
+        d = dict()
+        for mpu in result:
+            d[mpu[2]] = mpu
+        return d
+
+
+#MPU IDs
+#MPU post IDs
+@app.route('/api/mpu', methods=['POST'])
+def create_new_mpu():
+        # insert the new asset into the db
         result = db.execute(
             '''
+            INSERT INTO mpu
+            ... whatever the rest of this query is...''',
+            (id, ),
+        )
+
+
+#MPU get IDs
+@app.route('/api/mpu/<id>', methods=['GET'])
+def get_mpu(id):
+        #get MPUS with ID
+        result = db.execute(
+           '''
             SELECT *
-            FROM assets_table
+            FROM mpu
             WHERE
-                assetnum = ?''',
-            (assetnum, ),
+                id = ?''',
+            (id, ),
         )
         return result
-    else:
-        # insert the new asset into the db
-        db.execute(
-            '''
-            INSERT INTO assets_table
-            ... whatever the rest of this query is...''',
-            (assetnum, ),
+
+#Delete MPU by IDs
+@app.route('/api/mpu/<id>', methods=['DELETE'])
+def del_mpu(id):
+        #Delete ID
+        result = db.execute(
+            #TODO remove ID
         )
 
+#MPU PUT IDs
+@app.route('/api/mpu/<id>', methods=['PUT'])
+def put_mpu(id):
+        #Put MPUs
+            result = db.execute(
+            #TODO PUT ID
+        )
 
-def _json_exception(e: Exception, status_code=500):
-    if DEBUG:
-        return {
-            'error': 'internal server error',
-            'debug': str(e),
-            'type': type(e).__name__,
-            'traceback': ''.join(traceback.format_tb(e.__traceback__)),
-        }
-    else:
-        return {
-            'error': 'internal server error',
-            'statuscode': status_code,
-        }
+#MPU Milestones
+#MPU Post Milestones
+@app.route('/api/mpu/<id>/milestone', methods=['POST'])
+def post_mpu_milestone(id): pass
 
-if __name__ == '__main__':
-    app.run('0.0.0.0', 5000)
+#MPU get Milestones
+@app.route('/api/mpu/<id>/milestone', methods=['GET'])
+def get_mpu_milestone(id): pass
+
+#MPU Delete Milestones
+@app.route('/api/mpu/<id>/milestone', methods=['DELETE'])
+def del_mpu_milestone(id): pass
+
+#MPU Put Milestones
+@app.route('/api/mpu/<id>/milestone', methods=['PUT'])
+def put_mpu_milestone(id): pass
+
+#MPU Funds
+#MPU Post Funds
+@app.route('/api/mpu/<id>/fund', methods=['POST'])
+def post_mpu_fund(id): pass
+
+#MPU get Funds
+@app.route('/api/mpu/<id>/fund', methods=['GET'])
+def get_mpu_fund(id): pass
+
+#MPU Delete Funds
+@app.route('/api/mpu/<id>/fund', methods=['DELETE'])
+def del_mpu_fund(id): pass
+
+#MPU Put Funds
+@app.route('/api/mpu/<id>/fund', methods=['PUT'])
+def put_mpu_fund(id): pass
+
+#MPU Criteria
+#MPU Post Criteria
+@app.route('/api/mpu/<id>/criteria', methods=['POST'])
+def post_mpu_criteria(id): pass
+
+#MPU get Criteria
+@app.route('/api/mpu/<id>/criteria', methods=['GET'])
+def get_mpu_criteria(id): pass
+
+#MPU Delete Criteria
+@app.route('/api/mpu/<id>/criteria', methods=['DELETE'])
+def del_mpu_criteria(id): pass
+
+#MPU Put Criteria
+@app.route('/api/mpu/<id>/criteria', methods=['PUT'])
+def put_mpu_criteria(id): pass
