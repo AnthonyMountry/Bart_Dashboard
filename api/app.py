@@ -15,7 +15,10 @@ app.config.from_object(Config)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
-DEBUG = True
+from . import asset
+
+app.register_blueprint(asset.blueprint)
+
 
 VALID_CONTENT_TYPES = {
     "application/vnd.ms-excel",
@@ -57,33 +60,6 @@ def handle_uploads():
     return {'success': f'{f.filename} uploaded successfully'}, 200 # status "ok"
 
 
-class Asset(db.Model):
-    num = db.Column(db.Integer, primary_key=True)
-    bartdept = db.Column(db.String(16))
-    description = db.Column(db.String(128))
-    status = db.Column(db.String(28))
-
-    def to_json(self):
-        return {
-            'num': self.num,
-            'bartdept': self.bartdept,
-            'description': self.description,
-            'status': self.status,
-        }
-
-
-class MeterReading(db.Model):
-    # Sorry about all the primary keys, I needed to get around
-    # some SQLAlchemy-specific limitations.
-    assetnum = db.Column(db.Integer, primary_key=True)
-    metername = db.Column(db.String(28), primary_key=True)
-    readingsource = db.Column(db.String(28), primary_key=True)
-    reading = db.Column(db.Integer, primary_key=True, nullable=False)
-    delta = db.Column(db.Integer, primary_key=True)
-    readingdate = db.Column(db.Date, primary_key=True)
-    enterdate = db.Column(db.Date, primary_key=True)
-
-
 class Mpu(db.Model):
     id = db.Column(db.String(14), primary_key=True)
     name = db.Column(db.String(128))
@@ -107,42 +83,6 @@ class Mpu(db.Model):
     review_format = db.Column(db.String(32))
     end_date = db.Column(db.Date)
 
-
-@app.route('/api/asset/<assetnum>', methods=['GET'])
-def get_asset(assetnum):
-    res = Asset.query.filter(Asset.num == assetnum).all()
-    if len(res) == 0:
-        return {'error': f"asset '{assetnum}' not found"}, 404
-    elif len(res) != 1:
-        return {'error': 'internal server error'}, 500
-    return res[0].to_json(), 200
-
-
-@app.route('/api/asset', methods=['POST'])
-def create_asset():
-    raise NotImplemented
-
-
-@app.route('/api/asset/<assetnum>/readings', methods=['GET'])
-def asset_readings(assetnum):
-    assets = Asset.query.filter(
-        Asset.num == assetnum
-    ).all()
-    if len(assets) == 0:
-        return {'error': f"asset '{assetnum}' not found"}, 404
-    elif len(assets) > 1:
-        return {'error': "internal server error"}, 500
-
-    asset = assets[0].to_json()
-    res = MeterReading.query.filter(
-        MeterReading.assetnum == assetnum
-    )
-    readings, dates = [], []
-    for r in res.all():
-        readings.append(r.reading)
-        dates.append(r.readingdate)
-    asset['meter_readings'] = {'reading': readings, 'date': dates}
-    return asset, 200
 
 #Workorder API
 
