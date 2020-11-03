@@ -14,7 +14,9 @@ An internal analytics dashboard and project management system for BART.
 | [`/api/mpu/<id>/milestone`](#MPU-milestones "/api/mpu") | `GET`, `POST`, `DELETE`, `PUT` | MPU milestones                        |
 | [`/api/mpu/<id>/fund`](#MPU-funds "/api/mpu")           | `GET`, `POST`, `DELETE`, `PUT` | MPU Funds                             |
 | [`/api/mpu/<id>/criteria`](#MPU "/api/mpu")             | `GET`, `POST`, `DELETE`, `PUT` | MPU Ranking criteria                  |
+| [`/api/assets`](#Assets "/api/assets")                  | `GET`                          | List assets                           |
 | [`/api/asset/<id>`](#Assets "/api/asset")               | `GET`, `POST`, `DELETE`, `PUT` | Manage a single asset                 |
+| [`/api/asset/<id>/readings`](#Assets "/api/asset")      | `GET`                          | List an asset's meter readings        |
 | [`/api/workorder/<id>`](#work-order "/api/workorder")   | `GET`, `POST`, `DELETE`, `PUT` | Manage work orders                    |
 
 ### File Uploads
@@ -111,18 +113,19 @@ _TODO_
 
 ## TODO
 
-- [ ] Replace the MPU spreadsheets with a page on the dashboard
-  - if they want to
+- [ ] Replace the MPU spreadsheets with a page on the dashboard (if bart wants that)
 - [ ] Full database design and implementation
+  - [ ] Monthly Project Updates
+  - [ ] Switch Throw counts
+  - [ ] Work orders
+  - [x] Assets
+  - [x] Meter readings
 - [ ] write a script that will populate the development database with the data from the excel spreadsheets
 - [ ] Authentication and authorization, see [this tutorial](https://dev.to/paurakhsharma/flask-rest-api-part-3-authentication-and-authorization-5935)
   - use `flask_bcrypt` for hashing passwords
   - add different permission levels for BART employees
-- [ ] Pick between server side rendering or client side rendering
-  - If we go with client side rendering, React or Angular are tools we could use
-* [x] Use [pyexcel](https://github.com/pyexcel/pyexcel) for in-memory excel
-      spreadsheets
-  - Look at [this tutorial](http://docs.pyexcel.org/en/latest/tutorial06.html)
+- [x] Use [pyexcel](https://github.com/pyexcel/pyexcel) for in-memory excel spreadsheets, [tutorial](http://docs.pyexcel.org/en/latest/tutorial06.html)
 
-- [this project](https://github.com/gothinkster/flask-realworld-example-app) is a fat flask example app
-- [more tutorials](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+## Notes
+* [this project](https://github.com/gothinkster/flask-realworld-example-app) is a fat flask example app
+* [more tutorials](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
