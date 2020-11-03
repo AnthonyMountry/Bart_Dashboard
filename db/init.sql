@@ -41,3 +41,32 @@ CREATE TABLE mpu (
     review_format     varchar(32),
     end_date          date
 );
+
+-- Work orders
+-- File: Power/POWER WOs 9-22-2018 to 9-21-2020.xlsx
+CREATE TABLE power_work_order (
+    wonum                 INT NOT NULL, -- work order number
+    description           VARCHAR(128),
+    detail_description    VARCHAR(128),
+    -- TODO most of the "alias" column has INTs but some look like "64-14-19150-2704"
+    alias                 VARCHAR(32),
+    location              VARCHAR(64),
+    loc_desc              VARCHAR(128),
+    worktype              VARCHAR(8),
+    asset_type            VARCHAR(16),
+    bartdept              VARCHAR(8),
+    status                VARCHAR(28),
+    reportdate            DATE,
+    actstart              DATE,
+    actfinish             DATE,
+    actual_labor_hours    FLOAT,
+    material_cost         FLOAT,
+    problem_code_desc     VARCHAR(64),
+    reason_to_repair_desc VARCHAR(64),
+    component_desc        VARCHAR(64),
+    part_failure_desc     VARCHAR(28),
+    work_accomp_desc      VARCHAR(28),
+    wl_date               DATE,
+    wl_summary            VARCHAR(256),
+    wl_summary_detail     VARCHAR(256)
+);
