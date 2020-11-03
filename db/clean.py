@@ -3,6 +3,7 @@ from os.path import (
     exists as path_exists,
 )
 import re
+from datetime import datetime, MINYEAR
 import sqlite3
 from sqlite3 import Connection
 
@@ -149,6 +150,9 @@ def extract_milestones(book):
     write_sheet(milestones, 'Monthly Project Update - MPU/milestones.csv')
     return milestones
 
+def parse_date(d):
+    return datetime.strptime(d, '%d-%b-%y') if d else MINYEAR
+
 def combine_all_meterdata(csv_file):
     if not path_exists(csv_file):
         raise Exception('csv file does not exist')
@@ -173,6 +177,9 @@ def combine_all_meterdata(csv_file):
                 sheet.delete_rows([0])
             print(f'file: {filename}, length: {len(sheet)}')
             # append the sheet to the csv file
+            for i in range(sheet.number_of_rows()):
+                sheet[i, 8] = parse_date(sheet[i, 8])
+                sheet[i, 9] = parse_date(sheet[i, 9])
             with open(csv_file, 'a') as f:
                 data = sheet.get_csv()
                 f.write(data)
@@ -181,14 +188,15 @@ def combine_all_meterdata(csv_file):
 
 
 def main():
+    book_filename = path_join(BASE_DIR, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
+    book = pe.get_book(file_name=book_filename)
+    extract_mpu(book)
+
     filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
     if not path_exists(filename):
         with open(filename, 'w'): pass
         combine_all_meterdata(filename)
 
-    book_filename = path_join(BASE_DIR, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
-    book = pe.get_book(file_name=book_filename)
-    extract_mpu(book)
 
 if __name__ == '__main__':
     main()

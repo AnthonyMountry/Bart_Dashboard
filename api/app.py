@@ -63,6 +63,15 @@ class Asset(db.Model):
     description = db.Column(db.String(128))
     status = db.Column(db.String(28))
 
+    def to_json(self):
+        return {
+            'num': self.num,
+            'bartdept': self.bartdept,
+            'description': self.description,
+            'status': self.status,
+        }
+
+
 class MeterReading(db.Model):
     # Sorry about all the primary keys, I needed to get around
     # some SQLAlchemy-specific limitations.
@@ -73,6 +82,7 @@ class MeterReading(db.Model):
     delta = db.Column(db.Integer, primary_key=True)
     readingdate = db.Column(db.Date, primary_key=True)
     enterdate = db.Column(db.Date, primary_key=True)
+
 
 class Mpu(db.Model):
     id = db.Column(db.String(14), primary_key=True)
@@ -100,15 +110,12 @@ class Mpu(db.Model):
 
 @app.route('/api/asset/<assetnum>', methods=['GET'])
 def get_asset(assetnum):
-    result = db.execute(
-        '''
-        SELECT *
-        FROM assets_table
-        WHERE
-            assetnum = ?''',
-        (assetnum, ),
-    )
-    raise NotImplemented
+    res = Asset.query.filter(Asset.num == assetnum).all()
+    if len(res) == 0:
+        return {'error': f"asset '{assetnum}' not found"}, 404
+    elif len(res) != 1:
+        return {'error': 'internal server error'}, 500
+    return res[0].to_json(), 200
 
 
 @app.route('/api/asset', methods=['POST'])
@@ -118,13 +125,24 @@ def create_asset():
 
 @app.route('/api/asset/<assetnum>/readings', methods=['GET'])
 def asset_readings(assetnum):
-    result = db.execute('''
-        SELECT reading FROM meter_reading
-        WHERE assetnum = ?''', (assetnum, ))
-    data = []
-    for row in result:
-        data.append(row[0])
-    return {'readings': data}
+    assets = Asset.query.filter(
+        Asset.num == assetnum
+    ).all()
+    if len(assets) == 0:
+        return {'error': f"asset '{assetnum}' not found"}, 404
+    elif len(assets) > 1:
+        return {'error': "internal server error"}, 500
+
+    asset = assets[0].to_json()
+    res = MeterReading.query.filter(
+        MeterReading.assetnum == assetnum
+    )
+    readings, dates = [], []
+    for r in res.all():
+        readings.append(r.reading)
+        dates.append(r.readingdate)
+    asset['meter_readings'] = {'reading': readings, 'date': dates}
+    return asset, 200
 
 #Workorder API
 
