@@ -28,6 +28,8 @@ The request can include the following url parameters.
 - `?type=<type>` what type of data is being sent (i.e. MPU, Asset, Work Order)
 - `?filename=<filename>` name of the file being uploaded
 
+Returns an [error response](#error-responses)
+
 ---
 
 ### MPU
@@ -90,9 +92,45 @@ Example response:
 
 **GET** `/api/asset/<id>` Get an asset by ID.
 
-**GET** `/api/asset/<id>/readings` Get asset readings.
+Example response:
+
+```json
+{
+  "bartdept": "AFC",
+  "description": "COIN HANDLING",
+  "num": 123456,
+  "status": "OPERATING"
+}
+```
+
+**GET** `/api/asset/<id>/readings` Get an asset with all of it's meter readings.
+
+Example response:
+
+```json
+{
+  "bartdept": "AFC",
+  "description": "COIN HANDLING",
+  "num": 123456,
+  "status": "OPERATING",
+  "meter_readings": {
+    "date": [
+      "Thu, 16 Mar 2017 00:00:00 GMT",
+      "Fri, 16 Mar 2017 00:00:00 GMT",
+      ...
+    ],
+    "reading": [
+      10000001,
+      10000002,
+      ...
+    ]
+  },
+}
+```
 
 **POST** `api/asset` Create a new asset by sending json data.
+
+Responds with an [error response](#error-responses)
 
 ---
 
@@ -102,28 +140,74 @@ _TODO_
 
 ---
 
+### Error Responses
+If and endpoint does not return data, then it should return an error response as JSON.
+
+```json
+{
+  "error": "This is a helpful error message, if something went wrong",
+  "success": "This is a message saying that everything is ok"
+}
+```
+
+---
+
+
 ## Development
 
+### Initial Setup
 - Install python 3
 - (optional) Setup a virtual environment if you want (recommended for dependency
   management but still optional)
 ```sh
 python -m venv '<your-environment-name>'
 <your-environment-name>/bin/activate
+# run 'deactivate' when you are done using python
 ```
-- Install dependencies `pip install -r requirements.txt`
-- Run the backend `FLASK_APP=api/app.py flask run` or `FLASK_APP=api/app.py python -m flask run`
+- Install dependencies
+```sh
+pip install -r requirements.txt
+```
+- Setup flask environment variables
+```sh
+export FLASK_APP=api/app.py
+```
+- Setup the database (first unzip BART's example data and put it in `/db`)
+```sh
+# setup the tables
+flask db init
+flask db migrate
+flask db upgrade
+# clean and load the example data
+python db/clean.py
+sqlite3 db/dashboard.db '.read db/load.sql'
+```
+- Run the backend
+```sh
+flask run --reload --with-threads
+```
 - Other steps coming soon... maybe... probably...
+
+### Testing
+All the tests are in the `/tests` directory and can be run with the command:
+
+```sh
+pytest
+```
 
 ## TODO
 
+- [ ] Write an `Error` class that will make returning json error easier (see [error responses](#error-responses)).
+  - [ ] Think of other useful error fields that can be included in the [error responses](#error-responses) JSON response.
 - [ ] Replace the MPU spreadsheets with a page on the dashboard (if bart wants that)
+  - [ ] Add api endpoints that would replace all the excel macros in `UC Merced 2020 SE Project/Monthly Project Update - MPU/MPU_July 20_20200820.xlsm`
 - [ ] Full database design and implementation
   - [ ] Monthly Project Updates
   - [ ] Switch Throw counts
   - [ ] Work orders
   - [x] Assets
   - [x] Meter readings
+  - [ ] Maybe a users table
 - [x] write a script that will populate the development database with the data from the excel spreadsheets
 - [ ] Authentication and authorization, see [this tutorial](https://dev.to/paurakhsharma/flask-rest-api-part-3-authentication-and-authorization-5935)
   - use `flask_bcrypt` for hashing passwords
@@ -131,5 +215,6 @@ python -m venv '<your-environment-name>'
 - [x] Use [pyexcel](https://github.com/pyexcel/pyexcel) for in-memory excel spreadsheets, [tutorial](http://docs.pyexcel.org/en/latest/tutorial06.html)
 
 ## Notes
-* [this project](https://github.com/gothinkster/flask-realworld-example-app) is a fat flask example app
-* [more tutorials](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+* Here is the [query documentation](https://docs.sqlalchemy.org/en/13/orm/query.html) for interacting with the database using the ORM.
+* This is an [example project](https://github.com/gothinkster/flask-realworld-example-app) for flask. This is [flask's documentation example](https://github.com/pallets/flask/tree/master/examples/tutorial)
+* [More flask tutorials](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
