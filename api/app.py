@@ -9,15 +9,26 @@ from flask_migrate import Migrate
 
 from api.config import Config
 
-app = Flask(__name__, static_url_path='/public')
-# db = sqlite3.connect('db/dashboard.db')
-app.config.from_object(Config)
-db = SQLAlchemy(app)
-migrate = Migrate(app, db)
+db = SQLAlchemy()
 
-from . import asset
+def create_app(conf=None):
+    app = Flask(__name__, static_url_path='/public')
+    if conf is None:
+        app.config.from_object(Config)
+    else:
+        app.config.from_object(conf)
 
-app.register_blueprint(asset.blueprint)
+    db.init_app(app)
+    migrate = Migrate(app, db)
+
+    import os
+    print(os.getcwd())
+    from . import asset
+    app.register_blueprint(asset.blueprint)
+
+    return app
+
+app = create_app()
 
 
 VALID_CONTENT_TYPES = {
