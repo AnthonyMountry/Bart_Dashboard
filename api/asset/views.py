@@ -5,6 +5,12 @@ from .models import Asset, MeterReading
 blueprint = Blueprint('asset', __name__)
 
 
+@blueprint.route('/api/assets', methods=('GET',))
+def list_assets():
+    # return all assets as a list of json objects
+    return [a.to_json() for a in Asset.query.all()], 200
+
+
 @blueprint.route('/api/asset/<assetnum>', methods=['GET'])
 def get_asset(assetnum):
     res = Asset.query.filter(Asset.num == assetnum).all()

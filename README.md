@@ -92,6 +92,8 @@ Example response:
 
 **GET** `/api/asset/<id>/readings` Get asset readings.
 
+**POST** `api/asset` Create a new asset by sending json data.
+
 ---
 
 ### Work Order
@@ -105,8 +107,10 @@ _TODO_
 - Install python 3
 - (optional) Setup a virtual environment if you want (recommended for dependency
   management but still optional)
-  - `python -m venv <your-environment-name>`
-  - `<your-environment-name>/bin/activate` (for mac and linux)
+```sh
+python -m venv '<your-environment-name>'
+<your-environment-name>/bin/activate
+```
 - Install dependencies `pip install -r requirements.txt`
 - Run the backend `FLASK_APP=api/app.py flask run` or `FLASK_APP=api/app.py python -m flask run`
 - Other steps coming soon... maybe... probably...
@@ -120,7 +124,7 @@ _TODO_
   - [ ] Work orders
   - [x] Assets
   - [x] Meter readings
-- [ ] write a script that will populate the development database with the data from the excel spreadsheets
+- [x] write a script that will populate the development database with the data from the excel spreadsheets
 - [ ] Authentication and authorization, see [this tutorial](https://dev.to/paurakhsharma/flask-rest-api-part-3-authentication-and-authorization-5935)
   - use `flask_bcrypt` for hashing passwords
   - add different permission levels for BART employees
