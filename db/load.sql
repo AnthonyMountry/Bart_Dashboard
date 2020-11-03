@@ -25,7 +25,7 @@ INSERT INTO asset
     FROM meter_reading_tmp
     GROUP BY num;
 INSERT INTO meter_reading
-    SELECT assetnum, metername, readingsource, reading, delta, readingdate, enterdate
+    SELECT DISTINCT assetnum, metername, readingsource, reading, delta, readingdate, enterdate
     FROM meter_reading_tmp;
 DROP TABLE meter_reading_tmp;
 

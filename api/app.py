@@ -1,14 +1,19 @@
-import sqlite3
-
+import pyexcel
 from flask import (
     Flask,
     request,
     send_from_directory,
 )
-import pyexcel
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
+
+from api.config import Config
 
 app = Flask(__name__, static_url_path='/public')
-db = sqlite3.connect('db/dashboard.db')
+# db = sqlite3.connect('db/dashboard.db')
+app.config.from_object(Config)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 DEBUG = True
 
@@ -50,6 +55,47 @@ def handle_uploads():
     book = pyexcel.get_book(file_type=ext, file_content=f.read())
     # TODO do stuff with sheet
     return {'success': f'{f.filename} uploaded successfully'}, 200 # status "ok"
+
+
+class Asset(db.Model):
+    num = db.Column(db.Integer, primary_key=True)
+    bartdept = db.Column(db.String(16))
+    description = db.Column(db.String(128))
+    status = db.Column(db.String(28))
+
+class MeterReading(db.Model):
+    # Sorry about all the primary keys, I needed to get around
+    # some SQLAlchemy-specific limitations.
+    assetnum = db.Column(db.Integer, primary_key=True)
+    metername = db.Column(db.String(28), primary_key=True)
+    readingsource = db.Column(db.String(28), primary_key=True)
+    reading = db.Column(db.Integer, primary_key=True, nullable=False)
+    delta = db.Column(db.Integer, primary_key=True)
+    readingdate = db.Column(db.Date, primary_key=True)
+    enterdate = db.Column(db.Date, primary_key=True)
+
+class Mpu(db.Model):
+    id = db.Column(db.String(14), primary_key=True)
+    name = db.Column(db.String(128))
+    short_name = db.Column(db.String(128))
+    ranking = db.Column(db.Integer)
+    description = db.Column(db.String(256))
+    location = db.Column(db.String(32))
+    sub_location = db.Column(db.String(32))
+    district_location = db.Column(db.String(64))
+    mpu_phase = db.Column(db.String(32))
+    budget_amount = db.Column(db.Float)
+    expended_amount = db.Column(db.Float)
+    monthly_burn_rate = db.Column(db.Float)
+    remaining_budget = db.Column(db.Float)
+    funding_level = db.Column(db.String(16))
+    rr_funded = db.Column(db.Boolean)
+    project_group = db.Column(db.String(64))
+    project_manager = db.Column(db.String(32))
+    accomplishments = db.Column(db.String(128))
+    program = db.Column(db.String(32))
+    review_format = db.Column(db.String(32))
+    end_date = db.Column(db.Date)
 
 
 @app.route('/api/asset/<assetnum>', methods=['GET'])

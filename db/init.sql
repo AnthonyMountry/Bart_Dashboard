@@ -39,7 +39,8 @@ CREATE TABLE mpu (
     accomplishments   varchar(128),
     program           varchar(32),
     review_format     varchar(32),
-    end_date          date
+    end_date          date,
+    CHECK (rr_funded IN (0, 1))
 );
 
 -- Work orders

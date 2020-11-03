@@ -124,6 +124,9 @@ def extract_mpu(book):
     # Rename the columns based on the schema mapping
     for i, name in enumerate(mpu.colnames):
         mpu.colnames[i] = mpu_schema_mappings[name]
+    for i, c in enumerate(mpu.column['rr_funded']):
+        mpu[i, 'rr_funded'] = 1 if c == 'Y' else 0
+    mpu.delete_rows([0]) # delete the column names
     write_sheet(mpu, 'Monthly Project Update - MPU/mpu.csv')
     return mpu
 
