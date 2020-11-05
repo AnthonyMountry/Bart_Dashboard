@@ -3,9 +3,9 @@ from os.path import (
     exists as path_exists,
 )
 import re
+import csv
 from datetime import datetime, MINYEAR
-import sqlite3
-from sqlite3 import Connection
+import multiprocessing as mp
 
 import pyexcel as pe
 from pyexcel.sheet import Sheet
@@ -13,6 +13,8 @@ from pyexcel.book import Book
 from pyexcel.internal.generators import BookStream
 
 BASE_DIR = 'UC Merced 2020 SE Project'
+if path_exists('./db'):
+    BASE_DIR = path_join('db', BASE_DIR)
 
 meter_schema_upper = [
     'BARTDEPT', 'ASSETNUM', 'DESCRIPTION', 'STATUS', 'METERNAME',
@@ -94,6 +96,17 @@ def is_meter_data(sheet: Sheet) -> bool:
         sheet.row[0] == meter_schema
     )
 
+def max_column_len(sheet: Sheet, name: str) -> int:
+    mx = 0
+    col = sheet.named_column_at(name)
+    if isinstance(col[5], (int, float)):
+        raise TypeError('cannot get max length of a number colunm')
+    for r in col:
+        if len(r) > mx:
+            mx = len(r)
+    return mx
+
+
 # ----- Extract The Weird MPU Data -----
 
 def extract_base(book):
@@ -104,7 +117,7 @@ def extract_base(book):
     return base
 
 
-def extract_mpu(book):
+def extract_mpu(book, csv_file: str):
     column_re = re.compile('Column([0-9]+)')
     mpu: Sheet = book.sheet_by_name('MPU')
     mpu.delete_rows(list(range(14))) # remove garbage at the top
@@ -128,7 +141,7 @@ def extract_mpu(book):
     for i, c in enumerate(mpu.column['rr_funded']):
         mpu[i, 'rr_funded'] = 1 if c == 'Y' else 0
     mpu.delete_rows([0]) # delete the column names
-    write_sheet(mpu, 'Monthly Project Update - MPU/mpu.csv')
+    write_sheet(mpu, csv_file)
     return mpu
 
 
@@ -150,52 +163,166 @@ def extract_milestones(book):
     write_sheet(milestones, 'Monthly Project Update - MPU/milestones.csv')
     return milestones
 
+
 def parse_date(d):
     return datetime.strptime(d, '%d-%b-%y') if d else MINYEAR
 
-def combine_all_meterdata(csv_file):
+
+def _process_sheet(sheet: Sheet) -> Sheet:
+    # Skip this sheet if it doesn't
+    # have the right column length
+    # or its an SQL sheet.
+    if (
+        len(sheet.row[0]) != len(meter_schema) or
+        is_sql_sheet(sheet)
+    ):
+        return None
+    # Delete the first row if it is
+    # empty or if it has column names
+    if (
+        is_meter_data(sheet) or
+        all([c == '' for c in sheet.row[0]])
+    ):
+        sheet.delete_rows([0])
+    print(f'sheet: {sheet.name}, length: {len(sheet)}')
+    # append the sheet to the csv file
+    for i in range(sheet.number_of_rows()):
+        sheet[i, 8] = parse_date(sheet[i, 8])
+        sheet[i, 9] = parse_date(sheet[i, 9])
+    return sheet
+
+
+# This class reads a bunch of meterdata files and
+# combines then into one csv file
+#
+# This solution takes A LOT of memory
+# https://stackoverflow.com/questions/13446445/python-multiprocessing-safely-writing-to-a-file
+class MeterDataWriter:
+
+    def __init__(self, filename: str, datafiles: list):
+        self.filename = filename
+        self.datafiles = datafiles
+        with open(self.filename, 'w'): pass
+
+    @staticmethod
+    def _worker(bookname, q):
+        filename = path_join(BASE_DIR, bookname)
+        book = pe.get_book(file_name=filename)
+        for sheet in book:
+            s = _process_sheet(sheet)
+            if s is None:
+                continue
+            else:
+                q.put(s.get_csv())
+
+    def _listener(self, q):
+        with open(self.filename, 'w') as f:
+            while True:
+                data = q.get()
+                if data == 'done':
+                    print('got done signal')
+                    break
+                print('writing', len(data), 'bytes')
+                f.write(data)
+                f.flush()
+
+    def run(self):
+        manager = mp.Manager()
+        q = manager.Queue()
+        pool = mp.Pool(
+            # we want to reuse processes because memory
+            # is not infinate
+            processes=int(mp.cpu_count() / 2),
+            # even if we still only use one process
+            # we still want to apply it to all files
+            maxtasksperchild=len(self.datafiles)
+        )
+        jobs = []
+        watcher = pool.apply_async(self._listener, (q,))
+        for f in self.datafiles:
+            job = pool.apply_async(self._worker, (f, q))
+            jobs.append(job)
+        for job in jobs:
+            job.get()
+        q.put('done') # listener will return
+        pool.close()
+        pool.join()
+
+
+def combine_all_meterdata(csv_file: str):
     if not path_exists(csv_file):
         raise Exception('csv file does not exist')
     for f in METER_READING_FILES:
         filename = path_join(BASE_DIR, f)
         book = pe.get_book(file_name=filename)
         for sheet in book:
-            # Skip this sheet if it doesn't
-            # have the right column length
-            # or its an SQL sheet.
-            if (
-                len(sheet.row[0]) != len(meter_schema) or
-                is_sql_sheet(sheet)
-            ):
+            s = _process_sheet(sheet)
+            if s is None:
                 continue
-            # Delete the first row if it is
-            # empty or if it has column names
-            if (
-                is_meter_data(sheet) or
-                all([c == '' for c in sheet.row[0]])
-            ):
-                sheet.delete_rows([0])
-            print(f'file: {filename}, length: {len(sheet)}')
-            # append the sheet to the csv file
-            for i in range(sheet.number_of_rows()):
-                sheet[i, 8] = parse_date(sheet[i, 8])
-                sheet[i, 9] = parse_date(sheet[i, 9])
-            with open(csv_file, 'a') as f:
-                data = sheet.get_csv()
-                f.write(data)
-                if data[-1] != '\n':
-                    f.write('\n')
+            else:
+                with open(csv_file, 'a') as f:
+                    data = s.get_csv()
+                    f.write(data)
+                    if data[-1] != '\n':
+                        f.write('\n')
+
+def extract_asset_aliases(csv_file: str):
+    filename = path_join(BASE_DIR, 'TC Switch Machines/Switch Machine WO By Quarter Analysis 2020May.xlsx')
+    bk: Book = pe.get_book(file_name=filename)
+    sheet: Sheet = bk.sheet_by_name('All Asset Summary')
+    n = sheet.number_of_columns()
+    sheet.delete_columns(list(range(4, n)))
+    sheet.name_columns_by_row(0)
+    mx = 0
+    for a in sheet.column[1]:
+        if len(a) > mx:
+            mx = len(a)
+    print('max alias len:', mx)
+    print('max alias len:', max_column_len(sheet, 'Alias'))
+    print('max status len:', max_column_len(sheet, 'Status'))
+    print('max location len:', max_column_len(sheet, 'Location'))
+    if sheet.row[-1][0] == 'Total':
+        sheet.delete_rows([-1])
+    with open(csv_file, 'w') as f:
+        f.write(sheet.get_csv())
+
+
+def meter_reading_lengths():
+    filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
+    max_dept = max_desc = max_status = max_metername = max_source = 0
+    with open(filename, 'r') as f:
+        r = csv.reader(f)
+        for row in r:
+            max_dept = max(len(row[0]), max_dept)
+            max_desc = max(len(row[2]), max_desc)
+            max_status = max(len(row[3]), max_status)
+            max_metername = max(len(row[4]), max_metername)
+            max_source = max(len(row[5]), max_source)
+    print('max bartdept:', max_dept)
+    print('max desc:', max_desc)
+    print('max status:', max_status)
+    print('max metername:', max_metername)
+    print('max readingsource:', max_source)
+
+
+def extract_work_orders(csv_file: str):
+    pass
 
 
 def main():
-    book_filename = path_join(BASE_DIR, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
-    book = pe.get_book(file_name=book_filename)
-    extract_mpu(book)
+    return
+
+    asset_alias_csv = path_join(BASE_DIR, 'tmp_asset_aliases.csv')
+    extract_asset_aliases(asset_alias_csv)
 
     filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
-    if not path_exists(filename):
-        with open(filename, 'w'): pass
-        combine_all_meterdata(filename)
+    writer = MeterDataWriter(filename, METER_READING_FILES)
+    writer.run()
+
+    book_filename = path_join(BASE_DIR, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
+    book = pe.get_book(file_name=book_filename)
+    extract_mpu(book, 'Monthly Project Update - MPU/mpu.csv')
+
 
 
 if __name__ == '__main__':

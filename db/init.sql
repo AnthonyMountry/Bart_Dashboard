@@ -2,16 +2,16 @@
 -- Files: Fares NonRevVehicles/* and Power/POWER Meter Data (all).xlsx
 CREATE TABLE asset (
     num         int,
-    bartdept    varchar(16),
-    description varchar(128),
-    status      varchar(28)
+    bartdept    varchar(8),
+    description varchar(100),
+    status      varchar(16)
 );
 
 -- Files: Fares NonRevVehicles/* and Power/POWER Meter Data (all).xlsx
 CREATE TABLE meter_reading (
     assetnum      int,
-    metername     varchar(28),
-    readingsource varchar(28),
+    metername     varchar(16),
+    readingsource varchar(32),
     reading       int,
     delta         int,
     readingdate   date,
