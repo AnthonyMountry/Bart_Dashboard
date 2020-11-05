@@ -14,10 +14,13 @@ __pycache__/
 /db/bart_data
 /db/UC Merced 2020 SE Project
 /db/*.sh
+# might change this later
+/migrations
 
 # Notes
 *.pdf
 TODO
+TODO.md
 
 # For MacOS
 .DS_Store
