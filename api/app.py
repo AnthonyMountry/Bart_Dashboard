@@ -95,6 +95,13 @@ class Mpu(db.Model):
     end_date = db.Column(db.Date)
 
 
+class WorkOrder(db.Model):
+    num = db.Column(db.Integer, primary_key=True)
+    description = db.Column(db.String(128))
+    alias = db.Column(db.String(24))
+    location = db.Column(db.String())
+
+
 #Workorder API
 
 #MPU Post Workorder

@@ -13,7 +13,7 @@ def list_assets():
 
 @blueprint.route('/api/asset/<assetnum>', methods=['GET'])
 def get_asset(assetnum):
-    res = Asset.query.filter(Asset.num == assetnum).all()
+    res = Asset.query.filter_by(num=assetnum).all()
     if len(res) == 0:
         return {'error': f"asset '{assetnum}' not found"}, 404
     elif len(res) != 1:
@@ -24,6 +24,18 @@ def get_asset(assetnum):
 @blueprint.route('/api/asset', methods=['POST'])
 def create_asset():
     # TODO handle post requests and insert an asset from json
+    raise NotImplemented
+
+
+@blueprint.route('/api/asset/<assetnum>', methods=('PUT',))
+def update_asset(assetnum):
+    # TODO Update the asset where assetnum=assetnum
+    raise NotImplemented
+
+
+@blueprint.route('/api/asset/<assetnum>', methods=('DELETE',))
+def delete_asset(assetnum):
+    # TODO delete the asset
     raise NotImplemented
 
 
