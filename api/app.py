@@ -52,6 +52,39 @@ def home(path):
     return send_from_directory('../public', path)
 
 
+@app.errorhandler(Exception)
+def handle_all_errors(err):
+    resp = {
+        'error': 'Internal server error',
+        'debug': str(err),
+        'type': type(err).__name__,
+    }
+    print(''.join(traceback.format_tb(err.__traceback__)))
+    if current_app.config.get('DEBUG'):
+        resp['traceback'] = ''.join(
+            traceback.format_tb(err.__traceback__)
+        )
+    return resp, 500
+
+
+@app.errorhandler(NotImplementedError)
+def not_impl_handler(e):
+    tb = traceback.extract_tb(e.__traceback__)
+    last = tb[-1]
+    path = last.name
+    # path = url_for(last.name)
+    # fn = globals()[last.name]
+    for r in current_app.url_map.iter_rules():
+        if r.endpoint == last.name:
+            path = r.rule
+            break
+    return {
+        'error': f"Endpoint '{path}' not implemented",
+        'type': type(e).__name__,
+        'debug': f"File '{last.filename}', line {last.lineno}",
+    }, 501
+
+
 @app.route('/api/test', methods=['GET', 'POST'])
 def api_test():
     return {'db': repr(db), 'app': repr(app)}
