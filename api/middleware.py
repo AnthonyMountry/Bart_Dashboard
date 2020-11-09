@@ -1,6 +1,7 @@
-import os
 from functools import wraps
 from flask import request
+
+import pyexcel
 
 VALID_FILE_EXTS = {'xlsx', 'xlsm', 'xltm', 'xls', 'csv'}
 
@@ -13,30 +14,34 @@ VALID_CONTENT_TYPES = {
     "text/csv",
 }
 
-def spreadsheet_upload(handler):
-    """Checks that the file-upload request has a spreadsheet
+
+def with_spreadsheet(handler):
+    """Run write an endpoint that will accept
+       an excel book as an argument.
 
     Usage
-    ----
+    -----
     @app.route('/some/api/route')
-    @spreadsheet_required
-    def endpoint_handler():
-        # process data
-        return
+    @with_spreadsheet
+    def endpoint_handler(book: pyexcel.Book):
+        # process data in book
+        return {"msg": "ok"}
     """
     @wraps(handler)
     def inner(*args, **kwargs):
-        content_type = request.headers.get('Content-Type')
-        data_type = request.args.get('type')
-        filename = request.args.get('filename')
-
-        if content_type not in VALID_CONTENT_TYPES:
-            return _error("Unknown content type")
-        elif not filename:
-            return _error("No filename given")
-        elif not data_type:
-            return _error("No type for this spreadsheet")
-        return handler(*args, **kwargs)
+        # if request.headers.get('Content-Type') != 'multipart/form-data':
+        #     return {'error': "bad content type, expected 'multipart/form-data'"}, 400
+        if 'file' not in request.files:
+            return {'error': 'no file'}, 400
+        f = request.files['file']
+        if f.content_type not in VALID_CONTENT_TYPES:
+            return {"error": "Unknown content type"}, 400
+        if not f.filename:
+            return {"error": "No filename"}, 400
+        ext = f.filename.split('.')[-1]
+        book = pyexcel.get_book(file_type=ext, file_content=f.read())
+        book.filename = f.filename
+        return handler(book, *args, **kwargs)
     return inner
 
 
