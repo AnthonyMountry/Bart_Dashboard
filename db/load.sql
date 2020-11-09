@@ -29,7 +29,7 @@ INSERT INTO meter_reading
     SELECT DISTINCT assetnum, metername, readingsource, reading, delta, readingdate, enterdate
     FROM meter_reading_tmp;
 /**/
-DROP TABLE meter_reading_tmp;
+-- DROP TABLE meter_reading_tmp;
 
 VACUUM; -- clean up the temp data
 

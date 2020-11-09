@@ -24,7 +24,7 @@ _Work Order_ - A maintenance job. Common attributes of a WO are duration and cos
 
 #### Other Acronyms
 
-_CM_ -(usually for a work order)
+_CM_ -(usually for a work order) Corrective maintenence
 
 _PM_ - Preventative maintenance (usually for a work order)
 
@@ -86,6 +86,10 @@ Returns an [error response](#error-responses)
 MPU - Monthly Project Updates.
 
 **GET** `/api/mpus` Returns a list of MPUs
+
+Url Parameter:
+
+* `?limit=5` Limits the number of asset objects returned.
 
 Example response:
 
@@ -165,6 +169,31 @@ Returns an [error response](#error-responses)
 
 **GET** `/api/assets` List assets.
 
+Url Parameter:
+
+* `?limit=5` Limits the number of asset objects returned.
+
+<a name="example-assets-json">Example response:</a>
+
+```json
+{
+  "assets": [
+    {
+      "bartdept": "AFC",
+      "description": "COIN HANDLING",
+      "num": 123456,
+      "status": "OPERATING"
+    },
+    {
+      "bartdept": "AFC",
+      "description": "COIN HANDLING",
+      "num": 123457,
+      "status": "OPERATING"
+    }
+  ]
+}
+```
+
 **GET** `/api/asset/<id>` Get an asset by ID.
 
 <a name="example-asset-json">Example response:</a>
@@ -234,6 +263,7 @@ If and endpoint does not return data, then it should return an error response as
 {
   "error": "This is a helpful error message, if something went wrong",
   "success": "This is a message saying that everything is ok",
+  "debug": "More in-depth debugging message",
   "status": 404, // the http status of the response
   "code": 1234   // error code (0 for success)
 }
@@ -257,7 +287,7 @@ pip install -r requirements.txt
 ```
 - Setup flask environment variables
 ```sh
-export FLASK_APP=api/app.py
+export FLASK_APP=api
 ```
 - Setup the database (first unzip BART's example data and put it in `/db`)
 ```sh

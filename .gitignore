@@ -1,9 +1,15 @@
+# Config
+.env
+api.ini
+
 # Misc
-node_modules/
 __pycache__/
+node_modules/
 .vscode/
 .pytest_cache/
 .mypy_cache/
+*.log
+*.sh
 
 # Database
 *.db
@@ -13,7 +19,6 @@ __pycache__/
 *.zip
 /db/bart_data
 /db/UC Merced 2020 SE Project
-/db/*.sh
 # might change this later
 /migrations
 

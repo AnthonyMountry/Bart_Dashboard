@@ -84,7 +84,7 @@ switch_machine_workorder_files = [
 # ----- Utilities ------
 
 def write_sheet(sheet: Sheet, filename: str):
-    with open(path_join(BASE_DIR, filename), 'w', encoding='utf-8') as f:
+    with open(filename, 'w', encoding='utf-8') as f:
         f.write(sheet.get_csv())
 
 def is_sql_sheet(s: Sheet) -> bool:
@@ -113,7 +113,7 @@ def extract_base(book):
     base: Sheet = book.sheet_by_index(0)
     base.delete_columns([0, 1])
     base.delete_rows(list(range(24)))
-    write_sheet(base, 'Monthly Project Update - MPU/exceptions_template.csv')
+    write_sheet(base, path_join(BASE_DIR, 'Monthly Project Update - MPU/exceptions_template.csv'))
     return base
 
 
@@ -140,7 +140,14 @@ def extract_mpu(book, csv_file: str):
         mpu.colnames[i] = mpu_schema_mappings[name]
     for i, c in enumerate(mpu.column['rr_funded']):
         mpu[i, 'rr_funded'] = 1 if c == 'Y' else 0
-    mpu.delete_rows([0]) # delete the column names
+    for name in ['district_location', 'accomplishments']:
+        for i, c in enumerate(mpu.column[name]):
+            if c == '--' or c == '-':
+                mpu[i, name] = ''
+    for i, c in enumerate(mpu.column['remaining_budget']):
+        if c == 'Full Scope':
+            raise ValueError('expected a number but got a string')
+    # mpu.delete_rows([0]) # delete the column names
     write_sheet(mpu, csv_file)
     return mpu
 
@@ -310,19 +317,17 @@ def extract_work_orders(csv_file: str):
 
 
 def main():
-    return
+    # asset_alias_csv = path_join(BASE_DIR, 'tmp_asset_aliases.csv')
+    # extract_asset_aliases(asset_alias_csv)
 
-    asset_alias_csv = path_join(BASE_DIR, 'tmp_asset_aliases.csv')
-    extract_asset_aliases(asset_alias_csv)
-
-    filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
-    writer = MeterDataWriter(filename, METER_READING_FILES)
-    writer.run()
+    # filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
+    # writer = MeterDataWriter(filename, METER_READING_FILES)
+    # writer.run()
 
     book_filename = path_join(BASE_DIR, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
     book = pe.get_book(file_name=book_filename)
-    extract_mpu(book, 'Monthly Project Update - MPU/mpu.csv')
-
+    # extract_mpu(book, 'Monthly Project Update - MPU/mpu.csv')
+    extract_mpu(book, 'cleaned/mpu.csv')
 
 
 if __name__ == '__main__':
