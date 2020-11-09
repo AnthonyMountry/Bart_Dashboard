@@ -1,14 +1,18 @@
-from flask import Blueprint
+from flask import Blueprint, jsonify, request
 
 from .models import Asset, MeterReading
 
 blueprint = Blueprint('asset', __name__)
 
 
-@blueprint.route('/api/assets', methods=('GET',))
+@blueprint.route('/api/assets', methods=['GET'])
 def list_assets():
-    # return all assets as a list of json objects
-    return [a.to_json() for a in Asset.query.all()], 200
+    # Return all assets as a list of json objects
+    return {
+        'assets': Asset.query.limit(
+            request.args.get('limit')
+        ).all()
+    }, 200
 
 
 @blueprint.route('/api/asset/<assetnum>', methods=['GET'])
@@ -18,25 +22,25 @@ def get_asset(assetnum):
         return {'error': f"asset '{assetnum}' not found"}, 404
     elif len(res) != 1:
         return {'error': 'internal server error'}, 500
-    return res[0].to_json(), 200
+    return jsonify(res[0]), 200
 
 
 @blueprint.route('/api/asset', methods=['POST'])
 def create_asset():
     # TODO handle post requests and insert an asset from json
-    raise NotImplemented
+    raise NotImplementedError
 
 
 @blueprint.route('/api/asset/<assetnum>', methods=('PUT',))
 def update_asset(assetnum):
     # TODO Update the asset where assetnum=assetnum
-    raise NotImplemented
+    raise NotImplementedError
 
 
 @blueprint.route('/api/asset/<assetnum>', methods=('DELETE',))
 def delete_asset(assetnum):
     # TODO delete the asset
-    raise NotImplemented
+    raise NotImplementedError
 
 
 @blueprint.route('/api/asset/<assetnum>/readings', methods=['GET'])

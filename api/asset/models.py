@@ -3,6 +3,7 @@ from ..app import db
 STATUS_DECOMMISSIONED = 'DECOMMISSIONED'
 STATUS_OPERATING = 'OPERATING'
 
+
 class Asset(db.Model):
     num = db.Column(db.Integer, primary_key=True)
     bartdept = db.Column(db.String(8))
