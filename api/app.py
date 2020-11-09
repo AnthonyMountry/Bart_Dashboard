@@ -1,48 +1,24 @@
+import traceback
 import pyexcel
 from flask import (
-    Flask,
+    Blueprint,
     request,
     send_from_directory,
+    current_app,
 )
+
+from api.middleware import with_spreadsheet
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 
-from api.config import Config
-
 db = SQLAlchemy()
+migrate = Migrate()
 
-def create_app(conf=None):
-    app = Flask(__name__, static_url_path='/public')
-    if conf is None:
-        app.config.from_object(Config)
-    else:
-        app.config.from_object(conf)
-
-    db.init_app(app)
-    migrate = Migrate(app, db)
-
-    import os
-    print(os.getcwd())
-    from . import asset
-    app.register_blueprint(asset.blueprint)
-
-    return app
-
-app = create_app()
+blueprint = Blueprint('api', __name__)
 
 
-VALID_CONTENT_TYPES = {
-    "application/vnd.ms-excel",
-    "application/vnd.ms-excel.sheet.macroEnabled.12",
-    "application/vnd.ms-excel.template.macroEnabled.12",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    "application/vnd.openxmlformats-officedocument.spreadsheetml.template",
-    "text/csv",
-}
-
-
-@app.route('/', defaults={'path': None})
-@app.route('/<path>', methods=['GET'])
+@blueprint.route('/', defaults={'path': None})
+@blueprint.route('/<path>', methods=['GET'])
 def home(path):
     '''
     return the home page and any other public files
@@ -52,7 +28,7 @@ def home(path):
     return send_from_directory('../public', path)
 
 
-@app.errorhandler(Exception)
+@blueprint.errorhandler(Exception)
 def handle_all_errors(err):
     resp = {
         'error': 'Internal server error',
@@ -67,7 +43,7 @@ def handle_all_errors(err):
     return resp, 500
 
 
-@app.errorhandler(NotImplementedError)
+@blueprint.errorhandler(NotImplementedError)
 def not_impl_handler(e):
     tb = traceback.extract_tb(e.__traceback__)
     last = tb[-1]
@@ -85,23 +61,17 @@ def not_impl_handler(e):
     }, 501
 
 
-@app.route('/api/test', methods=['GET', 'POST'])
+@blueprint.route('/api/test', methods=['GET', 'POST'])
 def api_test():
-    return {'db': repr(db), 'app': repr(app)}
+    # return {'db': repr(db), 'app': repr(current_app)}
+    raise NotImplementedError
 
 
-@app.route('/api/upload', methods=['POST'])
-def handle_uploads():
-    '''handle_uploads handles the spreadsheet file uploads'''
-    f = request.files['file']
-    if f.content_type not in VALID_CONTENT_TYPES:
-        return {"error": "Unknown content type"}, 400
-    if not f.filename:
-        return {"error": "No filename"}, 400
-    ext = f.filename.split('.')[-1]
-    book = pyexcel.get_book(file_type=ext, file_content=f.read())
-    # TODO do stuff with sheet
-    return {'success': f'{f.filename} uploaded successfully'}, 200 # status "ok"
+@blueprint.route('/api/upload', methods=('POST',))
+@with_spreadsheet
+def handle_data_uploads(book: pyexcel.Book):
+    # TODO finish this
+    raise NotImplementedError
 
 
 class Mpu(db.Model):
@@ -109,7 +79,7 @@ class Mpu(db.Model):
     name = db.Column(db.String(128))
     short_name = db.Column(db.String(128))
     ranking = db.Column(db.Integer)
-    description = db.Column(db.String(256))
+    description = db.Column(db.String(512))
     location = db.Column(db.String(32))
     sub_location = db.Column(db.String(32))
     district_location = db.Column(db.String(64))
@@ -160,45 +130,40 @@ class MeterReadings(db.Model):
 #Workorder API
 
 #MPU Post Workorder
-@app.route('/api/workorder/<id>', methods=['POST'])
+@blueprint.route('/api/workorder/<id>', methods=['POST'])
 def post_workorder(id):
-    raise NotImplemented
+    raise NotImplementedError
 
 #MPU get Workorder
-@app.route('/api/workorder/<id>', methods=['GET'])
+@blueprint.route('/api/workorder/<id>', methods=['GET'])
 def get_workorder(id):
-    raise NotImplemented
+    raise NotImplementedError
 
 #MPU Delete Workorder
-@app.route('/api/workorder/<id>', methods=['DELETE'])
+@blueprint.route('/api/workorder/<id>', methods=['DELETE'])
 def del_workorder(id):
-    raise NotImplemented
+    raise NotImplementedError
 
 #MPU Put Workorder
-@app.route('/api/workorder/<id>', methods=['PUT'])
+@blueprint.route('/api/workorder/<id>', methods=['PUT'])
 def put_workorder(id):
-    raise NotImplemented
+    raise NotImplementedError
 
 # Start of MPU API
 #MPU
 #MPU list
-@app.route('/api/mpu', methods=['GET'])
-def ListMPU():
-    if request.method == 'GET':
-        #get the list of MPUS
-        result = db.execute(
-            # TODO list the MPU data
-            'select * from mpu'
-        )
-        d = dict()
-        for mpu in result:
-            d[mpu[2]] = mpu
-        return d
+@blueprint.route('/api/mpus', methods=['GET'])
+def listMPU():
+    return {
+        'mpus': Mpu.query.limit(
+            request.args.get('limit')
+        ).all()
+    }, 200
 
 
 #MPU IDs
 #MPU post IDs
-@app.route('/api/mpu', methods=['POST'])
+@blueprint.route('/api/mpu', methods=['POST'])
 def create_new_mpu():
     # insert the new asset into the db
     result = db.execute(
@@ -210,7 +175,7 @@ def create_new_mpu():
 
 
 #MPU get IDs
-@app.route('/api/mpu/<id>', methods=['GET'])
+@blueprint.route('/api/mpu/<id>', methods=['GET'])
 def get_mpu(id):
     #get MPUS with ID
     result = db.execute(
@@ -224,7 +189,7 @@ def get_mpu(id):
     return result
 
 #Delete MPU by IDs
-@app.route('/api/mpu/<id>', methods=['DELETE'])
+@blueprint.route('/api/mpu/<id>', methods=['DELETE'])
 def del_mpu(id):
     #Delete ID
     result = db.execute(
@@ -232,7 +197,7 @@ def del_mpu(id):
     )
 
 #MPU PUT IDs
-@app.route('/api/mpu/<id>', methods=['PUT'])
+@blueprint.route('/api/mpu/<id>', methods=['PUT'])
 def put_mpu(id):
     #Put MPUs
         result = db.execute(
@@ -241,58 +206,69 @@ def put_mpu(id):
 
 #MPU Milestones API
 #MPU Post Milestones
-@app.route('/api/mpu/<id>/milestone', methods=['POST'])
-def post_mpu_milestone(id): pass
+@blueprint.route('/api/mpu/<id>/milestone', methods=['POST'])
+def post_mpu_milestone(id):
+    raise NotImplementedError
 
 #MPU get Milestones
-@app.route('/api/mpu/<id>/milestone', methods=['GET'])
-def get_mpu_milestone(id): pass
+@blueprint.route('/api/mpu/<id>/milestone', methods=['GET'])
+def get_mpu_milestone(id):
+    raise NotImplementedError
 
 #MPU Delete Milestones
-@app.route('/api/mpu/<id>/milestone', methods=['DELETE'])
-def del_mpu_milestone(id): pass
+@blueprint.route('/api/mpu/<id>/milestone', methods=['DELETE'])
+def del_mpu_milestone(id):
+    raise NotImplementedError
 
 #MPU Put Milestones
-@app.route('/api/mpu/<id>/milestone', methods=['PUT'])
-def put_mpu_milestone(id): pass
+@blueprint.route('/api/mpu/<id>/milestone', methods=['PUT'])
+def put_mpu_milestone(id):
+    raise NotImplementedError
 
 #MPU Funds API
 #MPU Post Funds
-@app.route('/api/mpu/<id>/fund', methods=['POST'])
-def post_mpu_fund(id): pass
+@blueprint.route('/api/mpu/<id>/fund', methods=['POST'])
+def post_mpu_fund(id):
+    raise NotImplementedError
 
 #MPU get Funds
-@app.route('/api/mpu/<id>/fund', methods=['GET'])
-def get_mpu_fund(id): pass
+@blueprint.route('/api/mpu/<id>/fund', methods=['GET'])
+def get_mpu_fund(id):
+    raise NotImplementedError
 
 #MPU Delete Funds
-@app.route('/api/mpu/<id>/fund', methods=['DELETE'])
-def del_mpu_fund(id): pass
+@blueprint.route('/api/mpu/<id>/fund', methods=['DELETE'])
+def del_mpu_fund(id):
+    raise NotImplementedError
 
 #MPU Put Funds
-@app.route('/api/mpu/<id>/fund', methods=['PUT'])
-def put_mpu_fund(id): pass
+@blueprint.route('/api/mpu/<id>/fund', methods=['PUT'])
+def put_mpu_fund(id):
+    raise NotImplementedError
 
 #MPU Criteria API
 #MPU Post Criteria
-@app.route('/api/mpu/<id>/criteria', methods=['POST'])
-def post_mpu_criteria(id): pass
+@blueprint.route('/api/mpu/<id>/criteria', methods=['POST'])
+def post_mpu_criteria(id):
+    raise NotImplementedError
 
 #MPU get Criteria
-@app.route('/api/mpu/<id>/criteria', methods=['GET'])
-def get_mpu_criteria(id): pass
+@blueprint.route('/api/mpu/<id>/criteria', methods=['GET'])
+def get_mpu_criteria(id):
+    raise NotImplementedError
 
 #MPU Delete Criteria
-@app.route('/api/mpu/<id>/criteria', methods=['DELETE'])
-def del_mpu_criteria(id): pass
+@blueprint.route('/api/mpu/<id>/criteria', methods=['DELETE'])
+def del_mpu_criteria(id):
+    raise NotImplementedError
 
 #MPU Put Criteria
-@app.route('/api/mpu/<id>/criteria', methods=['PUT'])
+@blueprint.route('/api/mpu/<id>/criteria', methods=['PUT'])
 def put_mpu_criteria(id): pass
 
 #Start of Meter Reading API
 #Meter list
-@app.route('/api/MeterReadings', methods=['GET'])
+@blueprint.route('/api/MeterReadings', methods=['GET'])
 def ListMeterReadings():
     if request.method == 'GET':
         #get the list of MeterReadings
@@ -306,21 +282,21 @@ def ListMeterReadings():
         return d
 
 #MPU Post Meter Reading (Not sure how to implement as many share same ID's, Project, etc)
-@app.route('/api/MeterReadings/<project>', methods=['POST'])
+@blueprint.route('/api/MeterReadings/<project>', methods=['POST'])
 def post_MeterReadings(project):
     raise NotImplemented
 
 #MPU get MeterReadings
-@app.route('/api/MeterReadings/<project>', methods=['GET'])
+@blueprint.route('/api/MeterReadings/<project>', methods=['GET'])
 def get_MeterReadings(project):
     raise NotImplemented
 
 #MPU Delete MeterReadings
-@app.route('/api/MeterReadings/<project>', methods=['DELETE'])
+@blueprint.route('/api/MeterReadings/<project>', methods=['DELETE'])
 def del_MeterReadings(project):
     raise NotImplemented
 
 #MPU Put MeterReadings
-@app.route('/api/MeterReadings/<project>', methods=['PUT'])
+@blueprint.route('/api/MeterReadings/<project>', methods=['PUT'])
 def put_MeterReadings(project):
     raise NotImplemented
