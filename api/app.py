@@ -101,6 +101,28 @@ class WorkOrder(db.Model):
     alias = db.Column(db.String(24))
     location = db.Column(db.String())
 
+class MeterReadings(db.Model):
+    project = db.Column(db.String(14), primary_key=True)
+    department= db.Column(db.String(32))
+    meter_name = db.Column(db.String(32))
+    meter_description = db.Column(db.String(256))
+    meter_reading = db.Column(db.Integer)
+    reading_date = db.Column(db.String(32))
+    meter_unit = db.Column(db.String(64))
+    goal = db.Column(db.Integer)
+    completion = db.Column(db.Float)
+    goal_group = db.Column(db.String(64))
+    work_order_num = db.Column(db.Integer)
+    description = db.Column(db.String(256))
+    cur_status = db.Column(db.String(32))
+    reported_date = db.Column(db.String(32))
+    location = db.Column(db.String(16))
+    proj_type = db.Column(db.String(16))
+    tpid = db.Column(db.Integer)
+    ps_project = db.Column(db.String(16))
+    ps_proj_description = db.Column(db.String(256))
+    ps_activity = db.Column(db.String(16))
+    ps_activity_description =db.Column(db.String(256))
 
 #Workorder API
 
@@ -124,8 +146,7 @@ def del_workorder(id):
 def put_workorder(id):
     raise NotImplemented
 
-# Start of code things for MPU
-
+# Start of MPU API
 #MPU
 #MPU list
 @app.route('/api/mpu', methods=['GET'])
@@ -185,7 +206,7 @@ def put_mpu(id):
         #TODO PUT ID
     )
 
-#MPU Milestones
+#MPU Milestones API
 #MPU Post Milestones
 @app.route('/api/mpu/<id>/milestone', methods=['POST'])
 def post_mpu_milestone(id): pass
@@ -202,7 +223,7 @@ def del_mpu_milestone(id): pass
 @app.route('/api/mpu/<id>/milestone', methods=['PUT'])
 def put_mpu_milestone(id): pass
 
-#MPU Funds
+#MPU Funds API
 #MPU Post Funds
 @app.route('/api/mpu/<id>/fund', methods=['POST'])
 def post_mpu_fund(id): pass
@@ -219,7 +240,7 @@ def del_mpu_fund(id): pass
 @app.route('/api/mpu/<id>/fund', methods=['PUT'])
 def put_mpu_fund(id): pass
 
-#MPU Criteria
+#MPU Criteria API
 #MPU Post Criteria
 @app.route('/api/mpu/<id>/criteria', methods=['POST'])
 def post_mpu_criteria(id): pass
@@ -235,3 +256,38 @@ def del_mpu_criteria(id): pass
 #MPU Put Criteria
 @app.route('/api/mpu/<id>/criteria', methods=['PUT'])
 def put_mpu_criteria(id): pass
+
+#Start of Meter Reading API
+#Meter list
+@app.route('/api/MeterReadings', methods=['GET'])
+def ListMeterReadings():
+    if request.method == 'GET':
+        #get the list of MeterReadings
+        result = db.execute(
+            # TODO list the MeterReadings data
+            'select * from MeterReadings'
+        )
+        d = dict()
+        for MeterReadings in result:
+            d[MeterReadings[2]] = MeterReadings
+        return d
+
+#MPU Post Meter Reading (Not sure how to implement as many share same ID's, Project, etc)
+@app.route('/api/MeterReadings/<project>', methods=['POST'])
+def post_MeterReadings(project):
+    raise NotImplemented
+
+#MPU get MeterReadings
+@app.route('/api/MeterReadings/<project>', methods=['GET'])
+def get_MeterReadings(project):
+    raise NotImplemented
+
+#MPU Delete MeterReadings
+@app.route('/api/MeterReadings/<project>', methods=['DELETE'])
+def del_MeterReadings(project):
+    raise NotImplemented
+
+#MPU Put MeterReadings
+@app.route('/api/MeterReadings/<project>', methods=['PUT'])
+def put_MeterReadings(project):
+    raise NotImplemented
