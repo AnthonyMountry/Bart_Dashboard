@@ -30,16 +30,17 @@ def home(path):
 
 @blueprint.errorhandler(Exception)
 def handle_all_errors(err):
+    with current_app.app_context():
+        debug = current_app.config.get('DEBUG')
     resp = {
         'error': 'Internal server error',
-        'debug': str(err),
+        'debug': str(err) if debug else '',
         'type': type(err).__name__,
     }
-    print(''.join(traceback.format_tb(err.__traceback__)))
-    if current_app.config.get('DEBUG'):
-        resp['traceback'] = ''.join(
-            traceback.format_tb(err.__traceback__)
-        )
+    tb = ''.join(traceback.format_tb(err.__traceback__))
+    if debug:
+        resp['traceback'] = tb
+    print(tb, end='')
     return resp, 500
 
 
@@ -48,8 +49,6 @@ def not_impl_handler(e):
     tb = traceback.extract_tb(e.__traceback__)
     last = tb[-1]
     path = last.name
-    # path = url_for(last.name)
-    # fn = globals()[last.name]
     for r in current_app.url_map.iter_rules():
         if r.endpoint == last.name:
             path = r.rule
@@ -264,7 +263,8 @@ def del_mpu_criteria(id):
 
 #MPU Put Criteria
 @blueprint.route('/api/mpu/<id>/criteria', methods=['PUT'])
-def put_mpu_criteria(id): pass
+def put_mpu_criteria(id):
+    raise NotImplementedError
 
 #Start of Meter Reading API
 #Meter list

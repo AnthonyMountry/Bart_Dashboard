@@ -2,19 +2,21 @@ import click
 from flask import Flask
 
 from api import asset
-from api.config import Config
+from api.config import read_config
 from api.util import ModelEncoder
 from api.app import blueprint, db, migrate
 
 
 def create_app(conf=None):
     app = Flask(__name__, static_url_path='/public')
-    if conf is None:
-        app.config.from_object(Config())
-    else:
-        app.config.from_mapping(conf)
+
+    if isinstance(conf, str):
+        conf = read_config(conf)
+    elif conf is None:
+        conf = read_config('api.ini')
 
     with app.app_context():
+        app.config.from_mapping(conf)
         db.init_app(app)
         migrate.init_app(app, db)
 
@@ -22,6 +24,7 @@ def create_app(conf=None):
     app.register_blueprint(blueprint)
     app.json_encoder = ModelEncoder
     app.cli.add_command(init_cmd)
+    print(app, id(app))
     return app
 
 
