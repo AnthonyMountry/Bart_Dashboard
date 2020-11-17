@@ -1,4 +1,9 @@
+from os.path import (
+    join as path_join,
+    exists as path_exists,
+)
 import traceback
+
 import pyexcel
 from flask import (
     Blueprint,
@@ -16,6 +21,24 @@ migrate = Migrate()
 
 blueprint = Blueprint('api', __name__)
 
+def static(folder):
+    base = '../public'
+    target = path_join(base, folder)
+    def fn(file):
+        if path_exists(path_join('public', folder, file)):
+            return send_from_directory(target, file)
+        else:
+            return send_from_directory(base, file)
+    blueprint.add_url_rule(
+        path_join('/', folder, '<file>'),
+        'static_'+folder,
+        fn,
+        methods=['GET']
+    )
+
+static('css')
+static('html')
+static('js')
 
 @blueprint.route('/', defaults={'path': None})
 @blueprint.route('/<path>', methods=['GET'])
@@ -24,8 +47,17 @@ def home(path):
     return the home page and any other public files
     '''
     if not path:
-        path = 'index.html'
+        path = 'html/index.html'
     return send_from_directory('../public', path)
+
+
+@blueprint.route('/analytics', methods=['GET'])
+def analytics():
+    return send_from_directory('../public', 'html/Analytics.html')
+
+@blueprint.route('/reports', methods=['GET'])
+def reports():
+    return send_from_directory('../public', 'html/Reports.html')
 
 
 @blueprint.errorhandler(Exception)
@@ -41,6 +73,7 @@ def handle_all_errors(err):
     if debug:
         resp['traceback'] = tb
     print(tb, end='')
+    print(err)
     return resp, 500
 
 
@@ -63,7 +96,8 @@ def not_impl_handler(e):
 @blueprint.route('/api/test', methods=['GET', 'POST'])
 def api_test():
     # return {'db': repr(db), 'app': repr(current_app)}
-    raise NotImplementedError
+    # raise NotImplementedError
+    return {}
 
 
 @blueprint.route('/api/upload', methods=('POST',))

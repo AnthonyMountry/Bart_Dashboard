@@ -53,10 +53,8 @@ def asset_readings(assetnum):
     elif len(assets) > 1:
         return {'error': "internal server error"}, 500
 
-    asset = assets[0].to_json()
-    res = MeterReading.query.filter(
-        MeterReading.assetnum == assetnum
-    )
+    asset = assets[0].to_dict()
+    res = MeterReading.query.filter_by(assetnum=assetnum)
     readings, dates = [], []
     for r in res.all():
         readings.append(r.reading)

@@ -7,12 +7,7 @@ import flask.json
 class ModelEncoder(flask.json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, Asset):
-            return {
-                'num': obj.num,
-                'bartdept': obj.bartdept,
-                'description': obj.description,
-                'status': obj.status,
-            }
+            return obj.to_dict()
         elif isinstance(obj, MeterReading):
             return {
                 'assetnum': obj.assetnum,

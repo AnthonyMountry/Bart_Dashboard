@@ -10,7 +10,7 @@ class Asset(db.Model):
     description = db.Column(db.String(128))
     status = db.Column(db.String(16))
 
-    def to_json(self):
+    def to_dict(self):
         return {
             'num': self.num,
             'bartdept': self.bartdept,

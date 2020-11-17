@@ -8,13 +8,11 @@ import sys
 sys.path.insert(0, os.getcwd())
 
 import pytest
-
 from api import create_app
 
 
 @pytest.fixture
 def app():
-    print(os.getcwd())
     app = create_app({
         'ENV': 'development',
         'DEBUG': False,
@@ -22,12 +20,14 @@ def app():
         'SQLALCHEMY_DATABASE_URI': f'sqlite:///../db/dashboard.db',
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
         'SQLALCHEMY_ECHO': False, # database logging
+
+        'READ_ONLY': True,
     })
 
     yield app
-
     # Cleanup code here...
     # Close the database connection
+    return
 
 
 @pytest.fixture

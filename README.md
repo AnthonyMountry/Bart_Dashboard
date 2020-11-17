@@ -290,10 +290,6 @@ python -m venv '<path-to-new-environment>'
 ```sh
 pip install -r requirements.txt
 ```
-- Setup flask environment variables
-```sh
-export FLASK_APP=api
-```
 - Setup the database (first unzip BART's example data and put it in `/db`)
 ```sh
 # setup the tables
