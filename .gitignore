@@ -8,13 +8,15 @@ __pycache__/
 api.ini
 
 # Misc
+*.log
+*.sh
 node_modules/
 dist/
 .vscode/
 .pytest_cache/
 .mypy_cache/
-*.log
-*.sh
+env/
+venv/
 
 # Database
 *.db

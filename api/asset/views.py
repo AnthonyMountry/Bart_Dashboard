@@ -11,6 +11,8 @@ def list_assets():
     return {
         'assets': Asset.query.limit(
             request.args.get('limit')
+        ).offset(
+            request.args.get('offset')
         ).all()
     }, 200
 
@@ -54,7 +56,9 @@ def asset_readings(assetnum):
         return {'error': "internal server error"}, 500
 
     asset = assets[0].to_dict()
-    res = MeterReading.query.filter_by(assetnum=assetnum)
+    res = MeterReading.query.filter_by(assetnum=assetnum) \
+        .limit(request.args.get('limit')) \
+        .offset(request.args.get('offset'))
     readings, dates = [], []
     for r in res.all():
         readings.append(r.reading)

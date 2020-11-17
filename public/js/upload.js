@@ -1,15 +1,28 @@
-const BASE_URL = "http://127.0.0.1:5000";
+
+/* This is the boiler plate code for file uploads
+// auto run this when the file is loaded
+  (() => {
+    document
+      .getElementById("fileUpload")
+      .addEventListener("change", handleReadFile);
+    // set a default event listener that does nothing
+    document
+      .getElementById("fileUploadSubmit")
+      .addEventListener("click", (e) => e.preventDefault());
+  })();
+*/
 
 function handleReadFile() {
   const file = this.files[0]; // get the first file object
   const button = document.getElementById("fileUploadSubmit");
   const handleUpload = (e) => {
-    e.preventDefault(); // prevent redirect
     var t0 = performance.now();
-    upload(file); // upload the data
+
     e.preventDefault(); // prevent redirect
+    upload(file);       // upload the data
     document.getElementById("fileUpload").value = null; // clear the filename
     button.removeEventListener("click", handleUpload); // remove the event listener
+
     console.log(`uploaded '${file.name}' after ${performance.now() - t0}ms`);
   };
   // add a callback to the "submit" button
