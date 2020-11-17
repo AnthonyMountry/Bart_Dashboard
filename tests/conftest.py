@@ -17,7 +17,7 @@ def app():
         'ENV': 'development',
         'DEBUG': False,
         'TESTING': True,
-        'SQLALCHEMY_DATABASE_URI': f'sqlite:///../db/dashboard.db',
+        'SQLALCHEMY_DATABASE_URI': f'sqlite:///db/test.db',
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
         'SQLALCHEMY_ECHO': False, # database logging
 

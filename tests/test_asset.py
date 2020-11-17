@@ -7,6 +7,10 @@ from flask.wrappers import Response
 def test_app(app: Flask):
     pass
 
+def test_assets(client):
+    resp: Response = client.get('/api/assets')
+    assert len(resp.json) != 0
+
 def test_asset(client):
     resp: Response = client.get('/api/asset/15384437')
     assert resp.status_code == 200

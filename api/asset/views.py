@@ -59,5 +59,6 @@ def asset_readings(assetnum):
     for r in res.all():
         readings.append(r.reading)
         dates.append(r.readingdate)
-    asset['meter_readings'] = {'reading': readings, 'date': dates}
+
+    asset['meter_readings'] = [{'reading': r, 'date': b} for r, b in zip(readings, dates)]
     return asset, 200

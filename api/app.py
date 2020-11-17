@@ -3,6 +3,7 @@ from os.path import (
     exists as path_exists,
 )
 import traceback
+from flask.templating import render_template
 
 import pyexcel
 from flask import (
@@ -11,18 +12,17 @@ from flask import (
     send_from_directory,
     current_app,
 )
+from werkzeug.exceptions import NotFound
 
 from api.middleware import with_spreadsheet
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
-
-db = SQLAlchemy()
-migrate = Migrate()
+from api.database import db
 
 blueprint = Blueprint('api', __name__)
 
+STATIC_DIR = 'public'
+
 def static(folder):
-    base = '../public'
+    base = STATIC_DIR
     target = path_join(base, folder)
     def fn(file):
         if path_exists(path_join('public', folder, file)):
@@ -48,16 +48,16 @@ def home(path):
     '''
     if not path:
         path = 'html/index.html'
-    return send_from_directory('../public', path)
+    return send_from_directory(STATIC_DIR, path)
 
 
 @blueprint.route('/analytics', methods=['GET'])
 def analytics():
-    return send_from_directory('../public', 'html/Analytics.html')
+    return send_from_directory(STATIC_DIR, 'html/Analytics.html')
 
 @blueprint.route('/reports', methods=['GET'])
 def reports():
-    return send_from_directory('../public', 'html/Reports.html')
+    return send_from_directory(STATIC_DIR, 'html/Reports.html')
 
 
 @blueprint.errorhandler(Exception)
@@ -65,8 +65,7 @@ def handle_all_errors(err):
     with current_app.app_context():
         debug = current_app.config.get('DEBUG')
     resp = {
-        'error': 'Internal server error',
-        'debug': str(err) if debug else '',
+        'error': str(err),
         'type': type(err).__name__,
     }
     tb = ''.join(traceback.format_tb(err.__traceback__))
@@ -76,6 +75,35 @@ def handle_all_errors(err):
     print(err)
     return resp, 500
 
+@blueprint.errorhandler(NotFound)
+def handle_status_notfound(err):
+    tb = traceback.format_tb(err.__traceback__)
+    headers = dict(err.get_headers())
+    print(''.join(tb))
+    print(err)
+    print(dir(err))
+    data = {
+        'error': err,
+        'type': type(err).__name__,
+        'traceback': tb,
+    }
+    if 'text/html' in headers['Content-Type']:
+        nl = "\n"
+        return f'''
+<h1>404</h1>
+<h2>Sorry, we couldn'd find this page.</h2>
+<p style="color:red;">{err.description}</p>
+    <div style="background-color: lightgrey">
+        {''.join('<a>' + t.replace(nl, "<br>") + '</a>' for t in tb) }
+    </div>
+<br>
+<p>It was probably the backend guys breaking something 😉.</p>
+''', 404
+    else:
+        return {
+            'error': str(err),
+            'type': type(err).__name__,
+        }, 404
 
 @blueprint.errorhandler(NotImplementedError)
 def not_impl_handler(e):
@@ -92,12 +120,15 @@ def not_impl_handler(e):
         'debug': f"File '{last.filename}', line {last.lineno}",
     }, 501
 
+@blueprint.route('/api/rootpath', methods=['GET'])
+def _get_rootpath():
+    return current_app.root_path
 
 @blueprint.route('/api/test', methods=['GET', 'POST'])
 def api_test():
     # return {'db': repr(db), 'app': repr(current_app)}
     # raise NotImplementedError
-    return {}
+    return {'testing': 'testing 123'}
 
 
 @blueprint.route('/api/upload', methods=('POST',))

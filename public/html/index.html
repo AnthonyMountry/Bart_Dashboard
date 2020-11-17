@@ -7,6 +7,10 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <link rel="stylesheet" href="/css/styles.css">
         <link rel="stylesheet" href="/css/dashboard_content.css">
+        <script>
+            // TODO(harry) this should be done in a server side template
+            const BASE_URL = 'http://localhost:5000';
+        </script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script defer src="/graph.js"></script>
     </head>
@@ -16,9 +20,10 @@
 
         <section class = "sideMenu">
             <nav>
-                <a href ="/index.html" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
-                <a href ="/Reports.html"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a>
-                <a href ="/Analytics.html"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
+                <a href ="/index" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
+            <!---  <a href ="/Reports.html"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a> -->
+                <a href ="/analytics"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
+
             </nav>
         </section>
 
@@ -76,7 +81,7 @@
 
             <div class = "updateList">
 
-                <table>
+                <table class = "updateTable">
                     <span class = "recentUpdates">Recent Update</span>
                     <a>icon</a>
                     <thead>
@@ -92,19 +97,21 @@
                     </thead>
 
                     <tbody>
-
+                        <tr></tr>
                     </tbody>
                 </table>
             </div>
 
 
+            <div id="readingsList"></div>
         </section>
 
     </body>
+    <script src="/js/asset.js"></script>
     <script>
         // render the testing graph when the pages loads
         window.onload = () => {
-            var ctx = document
+            const ctx = document
                 .getElementById('meterReadingsChart')
                 .getContext('2d');
             window.myScatter = testGraph(ctx);
@@ -112,17 +119,20 @@
     </script>
 
     <script>
-        console.log('hello');
-        // url = 'http://127.0.0.1:5000/api/asset/15384437/readings'
-        // fetch(url, {
-        //     method: 'GET',
-        // })
+        const limit = 10;
+        const readingsList = document.getElementById("readingsList");
+        listAssets(limit).then(assets => {
+            for (i in assets) {
+                let asset = assets[i];
+                readingsList.innerHTML += `<p>${asset.assetnum}, ${asset.status}</p>`
+            }
+        })
     </script>
-    <script>
-        async function postData(url = '', data = {}) {
+    <!-- <script>
+        async function GetData(url = '', data = {}) {
     // Default options are marked with *
     const response = await fetch(url, {
-    method: 'POST', // *GET, POST, PUT, DELETE, etc.
+    method: 'GETT', // *GET, POST, PUT, DELETE, etc.
     mode: 'cors', // no-cors, *cors, same-origin
     cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
     credentials: 'same-origin', // include, *same-origin, omit
@@ -137,11 +147,9 @@
     return response.json(); // parses JSON response into native JavaScript objects
 }
 
-// postData('http://127.0.0.1:5000/', { /* TODO */ })//replace TODO with data
-//   .then(data => {
-//     console.log('Success: ', data); // JSON data parsed by `data.json()` call
-//  });
-
-    </script>
-
+GetData('http://127.0.0.1:5000/', { /* TODO */ })//replace TODO with data
+  .then(data => {
+    console.log('Success: ', data); // JSON data parsed by `data.json()` call
+ });
+    </script> -->
 </html>

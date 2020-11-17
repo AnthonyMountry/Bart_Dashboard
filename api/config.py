@@ -9,6 +9,7 @@ def read_config(filename):
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',
         'DEBUG': False,
         'TESTING': False,
+        'STATIC_DIR':  '../public',
     }
     if not os.path.exists(filename):
         return config

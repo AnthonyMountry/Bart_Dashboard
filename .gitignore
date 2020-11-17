@@ -1,9 +1,13 @@
+# Build
+*.css
+*.css.map
+__pycache__/
+
 # Config
 .env
 api.ini
 
 # Misc
-__pycache__/
 node_modules/
 dist/
 .vscode/

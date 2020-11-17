@@ -1,11 +1,11 @@
-@import "Variables";
+@import "variables";
 
 
 #dashContent{
     margin-left: 175px;
     padding: 40px;
-    
-   
+
+
 
     .heading{
         h1{
@@ -27,8 +27,8 @@
             text-align: left;
             display: inline-block;
             outline:0.1px solid $blueDark;
-            
-            
+
+
         }
 
         .secondTotal{
@@ -37,7 +37,7 @@
             border-radius: 5px;
             width:200px;
             height: 70px;
-            
+
             text-align: left;
             display: inline-block;
             vertical-align: top;
@@ -47,7 +47,7 @@
 
     .dashboardCharts{
         margin-top: 35px;
-        
+
         .dashChart1{
             border-radius: 5px;
             background: white;
@@ -77,8 +77,9 @@
     }
 
     .updatelist{
-        table{
-            margin-top: 35px;
+        margin-top: 35px;
+
+        .updateTable{
             border-radius: 5px;
             background: white;
             width: 750px;
@@ -86,9 +87,8 @@
             display: block;
             margin-right: 50px;
         }
-        
 
-        
+
 
     }
 

@@ -64,8 +64,11 @@
   color: #757474;
 }
 
-#dashContent .updatelist table {
+#dashContent .updatelist {
   margin-top: 35px;
+}
+
+#dashContent .updatelist .updateTable {
   border-radius: 5px;
   background: white;
   width: 750px;
