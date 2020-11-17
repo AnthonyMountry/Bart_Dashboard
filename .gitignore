@@ -5,6 +5,7 @@ api.ini
 # Misc
 __pycache__/
 node_modules/
+dist/
 .vscode/
 .pytest_cache/
 .mypy_cache/

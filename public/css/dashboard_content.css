@@ -1,0 +1,76 @@
+#dashContent {
+  margin-left: 175px;
+  padding: 40px;
+}
+
+#dashContent .heading h1 {
+  color: #0367A6;
+  font-size: 1.4rem;
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+#dashContent .totals .firstTotal {
+  background: #0367A6;
+  color: white;
+  border-radius: 5px;
+  width: 200px;
+  height: 70px;
+  margin-right: 40px;
+  text-align: left;
+  display: inline-block;
+  outline: 0.1px solid #0367A6;
+}
+
+#dashContent .totals .secondTotal {
+  background: #0367A6;
+  color: white;
+  border-radius: 5px;
+  width: 200px;
+  height: 70px;
+  text-align: left;
+  display: inline-block;
+  vertical-align: top;
+  outline: 0.3px solid #0367A6;
+}
+
+#dashContent .dashboardCharts {
+  margin-top: 35px;
+}
+
+#dashContent .dashboardCharts .dashChart1 {
+  border-radius: 5px;
+  background: white;
+  width: 450px;
+  height: 250px;
+  display: inline-block;
+  margin-right: 50px;
+  outline: 0.3px solid #757474;
+}
+
+#dashContent .dashboardCharts .dashChart2 {
+  border-radius: 5px;
+  background: white;
+  width: 250px;
+  height: 250px;
+  display: inline-block;
+  outline: 0.3px solid #757474;
+}
+
+#dashContent .dashboardCharts .title {
+  padding-top: 10px;
+  margin-left: 15px;
+  font-size: 18px;
+  color: #757474;
+}
+
+#dashContent .updatelist table {
+  margin-top: 35px;
+  border-radius: 5px;
+  background: white;
+  width: 750px;
+  height: 300px;
+  display: block;
+  margin-right: 50px;
+}
+/*# sourceMappingURL=dashboard_content.css.map */

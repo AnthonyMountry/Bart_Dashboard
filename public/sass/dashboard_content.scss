@@ -1,0 +1,95 @@
+@import "Variables";
+
+
+#dashContent{
+    margin-left: 175px;
+    padding: 40px;
+    
+   
+
+    .heading{
+        h1{
+            color: $blueDark;
+            font-size: 1.4rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+        }
+    }
+
+    .totals{
+        .firstTotal{
+            background:$blueDark;
+            color: white;
+            border-radius: 5px;
+            width:200px;
+            height:70px;
+            margin-right:40px;
+            text-align: left;
+            display: inline-block;
+            outline:0.1px solid $blueDark;
+            
+            
+        }
+
+        .secondTotal{
+            background:$blueDark;
+            color: white;
+            border-radius: 5px;
+            width:200px;
+            height: 70px;
+            
+            text-align: left;
+            display: inline-block;
+            vertical-align: top;
+            outline:0.3px solid $blueDark;
+        }
+    }
+
+    .dashboardCharts{
+        margin-top: 35px;
+        
+        .dashChart1{
+            border-radius: 5px;
+            background: white;
+            width: 450px;
+            height:250px ;
+            display: inline-block;
+            margin-right: 50px;
+            outline:0.3px solid rgb(117, 116, 116);
+
+        }
+
+        .dashChart2{
+            border-radius: 5px;
+            background: white;
+            width: 250px;
+            height:250px ;
+            display: inline-block;
+            outline:0.3px solid rgb(117, 116, 116);
+        }
+
+        .title{
+            padding-top:10px;
+            margin-left: 15px;
+            font-size: 18px;
+            color:rgb(117, 116, 116);
+        }
+    }
+
+    .updatelist{
+        table{
+            margin-top: 35px;
+            border-radius: 5px;
+            background: white;
+            width: 750px;
+            height:300px ;
+            display: block;
+            margin-right: 50px;
+        }
+        
+
+        
+
+    }
+
+}
