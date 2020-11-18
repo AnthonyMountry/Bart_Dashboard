@@ -13,6 +13,8 @@ from pyexcel.sheet import Sheet
 from pyexcel.book import Book
 from pyexcel.internal.generators import BookStream
 
+from typing import Generator, List
+
 BASE_DIR = 'UC Merced 2020 SE Project'
 DB_DIR = './'
 if path_exists('./db'):
@@ -118,14 +120,10 @@ def is_meter_data(sheet: Sheet) -> bool:
     )
 
 def max_column_len(sheet: Sheet, name: str) -> int:
-    mx = 0
     col = sheet.named_column_at(name)
-    if isinstance(col[5], (int, float)):
+    if all(map(lambda x: isinstance(x, (int, float)), col)):
         raise TypeError('cannot get max length of a number colunm')
-    for r in col:
-        if len(r) > mx:
-            mx = len(r)
-    return mx
+    return max(map(len, col))
 
 
 # ----- Extract The Weird MPU Data -----
@@ -139,36 +137,29 @@ def extract_base(book):
 
 
 def extract_mpu(book, csv_file: str):
-    column_re = re.compile('Column([0-9]+)')
+    col_re = re.compile('Column([0-9]+)')
     mpu: Sheet = book.sheet_by_name('MPU')
     mpu.delete_rows(list(range(14))) # remove garbage at the top
     mpu.delete_columns([0])          # delete empty column
     mpu.name_columns_by_row(0)       # set column names
     # Find empty columns (named "Column3" or
     # "Column9", ect.) and remove them
-    bad_cols = []
-    for i, col in enumerate(mpu.colnames):
-        if column_re.match(col) is not None:
-            bad_cols.append(i)
-    mpu.delete_columns(bad_cols)
+    mpu.delete_columns([i for i,c in enumerate(mpu.colnames) if col_re.match(c)])
     # Delete the columns that we don't want
     desired_columns = set(mpu_schema_mappings.keys())
     names = set(mpu.colnames)
     for col in names.difference(desired_columns):
         mpu.delete_named_column_at(col)
     # Rename the columns based on the schema mapping
-    for i, name in enumerate(mpu.colnames):
-        mpu.colnames[i] = mpu_schema_mappings[name]
-    for i, c in enumerate(mpu.column['rr_funded']):
-        mpu[i, 'rr_funded'] = 1 if c == 'Y' else 0
+    mpu.colnames = [mpu_schema_mappings[n] for n in mpu.colnames]
+    mpu.column['rr_funded'] = list(map(lambda c: 1 if c == 'Y' else 0,
+                                   mpu.column['rr_funded']))
     for name in ['district_location', 'accomplishments']:
         for i, c in enumerate(mpu.column[name]):
             if c == '--' or c == '-':
                 mpu[i, name] = ''
-    for i, c in enumerate(mpu.column['remaining_budget']):
-        if c == 'Full Scope':
-            raise ValueError('expected a number but got a string')
-    # mpu.delete_rows([0]) # delete the column names
+    if any(map(lambda c: c=='Full Scope', mpu.column['remaining_budget'])):
+        raise ValueError('expected a number but got a string')
     mpu.colnames = []
     write_sheet(mpu, csv_file)
     return mpu
@@ -235,8 +226,7 @@ class MeterDataWriter:
 
     @staticmethod
     def _worker(bookname, q):
-        filename = path_join(BASE_DIR, bookname)
-        book = pe.get_book(file_name=filename)
+        book = pe.get_book(file_name=bookname)
         for sheet in book:
             s = _process_sheet(sheet)
             if s is None:
@@ -278,11 +268,11 @@ class MeterDataWriter:
         pool.join()
 
 
-def combine_all_meterdata(csv_file: str):
+def combine_all_meterdata(data_dir: str, csv_file: str):
     if not path_exists(csv_file):
         raise Exception('csv file does not exist')
     for f in METER_READING_FILES:
-        filename = path_join(BASE_DIR, f)
+        filename = path_join(data_dir, f)
         book = pe.get_book(file_name=filename)
         for sheet in book:
             s = _process_sheet(sheet)
@@ -296,21 +286,19 @@ def combine_all_meterdata(csv_file: str):
                         f.write('\n')
 
 
-def extract_asset_aliases(csv_file: str):
-    filename = path_join(BASE_DIR, 'TC Switch Machines/Switch Machine WO By Quarter Analysis 2020May.xlsx')
+def extract_asset_aliases(data_dir: str, csv_file: str, silent=True):
+    filename = path_join(data_dir, 'TC Switch Machines/Switch Machine WO By Quarter Analysis 2020May.xlsx')
     bk: Book = pe.get_book(file_name=filename)
     sheet: Sheet = bk.sheet_by_name('All Asset Summary')
     n = sheet.number_of_columns()
     sheet.delete_columns(list(range(4, n)))
     sheet.name_columns_by_row(0)
-    mx = 0
-    for a in sheet.column[1]:
-        if len(a) > mx:
-            mx = len(a)
-    print('max alias len:', mx)
-    print('max alias len:', max_column_len(sheet, 'Alias'))
-    print('max status len:', max_column_len(sheet, 'Status'))
-    print('max location len:', max_column_len(sheet, 'Location'))
+    if not silent:
+        mx = max(map(len, sheet.column[1]))
+        print('max alias len:', mx)
+        print('max alias len:', max_column_len(sheet, 'Alias'))
+        print('max status len:', max_column_len(sheet, 'Status'))
+        print('max location len:', max_column_len(sheet, 'Location'))
     if sheet.row[-1][0] == 'Total':
         sheet.delete_rows([-1])
     with open(csv_file, 'w') as f:
@@ -357,58 +345,84 @@ def parse_quarterly_workorder(base_sheets: list):
         all_rows.extend(st.row)
     return Sheet(all_rows)
 
-def extract_work_orders(book: Book):
+def extract_work_orders(filename):
+    book: Book = pe.get_book(file_name=filename)
     sheet: Sheet = book.sheet_by_index(0)
+    sheet.row[0] = [n.lower() for n in sheet.row[0]]
     sheet.name_columns_by_row(0)
-    bad = ['LOC_DESC', 'DETAIL_DESCRIPTION', 'PROBLEM_CODE_DESC',
-           'REASON_TO_REPAIR_DESC', 'WORK_ACCOMP_DESC',
-           'COMPONENT_DESC', 'PART_FAILURE_DESC']
-    for col in bad:
-        sheet.delete_named_column_at(col)
-
-    newnames = [workorder_schema_mappings[col] for col in sheet.colnames]
+    mapping = {k.lower(): v for k, v in workorder_schema_mappings.items()}
+    names = sheet.colnames[:]
+    newnames = []
+    for name in names:
+        if name not in mapping:
+            sheet.delete_named_column_at(name)
+        else:
+            newnames.append(mapping[name])
     sheet.colnames = newnames
-    date_rows = [1, 9, 10]
-    max_desc, max_loc = 0, 0
-    for i in range(sheet.number_of_rows()):
-        for r in date_rows:
-            if sheet[i, r] == '1' or sheet[i, r] == '':
-                sheet[i, r] = parse_date('01-JAN-01')
-            else:
-                sheet[i, r] = parse_date(sheet[i, r])
-        # max_loc = max(len(sheet.column[3][i]), max_loc)
-        # max_desc = max(len(sheet.column[5][i]), max_desc)
-    # print('workorders:')
-    # print('  max location:', max_loc)
-    # print('  max desc:', max_desc)
-    sheet.colnames = []
-    return sheet
+
+    repeats = []
+    visited = {}
+    for i, num in enumerate(sheet.named_column_at('num')):
+        if num in visited:
+            repeats.append(i)
+            a, b = sheet.row[visited[num]], sheet.row[i]
+            if a != b:
+                print(a)
+                print(b)
+                raise Exception("should be the same data")
+        else:
+            visited[num] = i
+    sheet.delete_rows(repeats)
+    return Sheet([
+        sheet.named_column_at('num'),
+        list(map(parse_date, sheet.named_column_at('report_date'))),
+        sheet.named_column_at('alias'),
+        sheet.named_column_at('location'),
+        sheet.named_column_at('work_type'),
+        sheet.named_column_at('description'),
+        sheet.named_column_at('asset_type'),
+        sheet.named_column_at('bartdept'),
+        sheet.named_column_at('status'),
+        list(map(parse_date, sheet.named_column_at('start'))),
+        list(map(parse_date, sheet.named_column_at('finish'))),
+        sheet.named_column_at('labor_hours'),
+        sheet.named_column_at('material_cost'),
+    ], transpose_after=True)
 
 
-def main():
-    bk: Book = pe.get_book(file_name=path_join(
-        BASE_DIR,
-        'TC Switch Machines',
-        'Oct 9, 2019 thru Apr 8, 2020 PM, CM, PMREP data.xlsx',
-    ))
-    with open(path_join(CLEANED, 'work_order.csv'), 'w') as f:
-        f.write(extract_work_orders(bk).get_csv())
+def extract_throw_counts(files: List[str]):
+    sheet_pat = re.compile('\d+-\d+(-\d+)?.Data')
+    books: List[Book] = (pe.get_book(file_name=f) for f in files)
+    sheets: Generator[Sheet] = (b.sheet_by_name(s) for b in books for s in b.sheet_names() if sheet_pat.match(s))
+    visited = {}
+    names = ['assetnum', 'alias', 'location', 'TOTAL COUNT SINCE 02042020', 'last pm date', 'next pm date', 'last cm date']
+    for sh in sheets:
+        sh.delete_rows([0, 1, 2])
+        sh.name_columns_by_row(0)
+        # print(sh.colnames[0:8])
+        print(sh.colnames[8:14])
+        # print(sh.name, sh.row[0][0:4])
+
+
+def clean(base_dir, output_dir):
+    filename = path_join(base_dir, "Power", "POWER WOs 9-22-2018 to 9-21-2020.xlsx")
+    with open(path_join(output_dir, 'work_order.csv'), 'w') as f:
+        f.write(extract_work_orders(filename).get_csv())
 
     files = [
-        path_join(BASE_DIR, 'TC Switch Machines', 'Switch Machine WO By Quarter Analysis 2020May.xlsx'),
-        path_join(BASE_DIR, 'TC Switch Machines', 'Switch Machine WO By Quarter 8-5-2020 v2.xlsx'),
+        path_join(base_dir, 'TC Switch Machines', 'Switch Machine WO By Quarter Analysis 2020May.xlsx'),
+        path_join(base_dir, 'TC Switch Machines', 'Switch Machine WO By Quarter 8-5-2020 v2.xlsx'),
     ]
     wo_books = [pe.get_book(file_name=f) for f in files]
     res = parse_quarterly_workorder(b.sheet_by_name("All Asset Summary") for b in wo_books)
-    # extract_asset_aliases(path_join(CLEANED, 'tmp_asset_aliases.csv'))
-    with open(path_join(CLEANED, 'quarterly_wo_analysis.csv'), 'w') as f:
+    with open(path_join(output_dir, 'quarterly_wo_analysis.csv'), 'w') as f:
         f.write(res.get_csv())
 
-    return
+    extract_asset_aliases(base_dir, path_join(output_dir, 'tmp_asset_aliases.csv'))
 
-    book_filename = path_join(BASE_DIR, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
+    book_filename = path_join(base_dir, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
     book = pe.get_book(file_name=book_filename)
-    extract_mpu(book, path_join(CLEANED, 'mpu.csv'))
+    extract_mpu(book, path_join(output_dir, 'mpu.csv'))
 
     # This takes a very long time.
     # # filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
@@ -416,6 +430,37 @@ def main():
     # writer = MeterDataWriter(filename, METER_READING_FILES)
     # writer.run()
 
+# Really just for testing
+def main(base_dir, output_dir):
+    # extract_throw_counts([
+    #     path_join(BASE_DIR, 'TC Switch Machines', 'Switch Machine Count Report 8-24-20 r2.xlsx'),
+    #     path_join(BASE_DIR, 'TC Switch Machines', 'Quarterly Throw Count Labor Evaluation - 2020-05-19.xlsx'),
+    # ])
+    files = [
+        path_join(
+            base_dir, 'TC Switch Machines',
+            'Oct 9, 2019 thru Apr 8, 2020 PM, CM, PMREP data.xlsx',
+        ),
+    ]
+    # extract_work_orders(filename)
+    # with open(path_join(CLEANED, 'work_order.csv'), 'w') as f:
+    #     f.write(extract_work_orders(filename).get_csv())
+    # extract_work_orders(filename)
+    filename = path_join(base_dir, "Power", "POWER WOs 9-22-2018 to 9-21-2020.xlsx")
+    with open(path_join(output_dir, 'work_order.csv'), 'w') as f:
+        f.write(extract_work_orders(filename).get_csv())
+    # return
+
+    files = [
+        path_join(base_dir, 'TC Switch Machines', 'Switch Machine WO By Quarter Analysis 2020May.xlsx'),
+        path_join(base_dir, 'TC Switch Machines', 'Switch Machine WO By Quarter 8-5-2020 v2.xlsx'),
+    ]
+    wo_books = [pe.get_book(file_name=f) for f in files]
+    res = parse_quarterly_workorder(b.sheet_by_name("All Asset Summary") for b in wo_books)
+    with open(path_join(output_dir, 'quarterly_wo_analysis.csv'), 'w') as f:
+        f.write(res.get_csv())
+    # extract_asset_aliases(path_join(CLEANED, 'tmp_asset_aliases.csv'))
+
 
 if __name__ == '__main__':
-    main()
+    main(BASE_DIR, CLEANED)

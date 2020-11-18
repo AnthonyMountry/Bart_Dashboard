@@ -297,8 +297,7 @@ flask db init
 flask db migrate
 flask db upgrade
 # clean and load the example data
-python db/clean.py
-sqlite3 db/dashboard.db '.read db/load.sql'
+flask load-db
 ```
 - Run the backend
 ```sh

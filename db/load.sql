@@ -3,8 +3,10 @@
 
 -- Loading MPUs
 --.import "UC Merced 2020 SE Project/Monthly Project Update - MPU/mpu.csv" "mpu"
-.import "cleaned/mpu.csv" "mpu"
-.import "cleaned/work_order.csv" "work_order"
+.import "db/cleaned/mpu.csv" "mpu"
+SELECT "mpu loaded";
+.import "db/cleaned/work_order.csv" "work_order"
+SELECT "work_order loaded";
 
 -- Loading Meter data
 CREATE TABLE meter_reading_tmp (
@@ -22,7 +24,7 @@ CREATE TABLE meter_reading_tmp (
 -- load the data into a temp table
 /**/
 --.import "UC Merced 2020 SE Project/Fares NonRevVehicles/all_meterdata.csv" "meter_reading_tmp"
-.import "cleaned/all_meterdata.csv" "meter_reading_tmp"
+.import "db/cleaned/all_meterdata.csv" "meter_reading_tmp"
 
 INSERT INTO asset
     SELECT assetnum as num, bartdept, description, status
@@ -35,6 +37,7 @@ INSERT INTO meter_reading
 -- DROP TABLE meter_reading_tmp;
 
 VACUUM; -- clean up the temp data
+SELECT "meter_reading loaded";
 
 CREATE TABLE asset_aliases (
     asset integer,
@@ -44,4 +47,4 @@ CREATE TABLE asset_aliases (
 );
 
 --.import "UC Merced 2020 SE Project/tmp_asset_aliases.csv" "asset_aliases"
-.import "cleaned/tmp_asset_aliases.csv" "asset_aliases"
+.import "db/cleaned/tmp_asset_aliases.csv" "asset_aliases"

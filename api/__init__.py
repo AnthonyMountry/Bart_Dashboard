@@ -1,8 +1,7 @@
 import os.path
-import click
 from flask import Flask
 
-from api import asset, wo
+from api import commands, asset, wo
 from api.config import read_config
 from api.util import ModelEncoder
 from api.app import blueprint
@@ -37,7 +36,9 @@ def create_app(conf=None):
     app.register_blueprint(wo.blueprint)
     app.register_blueprint(blueprint)
     app.json_encoder = ModelEncoder
-    app.cli.add_command(init_cmd)
+    app.cli.add_command(commands.init_cmd)
+    app.cli.add_command(commands.load_db_cmd)
+    app.cli.add_command(commands.test_cmd)
     app_context = app.app_context
     return app
 
@@ -45,10 +46,3 @@ def create_app(conf=None):
 def _read_only_db(*args, **kwargs):
     # https://writeonly.wordpress.com/2009/07/16/simple-read-only-sqlalchemy-sessions/
     return # do nothing
-
-@click.command('init', short_help='Run all the api setup in one command')
-def init_cmd():
-    print('initializing app...')
-    # TODO figure out how to run the database
-    # migration commands here
-    print('done')
