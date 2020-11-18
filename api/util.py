@@ -1,13 +1,19 @@
+import flask.json
 import traceback
 
+from .errors import Error
 from .asset.models import Asset, MeterReading
 from .wo.models import WorkOrder
-import flask.json
 
 
 class ModelEncoder(flask.json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, Asset):
+        if isinstance(obj, Error):
+            return {
+                'error': obj.msg,
+                'debug': obj.__suppress_context__,
+            }
+        elif isinstance(obj, Asset):
             return obj.to_dict()
         elif isinstance(obj, MeterReading):
             return {

@@ -26,15 +26,25 @@ def test_asset(client):
     assert resp.status_code == 200
     assert resp.json['num'] == 15384437
 
+def test_bad_asset(client):
+    resp = client.get('/api/asset/0')
+    assert resp.status_code == 404
+
 def test_asset_readings(client):
     resp: Response = client.get('/api/asset/15384437/readings')
     assert resp.status_code == 200
     assert resp.json['num'] == 15384437
 
 def test_workorders(client):
-    resp: Response = client.get('/api/workorders')
-    assert resp.status_code == 200
-    assert len(resp.json['workorders']) > 1
     resp: Response = client.get('/api/workorders?limit=10')
     assert resp.status_code == 200
     assert len(resp.json['workorders']) == 10
+
+    num = resp.json['workorders'][0]['num']
+    resp: Response = client.get(f'/api/workorder/{num}')
+    assert resp.json
+    assert resp.json['num'] == num
+
+def test_bad_workorder(client):
+    resp = client.get('/api/workorder/0')
+    assert resp.status_code == 404

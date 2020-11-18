@@ -47,15 +47,14 @@ def delete_asset(assetnum):
 
 @blueprint.route('/api/asset/<assetnum>/readings', methods=['GET'])
 def asset_readings(assetnum):
-    assets = Asset.query.filter(
-        Asset.num == assetnum
-    ).all()
+    assets = Asset.query.filter_by(num=assetnum).all()
+
     if len(assets) == 0:
         return {'error': f"asset '{assetnum}' not found"}, 404
-    elif len(assets) > 1:
+    if len(assets) > 1:
         return {'error': "internal server error"}, 500
-
     asset = assets[0].to_dict()
+
     res = MeterReading.query.filter_by(assetnum=assetnum) \
         .limit(request.args.get('limit')) \
         .offset(request.args.get('offset'))

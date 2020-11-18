@@ -6,10 +6,8 @@
 -- Loading MPUs
 --.import "UC Merced 2020 SE Project/Monthly Project Update - MPU/mpu.csv" "mpu"
 
-COPY mpu
-FROM '/home/harry/school/cse120/bart-dashboard/db/UC Merced 2020 SE Project/Monthly Project Update - MPU/mpu.csv'
-DELIMITER ','
-CSV;
+\copy mpu FROM 'cleaned/mpu.csv' DELIMITER ',' CSV;
+\copy work_order FROM 'cleaned/work_order.csv' DELIMITER ',' CSE;
 
 -- Loading Meter data
 DROP TABLE IF EXISTS meter_reading_tmp;
@@ -28,10 +26,8 @@ CREATE TABLE meter_reading_tmp (
 -- load the data into a temp table
 /**/
 -- .import "UC Merced 2020 SE Project/Fares NonRevVehicles/all_meterdata.csv" "meter_reading_tmp"
-COPY meter_reading_tmp
-FROM '/home/harry/school/cse120/bart-dashboard/db/UC Merced 2020 SE Project/Fares NonRevVehicles/all_meterdata.csv'
-DELIMITER ','
-CSV;
+\copy meter_reading_tmp FROM 'cleaned/all_meterdata.csv'
+DELIMITER ',' CSV;
 
 INSERT INTO asset
     SELECT assetnum as num, bartdept, description, status
@@ -53,8 +49,7 @@ CREATE TABLE asset_aliases (
     location varchar(16)
 );
 COPY asset_aliases
-FROM '/home/harry/school/cse120/bart-dashboard/db/UC Merced 2020 SE Project/tmp_asset_aliases.csv'
-DELIMITER ','
-CSV;
+FROM 'cleaned/tmp_asset_aliases.csv'
+DELIMITER ',' CSV;
 
 -- .import "UC Merced 2020 SE Project/tmp_asset_aliases.csv" "asset_aliases"

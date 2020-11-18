@@ -13,6 +13,8 @@ from api import create_app
 
 @pytest.fixture
 def app():
+    if not os.path.exists("db/test.db"):
+        raise Exception("no testing database")
     app = create_app({
         'ENV': 'development',
         'DEBUG': False,

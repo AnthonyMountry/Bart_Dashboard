@@ -262,6 +262,7 @@ _TODO_
 ---
 
 ### Error Responses
+
 If and endpoint does not return data, then it should return an error response as JSON.
 
 ```json
@@ -278,19 +279,25 @@ If and endpoint does not return data, then it should return an error response as
 ## Development
 
 ### Initial Setup
+
 - Install python 3
 - (optional) Setup a virtual environment if you want (recommended for dependency
   management but still optional)
+
 ```sh
 python -m venv '<path-to-new-environment>'
 <path-to-new-environment>/bin/activate
 # run 'deactivate' when you are done using python
 ```
+
 - Install dependencies
+
 ```sh
 pip install -r requirements.txt
 ```
+
 - Setup the database (first unzip BART's example data and put it in `/db`)
+
 ```sh
 # setup the tables
 flask db init
@@ -299,13 +306,17 @@ flask db upgrade
 # clean and load the example data
 flask load-db
 ```
+
 - Run the backend
+
 ```sh
 flask run --reload --with-threads
 ```
+
 - Other steps coming soon... maybe... probably...
 
 ### Testing
+
 All the tests are in the `/tests` directory and can be run with the command:
 
 ```sh

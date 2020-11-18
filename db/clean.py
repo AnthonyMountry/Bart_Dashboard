@@ -185,7 +185,7 @@ def extract_milestones(book):
 
 
 def parse_date(d):
-    return datetime.strptime(d, '%d-%b-%y') if d else MINYEAR
+    return datetime.strptime(d, '%d-%b-%y') if d else datetime(MINYEAR, 1, 1)
 
 
 def _process_sheet(sheet: Sheet) -> Sheet:

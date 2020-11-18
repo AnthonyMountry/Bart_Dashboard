@@ -2,7 +2,6 @@ from os.path import (
     join as path_join,
     exists as path_exists,
 )
-import traceback
 
 import pyexcel
 from flask import (
@@ -36,9 +35,8 @@ def static(folder):
     )
 
 static('css')
-static('html')
-static('js')
 static('img')
+static('js')
 
 @blueprint.route('/', defaults={'path': None})
 @blueprint.route('/<path>', methods=['GET'])
@@ -50,7 +48,6 @@ def home(path):
         path = 'html/index.html'
     return send_from_directory(STATIC_DIR, path)
 
-
 @blueprint.route('/analytics', methods=['GET'])
 def analytics():
     return send_from_directory(STATIC_DIR, 'html/Analytics.html')
@@ -59,66 +56,14 @@ def analytics():
 def reports():
     return send_from_directory(STATIC_DIR, 'html/Reports.html')
 
-
-@blueprint.errorhandler(Exception)
-def handle_all_errors(err):
-    with current_app.app_context():
-        debug = current_app.config.get('DEBUG')
-    resp = {
-        'error': str(err),
-        'type': type(err).__name__,
-    }
-    tb = ''.join(traceback.format_tb(err.__traceback__))
-    if debug:
-        resp['traceback'] = tb
-    print(tb, end='')
-    print(err)
-    return resp, 500
-
-@blueprint.errorhandler(NotFound)
-def handle_status_notfound(err):
-    tb = traceback.format_tb(err.__traceback__)
-    headers = dict(err.get_headers())
-    print(''.join(tb))
-    print(err)
-    print(dir(err))
-    data = {
-        'error': err,
-        'type': type(err).__name__,
-        'traceback': tb,
-    }
-    if 'text/html' in headers['Content-Type']:
-        nl = "\n"
-        return f'''
-<h1>404</h1>
-<h2>Sorry, we couldn'd find this page.</h2>
-<p style="color:red;">{err.description}</p>
-    <div style="background-color: lightgrey">
-        {''.join('<a>' + t.replace(nl, "<br>") + '</a>' for t in tb) }
-    </div>
-<br>
-<p>It was probably the backend guys breaking something 😉.</p>
-''', 404
+@blueprint.route('/login', methods=('GET', 'POST'))
+def login():
+    if request.mehtod == 'GET':
+        return send_from_directory(STATIC_DIR, 'html/login.html')
     else:
-        return {
-            'error': str(err),
-            'type': type(err).__name__,
-        }, 404
+        # TODO handle auth
+        raise NotImplementedError
 
-@blueprint.errorhandler(NotImplementedError)
-def not_impl_handler(e):
-    tb = traceback.extract_tb(e.__traceback__)
-    last = tb[-1]
-    path = last.name
-    for r in current_app.url_map.iter_rules():
-        if r.endpoint == last.name:
-            path = r.rule
-            break
-    return {
-        'error': f"Endpoint '{path}' not implemented",
-        'type': type(e).__name__,
-        'debug': f"File '{last.filename}', line {last.lineno}",
-    }, 501
 
 @blueprint.route('/api/rootpath', methods=['GET'])
 def _get_rootpath():
@@ -126,10 +71,7 @@ def _get_rootpath():
 
 @blueprint.route('/api/test', methods=['GET', 'POST'])
 def api_test():
-    # return {'db': repr(db), 'app': repr(current_app)}
-    # raise NotImplementedError
     return {'testing': 'testing 123'}
-
 
 @blueprint.route('/api/upload', methods=('POST',))
 @with_spreadsheet

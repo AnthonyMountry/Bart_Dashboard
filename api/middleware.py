@@ -43,7 +43,3 @@ def with_spreadsheet(handler):
         book.filename = f.filename
         return handler(book, *args, **kwargs)
     return inner
-
-
-def _error(msg, status_code=400):
-    return {"error": msg}, status_code
