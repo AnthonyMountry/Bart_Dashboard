@@ -1,0 +1,6 @@
+docPath: doc/db
+dsn: sqlite://./db/dashboard.db
+er:
+  skip: false
+  format: svg
+  comment: true

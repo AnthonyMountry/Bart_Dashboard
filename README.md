@@ -2,59 +2,6 @@
 
 An internal analytics dashboard and project management system for BART.
 
-## Terms
-
-Here is a list of useful terms.
-
-- _Asset_ - Some tool, machine, or vehicle that is used by BART.
-
-- _MPU_ - _M_onthly _P_roject _U_pdate, a report generated for tracking internal projects
-
-- _NonRev Vehicles_ - Vehicles that do not generate revenue (everything that isn't a train)
-
-- _OCC_ - _O_perations _C_ontrol _C_enter, control stations that manage operations.
-
-- _Meter_ - A machine that takes and records numeric readings.
-
-- _Fare Gate_ - A machine that requires a ticket before letting one person board a train. These have a number of different meter-readings associated with them.
-
-- _Switch Machine_ - A piece of the train track that switches the trains direction.
-
-- _Throw count_ - The number of times a _switch machine_ has changed direction.
-
-- _Work Order_ - A maintenance job. Common attributes of a WO are duration and cost.
-
-<details>
-  <summary>Other Acronyms...</summary>
-
-  - _CM_ -(usually for a work order) Corrective maintenence
-
-  - _PM_ - Preventative maintenance (usually for a work order)
-
-  - _INSP_ - Inspection job (usually for a work order)
-
-  - _NRVE_ - NonRev Vehicles (NRVE is a bartdept)
-
-  - _AFC_ - Fare Gate equipment (AFC is a bartdept)
-
-  - _ACTCOUNTL_ - Smart card and magnetic ticket transaction of actuator
-
-  - _ACTCOUNTR_ - Smart card and magnetic ticket transaction of actuator
-
-  - _COINSDT_ - Coins taken and coins dispensed of AFC vendor
-
-  - _MTENTRY_ - Magnetic ticket entry in a fare gate
-
-  - _MTEXIT_ - Magnetic ticket exit in a fare gate
-
-  - _SCENTRY_ - Smart card entry
-
-  - _SCEXIT_ - Smart card exit
-
-  - _TRANSACTIO_ - Transaction count
-
-</details>
-
 
 ## API
 
@@ -275,6 +222,10 @@ If and endpoint does not return data, then it should return an error response as
 }
 ```
 
+## Database
+
+See [database documentation](doc/db/README.md).
+
 
 ## Development
 
@@ -346,3 +297,56 @@ pytest
 * Here is the [query documentation](https://docs.sqlalchemy.org/en/13/orm/query.html) for interacting with the database using the ORM (SQLAlchemy). And here is a [tutorial](https://hackersandslackers.com/database-queries-sqlalchemy-orm/).
 * This is an [example project](https://github.com/gothinkster/flask-realworld-example-app) for flask. This is [flask's documentation example](https://github.com/pallets/flask/tree/master/examples/tutorial)
 * [More flask tutorials](https://blog.miguelgrinberg.com/post/the-flask-mega-tutorial-part-i-hello-world)
+
+## Terms
+
+Here is a list of useful terms.
+
+- _Asset_ - Some tool, machine, or vehicle that is used by BART.
+
+- _MPU_ - _M_onthly _P_roject _U_pdate, a report generated for tracking internal projects
+
+- _NonRev Vehicles_ - Vehicles that do not generate revenue (everything that isn't a train)
+
+- _OCC_ - _O_perations _C_ontrol _C_enter, control stations that manage operations.
+
+- _Meter_ - A machine that takes and records numeric readings.
+
+- _Fare Gate_ - A machine that requires a ticket before letting one person board a train. These have a number of different meter-readings associated with them.
+
+- _Switch Machine_ - A piece of the train track that switches the trains direction.
+
+- _Throw count_ - The number of times a _switch machine_ has changed direction.
+
+- _Work Order_ - A maintenance job. Common attributes of a WO are duration and cost.
+
+<details>
+  <summary>Other Acronyms...</summary>
+
+  - _CM_ -(usually for a work order) Corrective maintenence
+
+  - _PM_ - Preventative maintenance (usually for a work order)
+
+  - _INSP_ - Inspection job (usually for a work order)
+
+  - _NRVE_ - NonRev Vehicles (NRVE is a bartdept)
+
+  - _AFC_ - Fare Gate equipment (AFC is a bartdept)
+
+  - _ACTCOUNTL_ - Smart card and magnetic ticket transaction of actuator
+
+  - _ACTCOUNTR_ - Smart card and magnetic ticket transaction of actuator
+
+  - _COINSDT_ - Coins taken and coins dispensed of AFC vendor
+
+  - _MTENTRY_ - Magnetic ticket entry in a fare gate
+
+  - _MTEXIT_ - Magnetic ticket exit in a fare gate
+
+  - _SCENTRY_ - Smart card entry
+
+  - _SCEXIT_ - Smart card exit
+
+  - _TRANSACTIO_ - Transaction count
+
+</details>
