@@ -2,7 +2,7 @@ import os.path
 import click
 from flask import Flask
 
-from api import asset
+from api import asset, wo
 from api.config import read_config
 from api.util import ModelEncoder
 from api.app import blueprint
@@ -34,6 +34,7 @@ def create_app(conf=None):
         migrate.init_app(app, db)
 
     app.register_blueprint(asset.blueprint)
+    app.register_blueprint(wo.blueprint)
     app.register_blueprint(blueprint)
     app.json_encoder = ModelEncoder
     app.cli.add_command(init_cmd)

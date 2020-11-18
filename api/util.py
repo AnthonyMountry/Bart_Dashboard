@@ -1,6 +1,7 @@
 import traceback
 
 from .asset.models import Asset, MeterReading
+from .wo.models import WorkOrder
 import flask.json
 
 
@@ -17,6 +18,22 @@ class ModelEncoder(flask.json.JSONEncoder):
                 'delta': obj.delta,
                 'readingdate': obj.readingdate,
                 'enterdate': obj.enterdate,
+            }
+        elif isinstance(obj, WorkOrder):
+            return {
+                'num': obj.num,
+                'report_date': obj.report_date,
+                'alias': obj.alias,
+                'location': obj.location,
+                'work_type': obj.work_type,
+                'description': obj.description,
+                'asset_type': obj.asset_type,
+                'bartdept': obj.bartdept,
+                'status': obj.status,
+                'start': obj.start,
+                'finish': obj.finish,
+                'labor_hours': obj.labor_hours,
+                'material_cost': obj.material_cost,
             }
         return super().default(obj)
 

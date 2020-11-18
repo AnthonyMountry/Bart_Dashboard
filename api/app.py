@@ -3,7 +3,6 @@ from os.path import (
     exists as path_exists,
 )
 import traceback
-from flask.templating import render_template
 
 import pyexcel
 from flask import (
@@ -162,12 +161,6 @@ class Mpu(db.Model):
     review_format = db.Column(db.String(32))
     end_date = db.Column(db.Date)
 
-
-class WorkOrder(db.Model):
-    num = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(128))
-    alias = db.Column(db.String(24))
-    location = db.Column(db.String())
 
 class MeterReadings(db.Model):
     project = db.Column(db.String(14), primary_key=True)

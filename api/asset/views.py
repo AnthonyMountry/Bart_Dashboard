@@ -59,6 +59,7 @@ def asset_readings(assetnum):
     res = MeterReading.query.filter_by(assetnum=assetnum) \
         .limit(request.args.get('limit')) \
         .offset(request.args.get('offset'))
+
     readings, dates = [], []
     for r in res.all():
         readings.append(r.reading)

@@ -1,4 +1,4 @@
-from ..app import db
+from ..database import db
 
 STATUS_DECOMMISSIONED = 'DECOMMISSIONED'
 STATUS_OPERATING = 'OPERATING'
