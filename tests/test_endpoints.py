@@ -9,12 +9,12 @@ def test_app(app: Flask):
 
 def test_assets(client):
     resp: Response = client.get('/api/assets?limit=12')
-    assert len(resp.json) == 1
+    assert resp.status_code == 200
     assert len(resp.json['assets']) == 12
     prev = resp
 
     resp = client.get('/api/assets?limit=5&offset=4')
-    assert len(resp.json) == 1
+    assert resp.status_code == 200
     assert len(resp.json['assets']) == 5
 
     for key in ['num', 'status', 'description', 'bartdept']:

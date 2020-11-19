@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 
+from ..errors import Ok
 from .models import Asset, MeterReading
 
 blueprint = Blueprint('asset', __name__)
@@ -8,13 +9,14 @@ blueprint = Blueprint('asset', __name__)
 @blueprint.route('/api/assets', methods=['GET'])
 def list_assets():
     # Return all assets as a list of json objects
-    return {
-        'assets': Asset.query.limit(
+    return Ok(
+        msg='assets successfully listed',
+        assets= Asset.query.limit(
             request.args.get('limit')
         ).offset(
             request.args.get('offset')
-        ).all()
-    }, 200
+        ).all(),
+    )
 
 
 @blueprint.route('/api/asset/<assetnum>', methods=['GET'])

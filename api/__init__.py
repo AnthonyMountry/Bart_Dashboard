@@ -5,7 +5,7 @@ import os.path
 
 from api import commands, asset, wo, errors
 from api.config import read_config
-from api.util import ModelEncoder
+from api.util import ModelEncoder, ModelResponse
 from api.app import blueprint
 
 app_context = None
@@ -34,6 +34,7 @@ def create_app(conf=None):
         migrate.init_app(app, db)
 
     app.json_encoder = ModelEncoder
+    # app.response_class =  ModelResponse
     app_context = app.app_context
 
     app.register_blueprint(asset.blueprint)

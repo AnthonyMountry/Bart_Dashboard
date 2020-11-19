@@ -1,19 +1,17 @@
+from flask import Response, jsonify
 import flask.json
 import traceback
 
-from .errors import Error
+from .errors import Err, Ok
 from .asset.models import Asset, MeterReading
 from .wo.models import WorkOrder
 
 
 class ModelEncoder(flask.json.JSONEncoder):
     def default(self, obj):
-        if isinstance(obj, Error):
-            return {
-                'error': obj.msg,
-                'debug': obj.__suppress_context__,
-            }
-        elif isinstance(obj, Asset):
+        if isinstance(obj, Err):
+            return obj.as_dict()
+        if isinstance(obj, Asset):
             return obj.to_dict()
         elif isinstance(obj, MeterReading):
             return {
@@ -42,6 +40,15 @@ class ModelEncoder(flask.json.JSONEncoder):
                 'material_cost': obj.material_cost,
             }
         return super().default(obj)
+
+
+class ModelResponse(Response):
+    @classmethod
+    def force_type(cls, rv, environ=None):
+        print('running force_type')
+        if isinstance(rv, (Ok, Err)):
+            rv = jsonify(rv)
+        return super(ModelResponse, cls).force_type(rv, environ)
 
 
 def _json_exception(e: Exception, status_code=500):

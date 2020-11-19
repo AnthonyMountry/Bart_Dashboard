@@ -1,0 +1,29 @@
+{
+  "name": "bart-dashboard",
+  "version": "0.0.1",
+  "description": "An internal analytics dashboard for bart.",
+  "main": "wsgi.py",
+  "directories": {
+    "doc": "doc",
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "pytest",
+    "api": "python -m flask run --with-threads",
+    "build": "node-sass public/sass -o public/css",
+    "watch": "node-sass -w public/sass -o public/css"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harrybrwn/bart-dashboard.git"
+  },
+  "authors": "Anthony Mountry,Harrison Brown,Rosalia Valencia",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harrybrwn/bart-dashboard/issues"
+  },
+  "homepage": "https://github.com/harrybrwn/bart-dashboard#readme",
+  "devDependencies": {
+    "node-sass": "^5.0.0"
+  }
+}

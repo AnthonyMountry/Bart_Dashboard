@@ -2,6 +2,10 @@
 
 An internal analytics dashboard and project management system for BART.
 
+## Database
+
+See [database documentation](doc/db/README.md).
+
 
 ## API
 
@@ -33,6 +37,164 @@ Returns an [error response](#error-responses)
 
 ---
 
+
+### Assets
+
+**GET** `/api/assets` List assets.
+
+Url Parameter:
+
+* `?limit=5` Limits the number of asset objects returned.
+* `?offset=3` Offsets the response by the given number.
+
+<a name="example-assets-json">Example response:</a>
+
+```json
+{
+  "assets": [
+    {
+      "bartdept": "AFC",
+      "description": "COIN HANDLING",
+      "num": 123456,
+      "status": "OPERATING"
+    },
+    {
+      "bartdept": "AFC",
+      "description": "COIN HANDLING",
+      "num": 123457,
+      "status": "OPERATING"
+    }
+  ]
+}
+```
+
+**GET** `/api/asset/<id>` Get an asset by ID.
+
+<a name="example-asset-json">Example response:</a>
+
+```json
+{
+  "bartdept": "AFC",
+  "description": "COIN HANDLING",
+  "num": 123456,
+  "status": "OPERATING"
+}
+```
+
+**POST** `/api/asset` Create a new asset.
+
+Returns an [error response](#error-responses)
+
+**PUT** `/api/asset/<id>` Update an asset.
+
+Returns the updated [asset](#example-asset-json) or an [error response](#error-responses).
+
+**DELETE** `/api/asset/<id>` Delete an asset.
+
+Returns an [error response](#error-responses)
+
+**GET** `/api/asset/<id>/readings` Get an asset with all of it's meter readings.
+
+<a name="example-meter-reading-json">Example response:</a>
+
+```json
+{
+  "bartdept": "AFC",
+  "description": "COIN HANDLING",
+  "num": 123456,
+  "status": "OPERATING",
+  "meter_readings": {
+    "date": [
+      "Thu, 16 Mar 2017 00:00:00 GMT",
+      "Fri, 16 Mar 2017 00:00:00 GMT",
+      ...
+    ],
+    "reading": [
+      10000001,
+      10000002,
+      ...
+    ]
+  },
+}
+```
+
+**POST** `/api/asset` Create a new asset by sending json data.
+
+Responds with an [error response](#error-responses)
+
+---
+
+### Work Order
+
+**GET** `/api/workorders` Get a list of assets
+
+* `?limit=5` Limits the number of workorder objects returned.
+* `?offset=3` Offsets the response by the given number.
+
+```json
+[
+  {
+    "num": 123,
+    "alias": "64-14-64700-0236",
+    "asset_type": "AFC",
+    "bartdept": "AFC",
+    "description": "Repair 11-11-11110-0111 - UPS",
+    "finish": "Wed, 29 Jan 2020 00:00:00 GMT",
+    "labor_hours": 3.85,
+    "location": "AFC-REPAIR",
+    "material_cost": 0.0,
+    "report_date": "Thu, 12 Dec 2019 00:00:00 GMT",
+    "start": "Wed, 29 Jan 2020 00:00:00 GMT",
+    "status": "CLOSE",
+    "work_type": "CM"
+  },
+  {
+    "alias": "64-14-88870-0442",
+    "asset_type": "AFC",
+    "bartdept": "AFC",
+    "description": "Repair Ticket Transport Mechanism Entry",
+    "finish": "Mon, 01 Jan 0001 00:00:00 GMT",
+    "labor_hours": 0.0,
+    "location": "AFC-REPAIR",
+    "material_cost": 0.0,
+    "num": 13968560,
+    "report_date": "Thu, 21 Nov 2019 00:00:00 GMT",
+    "start": "Wed, 19 Feb 2020 00:00:00 GMT",
+    "status": "INPRG",
+    "work_type": "CM"
+  }
+]
+```
+
+**GET** `/api/workorder/<wonum>` Get a specific work order by work order number
+
+```json
+{
+  "num": 123,
+  "alias": "64-14-64700-0236",
+  "asset_type": "AFC",
+  "bartdept": "AFC",
+  "description": "Repair 01-01-11100-0111 - UPS",
+  "finish": "Wed, 29 Jan 2020 00:00:00 GMT",
+  "labor_hours": 3.85,
+  "location": "AFC-REPAIR",
+  "material_cost": 0.0,
+  "report_date": "Thu, 12 Dec 2019 00:00:00 GMT",
+  "start": "Wed, 29 Jan 2020 00:00:00 GMT",
+  "status": "CLOSE",
+  "work_type": "CM"
+}
+```
+
+**DELETE** `/api/workorder/<wonum>` Delete a workorder
+
+Responds with an [error response](#error-responses)
+
+---
+
+<details>
+  <summary>Not yet implemented...</summary>
+
 ### MPU
 
 MPU - Monthly Project Updates.
@@ -41,7 +203,8 @@ MPU - Monthly Project Updates.
 
 Url Parameter:
 
-* `?limit=5` Limits the number of asset objects returned.
+* `?limit=5` Limits the number of MPU objects returned.
+* `?offset=3` Offsets the response by the given number.
 
 Example response:
 
@@ -115,96 +278,7 @@ Returns an [error response](#error-responses)
 
 **PUT** `/api/mpu/<id>/fund` Update an MPU fund.
 
----
-
-### Assets
-
-**GET** `/api/assets` List assets.
-
-Url Parameter:
-
-* `?limit=5` Limits the number of asset objects returned.
-
-<a name="example-assets-json">Example response:</a>
-
-```json
-{
-  "assets": [
-    {
-      "bartdept": "AFC",
-      "description": "COIN HANDLING",
-      "num": 123456,
-      "status": "OPERATING"
-    },
-    {
-      "bartdept": "AFC",
-      "description": "COIN HANDLING",
-      "num": 123457,
-      "status": "OPERATING"
-    }
-  ]
-}
-```
-
-**GET** `/api/asset/<id>` Get an asset by ID.
-
-<a name="example-asset-json">Example response:</a>
-
-```json
-{
-  "bartdept": "AFC",
-  "description": "COIN HANDLING",
-  "num": 123456,
-  "status": "OPERATING"
-}
-```
-
-**POST** `/api/asset` Create a new asset.
-
-Returns an [error response](#error-responses)
-
-**PUT** `/api/asset/<id>` Update an asset.
-
-Returns the updated [asset](#example-asset-json) or an [error response](#error-responses).
-
-**DELETE** `/api/asset/<id>` Delete an asset.
-
-Returns an [error response](#error-responses)
-
-**GET** `/api/asset/<id>/readings` Get an asset with all of it's meter readings.
-
-<a name="example-meter-reading-json">Example response:</a>
-
-```json
-{
-  "bartdept": "AFC",
-  "description": "COIN HANDLING",
-  "num": 123456,
-  "status": "OPERATING",
-  "meter_readings": {
-    "date": [
-      "Thu, 16 Mar 2017 00:00:00 GMT",
-      "Fri, 16 Mar 2017 00:00:00 GMT",
-      ...
-    ],
-    "reading": [
-      10000001,
-      10000002,
-      ...
-    ]
-  },
-}
-```
-
-**POST** `api/asset` Create a new asset by sending json data.
-
-Responds with an [error response](#error-responses)
-
----
-
-### Work Order
-
-_TODO_
+</details>
 
 ---
 
@@ -222,17 +296,13 @@ If and endpoint does not return data, then it should return an error response as
 }
 ```
 
-## Database
-
-See [database documentation](doc/db/README.md).
-
 
 ## Development
 
-### Initial Setup
+### Backend
 
 - Install python 3
-- (optional) Setup a virtual environment if you want (recommended for dependency
+- (optional) Setup a virtual environment (recommended for dependency
   management but still optional)
 
 ```sh
@@ -254,17 +324,31 @@ pip install -r requirements.txt
 flask db init
 flask db migrate
 flask db upgrade
-# clean and load the example data
+# clean and load the example data (this may take a while)
 flask load-db
 ```
 
-- Run the backend
+- Run the api
 
 ```sh
-flask run --reload --with-threads
+flask run --with-threads
 ```
 
-- Other steps coming soon... maybe... probably...
+### Frontend
+
+- Install npm
+
+- Install dependencies
+
+```sh
+npm install
+```
+
+- Run the build system
+
+```sh
+npm build
+```
 
 ### Testing
 
@@ -283,7 +367,7 @@ pytest
 - [ ] Full database design and implementation
   - [ ] Monthly Project Updates
   - [ ] Switch Throw counts
-  - [ ] Work orders
+  - [x] Work orders
   - [x] Assets
   - [x] Meter readings
   - [ ] Maybe a users table

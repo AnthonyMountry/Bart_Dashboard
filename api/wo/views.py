@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 
-from ..errors import Error
+from ..errors import Err, Ok
 from .models import WorkOrder
 
 
@@ -23,11 +23,11 @@ def get_work_order(wonum):
     if request.method == 'GET':
         res = res.all()
         if len(res) != 1:
-            return jsonify(Error(f"did not find {wonum}")), 404
+            return jsonify(Err(f"did not find {wonum}")), 404
         return jsonify(res[0])
     elif request.method == 'DELETE':
         ok = res.delete()
         if ok:
-            return {'status': f'successfully deleted work order {wonum}'}
+            return Ok(f'successfully deleted work order {wonum}')
         else:
-            return {'error': f'could not delete work order {wonum}'}
+            return Err(f'could not delete work order {wonum}', 404), 404

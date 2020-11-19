@@ -1,17 +1,32 @@
-from flask import current_app
+from flask import current_app, Response
 import traceback
 
 
-class Error(Exception):
+def Ok(msg, **data):
+    resp = {
+        'success': msg,
+        'status': 200,
+    }
+    resp.update(data)
+    return resp, 200
+
+
+class Err(Exception):
     msg: str
 
     def __init__(self, msg: str):
+        self.tb = traceback.format_tb(self.__traceback__)
         self.msg = msg
 
     def as_dict(self):
+        if len(self.args) <= 1:
+            code = 500
+        else:
+            code = self.args[1]
         return {
             'error': self.msg,
-            'status': 500 if len(self.args) <= 1 else self.args[1]
+            'code': code,
+            'debug': ''.join(self.tb)
         }
 
 
