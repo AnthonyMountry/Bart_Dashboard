@@ -26,6 +26,7 @@ venv/
 *.zip
 /db/bart_data
 /db/UC Merced 2020 SE Project
+db/UC Merced 2020 SE Project*
 # might change this later
 /migrations
 
