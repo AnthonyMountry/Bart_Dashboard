@@ -20,7 +20,7 @@
 
         <section class = "sideMenu">
             <nav>
-                <a href ="/index" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
+                <a href ="/" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
             <!---  <a href ="/Reports.html"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a> -->
                 <a href ="/analytics"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
 
@@ -126,6 +126,7 @@
         }
 
         let table = new AssetTable("assetsTable");
+        table.render();
         const assetsToggle = document.getElementById("assetsToggle");
         assetsToggle.addEventListener("click", (event) => {
             table.toggle();

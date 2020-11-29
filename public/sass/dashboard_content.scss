@@ -1,9 +1,10 @@
-@import "variables";
+@import "Variables";
 
 
 #dashContent{
     margin-left: 175px;
     padding: 40px;
+
 
 
     .heading{
@@ -76,9 +77,8 @@
     }
 
     .updatelist{
-        margin-top: 35px;
-
-        .updateTable{
+        table{
+            margin-top: 35px;
             border-radius: 5px;
             background: white;
             width: 750px;
@@ -86,6 +86,7 @@
             display: block;
             margin-right: 50px;
         }
+
 
 
 

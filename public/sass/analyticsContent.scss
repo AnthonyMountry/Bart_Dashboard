@@ -1,0 +1,109 @@
+@import "variables";
+
+
+#analyticsContent{
+    padding-left: 5%;
+    padding-right: 8%;
+    width:85%;
+    height:88%;
+    right:0;
+    bottom:0;
+    position: absolute;
+
+    .topSect{
+           height:25%;
+        width:100%;
+
+        .values{
+            display: table-cell;
+            vertical-align: top;
+            background:white;
+            border-radius: 5px;
+            width: 40%;
+            height:100%;
+            text-align: left;
+            display: inline-block;
+            outline:0.1px solid $blueDark;
+            margin-right: 9.8%;
+
+
+            .uniqueVisitors{
+                height: 33.3%;
+                outline:0.1px solid $blueDark;
+            }
+            .loadTime{
+                height: 33.3%;
+                outline:0.1px solid $blueDark;
+            }
+            .newIssues{
+                height: 33.3%;
+                outline:0.1px solid $blueDark;
+            }
+
+        }
+
+        .analyticsGraphic1{
+
+            display: table-cell;
+            vertical-align: top;
+            background:white;
+            border-radius: 5px;
+            width: 40%;
+            height:100%;
+            text-align: left;
+            display: inline-block;
+            outline:0.1px solid $blueDark;
+
+
+
+
+        }
+    }
+
+    .middleSect{
+        height:35%;
+        width:100%;
+        margin-right:60px;
+        margin-top: 20px;
+        .middleGraph{
+            height:100%;
+            width:90%;
+            background: white;
+            outline:0.1px solid $blueDark;
+
+        }
+    }
+
+    .bottomSect{
+        height:33%;
+        width:100%;
+        bottom:0px;
+        margin-top: 20px;
+        .systemLog{
+            display: table-cell;
+            vertical-align: top;
+            background:white;
+            border-radius: 5px;
+            width: 40%;
+            height:100%;
+            text-align: left;
+            display: inline-block;
+            outline:0.1px solid $blueDark;
+            margin-right: 9.8%;
+
+        }
+
+        .newTickets{
+            display: table-cell;
+            vertical-align: top;
+            background:white;
+            border-radius: 5px;
+            width: 40%;
+            height:100%;
+            text-align: left;
+            display: inline-block;
+            outline:0.1px solid $blueDark;
+            bottom:0;
+        }
+    }
+}

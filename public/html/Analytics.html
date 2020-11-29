@@ -4,40 +4,79 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Analytics</title>
-        <link rel = "stylesheet" href = "styles.css">
-        <link rel = "stylesheet" href = "dashboard_content.css">
+        <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+        <link rel = "stylesheet" href = "/css/styles.css">
+        <link rel = "stylesheet" href = "/css/analyticsContent.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     </head>
 
     <body>
+        <section class = "sideMenu">
+            <nav>
+                <a href ="/" ><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
+             <!--   <a href ="#"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a>  -->
+                <a href ="/analytics" class = "active"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
 
-        <section class = "analyticVisitors">
-            <div class = "visitorSect1">
-                <div class =  "uniqueVisitor">
-                    <h1>Unique Visitors</h1>
+            </nav>
+        </section>
+
+        <header>
+            <div class = "search">
+                <i class="fa fa-search" aria-hidden = "true"></i>
+                <input type = "text" name = "" value = "">
+            </div>
+
+            <div class = "accountInfo">
+                <a href = "#" class = "userName">Name</a>
+                <a href = "#" class = notifications><i class="fa fa-bell-o" aria-hidden = "true"></i>
+                    <span class = "notificationNum">#</span>
+                </a>
+            </div>
+        </header>
+        <section id = "analyticsContent">
+            <div class = "topSect">
+                <div class = "values">
+                    <div class = "uniqueVisitors">
+                        <span>Unique Visitors</span>
+                        <span>Visitors in the current month</span>
+                    </div>
+                    <div class = "loadTime">
+                        <span>Load Time</span>
+                        <span>Average page load time</span>
+                    </div>
+                    <div class = "newIssues">
+                        <span>New Issues</span>
+                        <span>system incidents and alerts</span>
+                    </div>
+
                 </div>
-                <div class = "Load Time">
-                    <h1>Load Time</h1>
-                </div>
-                <div class = "newIssues">
-                    <h1>New Issues</h1>
+
+                <div class = "analyticsGraphic1">
+                    <div>Weekly Visitors</div>
+                    <!-- Data bar graph-->
                 </div>
             </div>
-                <div class = "analyricsChart1">
-                    <span>Weekly Visitors</span>
+
+            <div class = "middleSect">
+                <div class = "middleGraph">
+                    <span>Inbound/Outbound Bandwidth</span>
+                    <!-- Data graph-->
+                </div>
+
+            </div>
+
+            <div class = "bottomSect">
+                <div class = "systemLog">
 
                 </div>
 
+                <div class = "newTickets">
+
+
+                </div>
+            </div>
         </section>
-            <span>In bound / Outbound Bandwidth</span>
 
-        <section>
-
-        </section>
-
-        <section>
-
-        </section>
 
     </body>
 </html>

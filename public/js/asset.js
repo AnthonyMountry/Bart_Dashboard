@@ -68,8 +68,9 @@ class AssetTable {
 
   render() {
     this.visable = true;
-    this.fetchTable();
+    this.fetchTable(10);
   }
+
   toggle() {
     if (this.visable) {
       this.table.innerHTML = "";
@@ -79,7 +80,10 @@ class AssetTable {
     this.visable = !this.visable;
   }
 
-  fetchTable() {
+  fetchTable(lim) {
+    if (lim === undefined) {
+      lim = 10;
+    }
     // if there are assets in the cache then use them
     this.table.innerHTML += `<tr>
       <th>Asset</th>
@@ -90,7 +94,7 @@ class AssetTable {
       this.showAssets(this.assets);
       return;
     }
-    listAssets({ limit: 10, offset: 0 })
+    listAssets({ limit: lim, offset: 0 })
       .then((assets) => {
         this.assets = assets; // cache the result
         this.showAssets(assets);

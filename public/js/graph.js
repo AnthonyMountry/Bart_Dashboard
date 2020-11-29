@@ -30,13 +30,13 @@ function testGraph(ctx) {
     options: {
       title: {
         display: true,
-        text: "Yeeeet",
+        text: "Example",
       },
     },
     data: {
       datasets: [
         {
-          label: "red bois",
+          label: "test",
           borderColor: "rgb(225, 99, 132)",
           backgroundColor: Chart.helpers
             .color("rgb(225, 99, 132)")
@@ -45,7 +45,7 @@ function testGraph(ctx) {
           data: testDataPoints(),
         },
         {
-          label: "blue bois",
+          label: "test",
           borderColor: "rgb(54, 162, 235)",
           backgroundColor: Chart.helpers
             .color("rgb(54, 162, 235)")

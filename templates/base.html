@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{% page_title %}</title>
+        <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <link rel="stylesheet" href="/css/styles.css">
+        {% for sheet in style_sheets %}
+        <link rel = "stylesheet" href = "/css/{{ sheet }}">
+        {% endfor %}
+    </head>
+    <body>
+        <section class = "sideMenu">
+            <nav>
+                <a href ="/" ><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
+                <a href ="/analytics" class = "active"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
+            </nav>
+        </section>
+        <header>
+            <div class = "search">
+                <i class="fa fa-search" aria-hidden = "true"></i>
+                <input type = "text" name = "" value = "">
+            </div>
+
+            <div class = "accountInfo">
+                <a href = "#" class = "userName">Name</a>
+                <a href = "#" class = notifications><i class="fa fa-bell-o" aria-hidden = "true"></i>
+                    <span class = "notificationNum">#</span>
+                </a>
+            </div>
+        </header>
+        {% block content %}
+
+        {% endblock %}
+    </body>
+</html>

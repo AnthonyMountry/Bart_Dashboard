@@ -37,6 +37,7 @@ def static(folder):
 static('css')
 static('img')
 static('js')
+static('html')
 
 @blueprint.route('/', defaults={'path': None})
 @blueprint.route('/<path>', methods=['GET'])

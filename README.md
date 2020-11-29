@@ -2,10 +2,65 @@
 
 An internal analytics dashboard and project management system for BART.
 
+## Development
+
+### Run the Backend
+
+- [Install python 3](https://www.python.org/downloads/release/python-386/)
+- Install dependencies
+
+```sh
+pip install -r requirements.txt
+```
+
+- Setup the database (first unzip the example data and put it in `/db`)
+
+```sh
+# setup the tables
+flask db init
+flask db migrate
+flask db upgrade
+# clean and load the example data (this may take a while)
+flask load-db
+```
+
+- Run the api
+
+```sh
+flask run --with-threads
+```
+
+### Build the Frontend
+
+- [Install npm](https://www.npmjs.com/get-npm)
+
+- Install dependencies
+
+```sh
+npm install
+```
+
+- Run the build system
+
+```sh
+npm build
+```
+
+### Testing
+
+All the tests are in the `/tests` directory and can be run with the command:
+
+```sh
+pytest
+```
+
+---
+
 ## Database
 
 See [database documentation](doc/db/README.md).
 
+---
 
 ## API
 
@@ -297,66 +352,6 @@ If and endpoint does not return data, then it should return an error response as
 ```
 
 
-## Development
-
-### Backend
-
-- Install python 3
-- (optional) Setup a virtual environment (recommended for dependency
-  management but still optional)
-
-```sh
-python -m venv '<path-to-new-environment>'
-<path-to-new-environment>/bin/activate
-# run 'deactivate' when you are done using python
-```
-
-- Install dependencies
-
-```sh
-pip install -r requirements.txt
-```
-
-- Setup the database (first unzip BART's example data and put it in `/db`)
-
-```sh
-# setup the tables
-flask db init
-flask db migrate
-flask db upgrade
-# clean and load the example data (this may take a while)
-flask load-db
-```
-
-- Run the api
-
-```sh
-flask run --with-threads
-```
-
-### Frontend
-
-- Install npm
-
-- Install dependencies
-
-```sh
-npm install
-```
-
-- Run the build system
-
-```sh
-npm build
-```
-
-### Testing
-
-All the tests are in the `/tests` directory and can be run with the command:
-
-```sh
-pytest
-```
 
 ## TODO
 
