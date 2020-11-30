@@ -11,7 +11,7 @@
     position: absolute;
 
     .topSect{
-           height:25%;
+        height:25%;
         width:100%;
 
         .values{
@@ -23,21 +23,25 @@
             height:100%;
             text-align: left;
             display: inline-block;
-            outline:0.1px solid $blueDark;
+            outline:0.1px solid black;
             margin-right: 9.8%;
 
 
+
             .uniqueVisitors{
+                color:black;
                 height: 33.3%;
-                outline:0.1px solid $blueDark;
+                outline:0.1px solid black;
             }
             .loadTime{
+                color:black;
                 height: 33.3%;
-                outline:0.1px solid $blueDark;
+                outline:0.1px solid black
             }
             .newIssues{
+                color:black;
                 height: 33.3%;
-                outline:0.1px solid $blueDark;
+                outline:0.1px solid black;
             }
 
         }
@@ -52,7 +56,7 @@
             height:100%;
             text-align: left;
             display: inline-block;
-            outline:0.1px solid $blueDark;
+            outline:0.1px solid $black;
 
 
 
@@ -69,7 +73,7 @@
             height:100%;
             width:90%;
             background: white;
-            outline:0.1px solid $blueDark;
+            outline:0.1px solid $black;
 
         }
     }
@@ -88,7 +92,7 @@
             height:100%;
             text-align: left;
             display: inline-block;
-            outline:0.1px solid $blueDark;
+            outline:0.1px solid $black;
             margin-right: 9.8%;
 
         }
@@ -102,7 +106,7 @@
             height:100%;
             text-align: left;
             display: inline-block;
-            outline:0.1px solid $blueDark;
+            outline:0.1px solid $black;
             bottom:0;
         }
     }

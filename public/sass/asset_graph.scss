@@ -1,0 +1,16 @@
+@import "variables";
+
+#content{
+    padding-left: 5%;
+    padding-right: 8%;
+    width:85%;
+    height:88%;
+    right:0;
+    bottom:0;
+    position: absolute;
+
+    .topSect{
+        height: 25%;
+        width: 100%;
+    }
+}

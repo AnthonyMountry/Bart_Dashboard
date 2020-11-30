@@ -1,6 +1,6 @@
 # Build
-*.css
 *.css.map
+#*.css
 __pycache__/
 
 # Config

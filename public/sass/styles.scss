@@ -1,5 +1,5 @@
 @import "variables";
-@import "dashboard_content";
+//@import "dashboard_content";
 
 
 * {
@@ -9,26 +9,37 @@
 }
 
 body {
-  background: #e6e7e9;
+  background: white;
 }
 
 
 .sideMenu {
-    background: $blueDark;
+    background:#F0F5F8;
     width: 15%;
     height: 100%;
     position: absolute;
     left:0;
     top: 0;
     bottom:0;
+    outline:2px solid rgb(235, 233, 233);
+
+    .logo{
+        background-color: $blueDark;
+        display: block;
+        top:0;
+        left:0;
+        height: 10%;
+        width:100%;
+
+    }
 
     nav {
-        padding-top: 100px;
+        padding-top: 15%;
 
 
         a {
             display: block;
-            color: $greyLight;
+            color: $blueDark;
             text-decoration: none;
             padding: 15px 30px;
             font-weight: 80%;
@@ -36,17 +47,17 @@ body {
 
 
             &:hover{
-                background: #02426d;
-                border-left: 5px solid #D94B18;
+                background: $greyLight;
+                border-left: 5px solid $blueDark;
                 padding: 15px 30px 15px 25px;
 
                 .fa{
-                    color: $bartOrange;
+                    color: $blueDark;
                 }
             }
 
             .fa{
-                color: $greyLight;
+                color: $blueDark;
                 font-size: 1.4rem;
                 margin-right: 0.6rem;
                 display: inline-block;
@@ -56,12 +67,12 @@ body {
             }
 
              &.active {
-                background: #02426d;
-                border-left: 5px solid #D94B18;
+                background: $greyLight;
+                border-left: 5px solid $blueDark;
                 padding: 15px 30px 15px 25px;
 
                 .fa{
-                    color: $bartOrange;
+                    color: $blueDark;
                 }
             }
         }
@@ -73,12 +84,13 @@ body {
 header{
 
     position: absolute;
-    width:85%;
+    width:84.8%;
     height: 55px;
     right: 0;
     top: 0;
     padding: 8px;
     background: white;
+    outline:2px solid rgb(235, 233, 233);
 
     .search{
         float: left;

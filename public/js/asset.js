@@ -1,8 +1,14 @@
 const encode = encodeURIComponent; // bc i dont want to write the whole thing every time
 
 async function listAssets(params) {
-  let query = new URLSearchParams(params);
-  return await fetch(`/api/assets?${query}`)
+  let url;
+  if (params === undefined) {
+    url = "/api/assets";
+  } else {
+    let query = new URLSearchParams(params);
+    url = `/api/assets?${query}`;
+  }
+  return await fetch(url)
     .then((resp) => resp.json())
     .then((json) => json["assets"].map((raw) => new Asset(raw)));
 }
@@ -12,21 +18,38 @@ class Asset {
     if (typeof data === "number") {
       this.assetnum = data;
       fetch(BASE_URL + `/api/asset/${this.assetnum}`)
-        .then((resp) => resp.json())
+        .then((resp) => {
+          if (resp.status != 200) {
+            console.log("Could not find asset " + data);
+            throw resp.json();
+          }
+          return resp.json();
+        })
         .then((json) => {
-          if (json.num != assetnum) {
+          console.log(data);
+          if (json.num != this.assetnum) {
             console.log("Error: backend returned the wrong asset number");
           }
           this.bartdept = json.bartdept;
           this.description = json.description;
           this.status = json.status;
-        });
+        })
+        .catch((error) => console.log("got error:", error));
     } else {
       this.bartdept = data.bartdept;
       this.assetnum = data.num;
       this.description = data.description;
       this.status = data.status;
     }
+  }
+
+  async readings() {
+    return await fetch(`/api/asset/${this.assetnum}/readings`)
+      .catch((err) => console.log("asset readings error:", err))
+      .then((resp) => {
+        console.log(resp.status);
+        return resp.json();
+      });
   }
 
   getReadings() {
@@ -47,7 +70,6 @@ class Asset {
                 <td>${asset.reading}</td>
             </tr>`;
         });
-
         // Display result
         document.getElementById("readingsList").innerHTML = li;
       });
@@ -85,7 +107,7 @@ class AssetTable {
       lim = 10;
     }
     // if there are assets in the cache then use them
-    this.table.innerHTML += `<tr>
+    this.table.innerHTML = `<tr>
       <th>Asset</th>
       <th>Department</th>
       <th>Status</th>
@@ -101,8 +123,9 @@ class AssetTable {
       })
       .catch((error) => {
         console.log(error);
-        this.table.innerHTML = `
-                      <p class="errorMsg"><span style="color:red;">Error</span>: Could not get assets</p>`;
+        this.table.innerHTML = `<p class="errorMsg">
+          <span style="color:red;">Error</span>: Could not get assets
+        </p>`;
       });
   }
 
@@ -110,21 +133,24 @@ class AssetTable {
     for (let i = 0; i < assets.length; i++) {
       let asset = assets[i];
       this.table.innerHTML += `<tr>
-        <td><a href="/api/asset/${asset.assetnum}/readings">${asset.assetnum}</a></td>
+        <td><a href="/asset?assetnum=${asset.assetnum}">${asset.assetnum}</a></td>
         <td>${asset.bartdept}</td>
         <td>${asset.status}</td>
       </tr>`;
     }
-    if (this.assets.length >= this.limit) {
+    // limit of -1 == no limit
+    if (this.limit > 0 && this.assets.length >= this.limit) {
       return;
     }
     const id = "showMoreAssets";
     this.table.innerHTML += `<button id="${id}">show more...</button>`;
     const more = document.getElementById(id);
+
     const callback = (event) => {
+      more.removeEventListener("click", callback); // remove itself
+      this.table.removeChild(more);
+
       listAssets({ limit: 10, offset: this.assets.length }).then((assets) => {
-        more.removeEventListener("click", callback); // remove itself
-        this.table.removeChild(more);
         this.assets = this.assets.concat(assets);
         this.showAssets(assets); // render new and add the more button
       });

@@ -1,0 +1,81 @@
+#analyticsContent {
+  padding-left: 5%;
+  padding-right: 8%;
+  width: 85%;
+  height: 88%;
+  right: 0;
+  bottom: 0;
+  position: absolute; }
+  #analyticsContent .topSect {
+    height: 25%;
+    width: 100%; }
+    #analyticsContent .topSect .values {
+      display: table-cell;
+      vertical-align: top;
+      background: white;
+      border-radius: 5px;
+      width: 40%;
+      height: 100%;
+      text-align: left;
+      display: inline-block;
+      outline: 0.1px solid black;
+      margin-right: 9.8%; }
+      #analyticsContent .topSect .values .uniqueVisitors {
+        color: black;
+        height: 33.3%;
+        outline: 0.1px solid black; }
+      #analyticsContent .topSect .values .loadTime {
+        color: black;
+        height: 33.3%;
+        outline: 0.1px solid black; }
+      #analyticsContent .topSect .values .newIssues {
+        color: black;
+        height: 33.3%;
+        outline: 0.1px solid black; }
+    #analyticsContent .topSect .analyticsGraphic1 {
+      display: table-cell;
+      vertical-align: top;
+      background: white;
+      border-radius: 5px;
+      width: 40%;
+      height: 100%;
+      text-align: left;
+      display: inline-block;
+      outline: 0.1px solid #0D0D0D; }
+  #analyticsContent .middleSect {
+    height: 35%;
+    width: 100%;
+    margin-right: 60px;
+    margin-top: 20px; }
+    #analyticsContent .middleSect .middleGraph {
+      height: 100%;
+      width: 90%;
+      background: white;
+      outline: 0.1px solid #0D0D0D; }
+  #analyticsContent .bottomSect {
+    height: 33%;
+    width: 100%;
+    bottom: 0px;
+    margin-top: 20px; }
+    #analyticsContent .bottomSect .systemLog {
+      display: table-cell;
+      vertical-align: top;
+      background: white;
+      border-radius: 5px;
+      width: 40%;
+      height: 100%;
+      text-align: left;
+      display: inline-block;
+      outline: 0.1px solid #0D0D0D;
+      margin-right: 9.8%; }
+    #analyticsContent .bottomSect .newTickets {
+      display: table-cell;
+      vertical-align: top;
+      background: white;
+      border-radius: 5px;
+      width: 40%;
+      height: 100%;
+      text-align: left;
+      display: inline-block;
+      outline: 0.1px solid #0D0D0D;
+      bottom: 0; }

@@ -15,6 +15,12 @@ def read_config(filename):
         return config
 
     ini = IniConfig(filename)
+
+    tmpl_reload = ini.get("server", 'template_reload')
+    if tmpl_reload:
+        tmpl_reload = tmpl_reload.lower()
+        config["TEMPLATES_AUTO_RELOAD"] = tmpl_reload == 'true' or tmpl_reload == 'yes'
+
     debug = ini.get('server', 'debug')
     if debug is not None:
         config['DEBUG'] = debug.lower() == 'true' or debug.lower() == 'yes'
@@ -35,4 +41,5 @@ def read_config(filename):
         url = path_join(f'{h}:{port}', name)
         config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{u}:{p}@{url}'
         config['DB_TYPE'] = 'postgresql'
+
     return config

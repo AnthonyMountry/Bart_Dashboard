@@ -9,6 +9,7 @@ from flask import (
     request,
     send_from_directory,
     current_app,
+    render_template,
 )
 from werkzeug.exceptions import NotFound
 
@@ -64,6 +65,23 @@ def login():
     else:
         # TODO handle auth
         raise NotImplementedError
+
+@blueprint.route('/asset', methods=('GET', ))
+def route_template():
+    num = request.args.get('assetnum')
+    print(request.host_url)
+    return render_template("asset.html",
+        asset_num=num,
+        page_title=f'Asset {num}',
+        host=request.host_url,
+    )
+
+@blueprint.route('/__dashboard', methods=("GET",))
+def __dashboard_route():
+    return render_template("dashboard.html",
+        page_title=f'Dashboard',
+        host=request.host_url,
+    )
 
 
 @blueprint.route('/api/rootpath', methods=['GET'])
