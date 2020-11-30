@@ -158,18 +158,10 @@ Returns an [error response](#error-responses)
   "description": "COIN HANDLING",
   "num": 123456,
   "status": "OPERATING",
-  "meter_readings": {
-    "date": [
-      "Thu, 16 Mar 2017 00:00:00 GMT",
-      "Fri, 16 Mar 2017 00:00:00 GMT",
-      ...
-    ],
-    "reading": [
-      10000001,
-      10000002,
-      ...
-    ]
-  },
+  "meter_readings": [
+    {"reading": 10000001, "readingdate": "Thu, 16 Mar 2017 00:00:00 GMT"},
+    {"reading": 10000002, "readingdate": "Fri, 17 Mar 2017 00:00:00 GMT"}
+  ]
 }
 ```
 

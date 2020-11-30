@@ -69,7 +69,6 @@ def login():
 @blueprint.route('/asset', methods=('GET', ))
 def route_template():
     num = request.args.get('assetnum')
-    print(request.host_url)
     return render_template("asset.html",
         asset_num=num,
         page_title=f'Asset {num}',

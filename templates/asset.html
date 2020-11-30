@@ -3,6 +3,8 @@
     <link rel="stylesheet" href="/css/asset_graph.css">
     <script>const ASSET_NUM = parseInt('{{ asset_num }}');</script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
 {% endblock %}
 
 {% block content %}
@@ -18,10 +20,11 @@
 <script src="/js/graph.js"></script>
 <script>
     let asset = new Asset(ASSET_NUM);
-    asset.readings().then(readings => {
+    let graph;
+    asset.readings(true).then(readings => {
         const ctx = document.getElementById("meterGraph").getContext("2d");
         // TODO change the graph title so it has the asset number/name
-        renderMeterReadings(ctx, readings.meter_readings);
+        graph = renderMeterReadings(ctx, readings);
     });
 </script>
 {% endblock %}

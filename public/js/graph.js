@@ -1,63 +1,21 @@
-function testDataPoints() {
-  return [
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-    { x: Math.random(), y: Math.random() },
-  ];
-}
+const groupBy = (xs, key) =>
+  xs.reduce((rv, x) => {
+    (rv[x[key]] = rv[x[key]] || []).push(x);
+    return rv;
+  }, {});
 
-function testGraph(ctx) {
-  let config = {
-    type: "scatter",
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      title: {
-        display: true,
-        text: "Example",
-      },
-    },
-    data: {
-      datasets: [
-        {
-          label: "test",
-          borderColor: "rgb(225, 99, 132)",
-          backgroundColor: Chart.helpers
-            .color("rgb(225, 99, 132)")
-            .alpha(0.2)
-            .rgbString(),
-          data: testDataPoints(),
-        },
-        {
-          label: "test",
-          borderColor: "rgb(54, 162, 235)",
-          backgroundColor: Chart.helpers
-            .color("rgb(54, 162, 235)")
-            .alpha(0.2)
-            .rgbString(),
-          data: testDataPoints(),
-        },
-      ],
-    },
-  };
-  return new Chart(ctx, config);
-}
+const COLORS = [
+  "rgb(255, 99, 132)",
+  "rgb(132, 255, 99)",
+  "rgb(99, 132, 255)",
+  "rgb(255, 130, 75)",
+  "rgb(255, 255, 0)",
+  "rgb(0, 255, 255)",
+  "rgb(0,128,0)",
+  "rgb(128,0,128)",
+  "rgb(0,128,128)",
+  "rgb(0, 0, 128)",
+];
 
 function transparentize(color, opacity) {
   var alpha = opacity === undefined ? 0.5 : 1 - opacity;
@@ -128,45 +86,99 @@ function renderBarGraph(ctx, assets) {
 }
 
 function renderMeterReadings(ctx, readings) {
-  let dataset = [];
-  for (let i = 0; i < readings.length; i++) {
-    // console.log(new Date(readings[i].date));
-    dataset.push({ x: new Date(readings[i].date), y: readings[i].reading });
+  let grouped = groupBy(readings, "name");
+  let datasets = [];
+  let colors = [...COLORS]; // copy the colors array
+  for (const name in grouped) {
+    let col = colors.pop();
+    datasets.push({
+      label: name,
+      borderColor: col,
+      backgroundColor: Chart.helpers.color(col).alpha(0.2).rgbString(),
+      data: grouped[name],
+      hidden: false,
+    });
   }
 
-  let opts = {
-    title: {
-      display: true,
-      text: "Example",
+  return new Chart(ctx, {
+    type: "line",
+    options: {
+      responsive: true,
+      title: { display: false, text: "" },
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            display: true,
+            scaleLabel: { display: true, labelString: "Date" },
+          },
+        ],
+      },
+    },
+    data: {
+      labels: readings.map((r) => r.x),
+      datasets: datasets,
+    },
+  });
+}
+
+function testDataPoints() {
+  return [
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+    { x: Math.random(), y: Math.random() },
+  ];
+}
+
+function testGraph(ctx) {
+  let config = {
+    type: "scatter",
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      title: {
+        display: true,
+        text: "Example",
+      },
+    },
+    data: {
+      datasets: [
+        {
+          label: "test",
+          borderColor: "rgb(225, 99, 132)",
+          backgroundColor: Chart.helpers
+            .color("rgb(225, 99, 132)")
+            .alpha(0.2)
+            .rgbString(),
+          data: testDataPoints(),
+        },
+        {
+          label: "test",
+          borderColor: "rgb(54, 162, 235)",
+          backgroundColor: Chart.helpers
+            .color("rgb(54, 162, 235)")
+            .alpha(0.2)
+            .rgbString(),
+          data: testDataPoints(),
+        },
+      ],
     },
   };
-
-  let data = {
-    datasets: [
-      {
-        label: "test",
-        borderColor: "rgb(225, 99, 132)",
-        backgroundColor: Chart.helpers
-          .color("rgb(225, 99, 132)")
-          .alpha(0.2)
-          .rgbString(),
-        data: dataset,
-      },
-
-      // {
-      //   label: "test",
-      //   borderColor: "rgb(54, 162, 235)",
-      //   backgroundColor: Chart.helpers
-      //     .color("rgb(54, 162, 235)")
-      //     .alpha(0.2)
-      //     .rgbString(),
-      //   data: testDataPoints(),
-      // },
-    ],
-  };
-  return new Chart(ctx, {
-    type: "scatter",
-    options: opts,
-    data: data,
-  });
+  return new Chart(ctx, config);
 }

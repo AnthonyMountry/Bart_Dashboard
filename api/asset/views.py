@@ -5,7 +5,6 @@ from .models import Asset, MeterReading
 
 blueprint = Blueprint('asset', __name__)
 
-
 @blueprint.route('/api/assets', methods=['GET'])
 def list_assets():
     # Return all assets as a list of json objects
@@ -60,11 +59,5 @@ def asset_readings(assetnum):
     res = MeterReading.query.filter_by(assetnum=assetnum) \
         .limit(request.args.get('limit')) \
         .offset(request.args.get('offset'))
-
-    readings, dates = [], []
-    for r in res.all():
-        readings.append(r.reading)
-        dates.append(r.readingdate)
-
-    asset['meter_readings'] = [{'reading': r, 'date': b} for r, b in zip(readings, dates)]
+    asset['meter_readings'] = res.all();
     return asset, 200

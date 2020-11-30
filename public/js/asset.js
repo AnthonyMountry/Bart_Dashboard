@@ -17,62 +17,58 @@ class Asset {
   constructor(data) {
     if (typeof data === "number") {
       this.assetnum = data;
-      fetch(BASE_URL + `/api/asset/${this.assetnum}`)
-        .then((resp) => {
-          if (resp.status != 200) {
-            console.log("Could not find asset " + data);
-            throw resp.json();
-          }
-          return resp.json();
-        })
-        .then((json) => {
-          console.log(data);
-          if (json.num != this.assetnum) {
-            console.log("Error: backend returned the wrong asset number");
-          }
-          this.bartdept = json.bartdept;
-          this.description = json.description;
-          this.status = json.status;
-        })
-        .catch((error) => console.log("got error:", error));
     } else {
       this.bartdept = data.bartdept;
       this.assetnum = data.num;
-      this.description = data.description;
       this.status = data.status;
+      this.description = data.description;
     }
   }
 
-  async readings() {
-    return await fetch(`/api/asset/${this.assetnum}/readings`)
-      .catch((err) => console.log("asset readings error:", err))
+  init() {
+    fetch(`/api/asset/${this.assetnum}`)
       .then((resp) => {
-        console.log(resp.status);
+        if (resp.status != 200) {
+          console.log("Could not find asset " + data);
+          throw resp.json();
+        }
         return resp.json();
-      });
+      })
+      .then((json) => {
+        if (json.num != this.assetnum) {
+          console.log("Error: wrong asset number recvieved");
+        }
+        this.bartdept = json.bartdept;
+        this.description = json.description;
+        this.status = json.status;
+      })
+      .catch((error) => console.log("got error:", error));
   }
 
-  getReadings() {
-    //This should fetch data and display the result
-    //https://www.geeksforgeeks.org/get-and-post-method-using-fetch-api/?ref=rp
-    const url = "/api/asset/15384437/readings"; // NOTE: i think this works too
-    fetch("http://127.0.0.1:5000/api/asset/15384437/readings")
-      // Converting received data to JSON
-      .then((response) => response.json())
+  async readings(graph) {
+    return await fetch(`/api/asset/${this.assetnum}/readings`)
+      .then((resp) => resp.json())
       .then((json) => {
-        // Create a variable to store HTML
-        let li = `<tr><th>date</th><th>reading</th></tr>`;
-        // Loop through each data and add a table row
-        json.meter_readings.forEach((asset) => {
-          //unsure if correct
-          li += `<tr>
-                <td>${asset.date} </td>
-                <td>${asset.reading}</td>
-            </tr>`;
-        });
-        // Display result
-        document.getElementById("readingsList").innerHTML = li;
-      });
+        let readings = json.meter_readings;
+        let fn = (r) => {
+          return {
+            date: new Date(r.readingdate),
+            reading: r.reading,
+            name: r.metername,
+          };
+        };
+        if (graph) {
+          fn = (r) => {
+            return {
+              x: new Date(r.readingdate),
+              y: r.reading,
+              name: r.metername,
+            };
+          };
+        }
+        return readings.map(fn);
+      })
+      .catch((err) => console.log("asset readings error:", err));
   }
 }
 
@@ -149,7 +145,6 @@ class AssetTable {
     const callback = (event) => {
       more.removeEventListener("click", callback); // remove itself
       this.table.removeChild(more);
-
       listAssets({ limit: 10, offset: this.assets.length }).then((assets) => {
         this.assets = this.assets.concat(assets);
         this.showAssets(assets); // render new and add the more button

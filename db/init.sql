@@ -71,3 +71,13 @@ CREATE TABLE power_work_order (
     wl_summary            VARCHAR(256),
     wl_summary_detail     VARCHAR(256)
 );
+
+
+SELECT *
+FROM meter_reading JOIN (
+    SELECT COUNT(*) as cnt, assetnum as a_num
+    FROM meter_reading
+    GROUP BY assetnum
+    ORDER BY cnt DESC
+) ON assetnum = a_num
+LIMIT 10;
