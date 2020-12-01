@@ -49,6 +49,10 @@ def home(path):
 def dashboard():
     return send_from_directory(STATIC_DIR, "html/dash.html")
 
+@blueprint.route('/search', methods=("GET",))
+def search():
+    return send_from_directory(STATIC_DIR, "html/search.html")
+
 @blueprint.route('/analytics', methods=['GET'])
 def analytics():
     return send_from_directory(STATIC_DIR, 'html/Analytics.html')
