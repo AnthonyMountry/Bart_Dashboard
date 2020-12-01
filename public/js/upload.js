@@ -1,4 +1,3 @@
-
 /* This is the boiler plate code for file uploads
 // auto run this when the file is loaded
   (() => {
@@ -12,14 +11,14 @@
   })();
 */
 
-function handleReadFile() {
+function handleReadFile(event) {
   const file = this.files[0]; // get the first file object
   const button = document.getElementById("fileUploadSubmit");
   const handleUpload = (e) => {
     var t0 = performance.now();
 
     e.preventDefault(); // prevent redirect
-    upload(file);       // upload the data
+    upload(file); // upload the data
     document.getElementById("fileUpload").value = null; // clear the filename
     button.removeEventListener("click", handleUpload); // remove the event listener
 
@@ -32,12 +31,13 @@ function handleReadFile() {
 function upload(file) {
   // TODO experiment with compression
   var form = new FormData();
-  var url = new URL(BASE_URL + "/api/upload");
+  let url = "/api/upload";
   form.append("file", file);
-  url.search = new URLSearchParams({
-    filename: file.name,
-    type: "<fill this in>",
-  });
+  // var search = new URLSearchParams({
+  //   filename: file.name,
+  //   type: "<fill this in>",
+  // });
+  // console.log(search);
   return fetch(url, {
     method: "POST",
     body: form,

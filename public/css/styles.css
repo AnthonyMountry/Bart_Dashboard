@@ -9,19 +9,28 @@ body {
 .sideMenu {
   background: #F0F5F8;
   width: 15%;
-  height: 100%;
-  position: absolute;
+  height: 150%;
+  position: fixed;
   left: 0;
   top: 0;
   bottom: 0;
-  outline: 2px solid #ebe9e9; }
+  outline: 2px solid #ebe9e9;
+  display: block;
+  overflow: visible; }
   .sideMenu .logo {
     background-color: #3D8BF2;
     display: block;
     top: 0;
     left: 0;
-    height: 10%;
+    height: 8%;
     width: 100%; }
+  .sideMenu .upload {
+    background-color: #b7c3db;
+    display: block;
+    text-decoration: none;
+    position: fixed;
+    bottom: 0;
+    width: 15%; }
   .sideMenu nav {
     padding-top: 15%; }
     .sideMenu nav a {

@@ -1,4 +1,5 @@
 const encode = encodeURIComponent; // bc i dont want to write the whole thing every time
+const WO_SESSION_KEY = "_work_orders";
 
 async function listWO(params) {
   let url;
@@ -10,37 +11,42 @@ async function listWO(params) {
   }
   return await fetch(url)
     .then((resp) => resp.json())
-    .then((json) => json["workorder"].map((raw) => new Asset(raw)));
+    .then((json) => {
+      let results = json["workorders"].map((raw) => new WorkOrder(raw));
+      return results;
+    });
 }
 
 class WorkOrder {
   constructor(data) {
     if (typeof data === "number") {
       this.num = data;
-      fetch(BASE_URL + `/api/workorder/${this.num}`)
-        .then((resp) => {
-          if (resp.status != 200) {
-            console.log("Could not find work order " + data);
-            throw resp.json();
-          }
-          return resp.json();
-        })
-        .then((json) => {
-          console.log(data);
-          if (json.num != this.num) {
-            console.log("Error: backend returned the wrong work order number");
-          }
-          this.bartdept = json.bartdept;
-          this.description = json.description;
-          this.status = json.status;
-        })
-        .catch((error) => console.log("got error:", error));
     } else {
-      this.bartdept = data.bartdept;
-      this.num = data.num;
-      this.description = data.description;
-      this.status = data.status;
+      for (const attr in data) {
+        this[attr] = data[attr];
+      }
     }
+  }
+
+  init() {
+    fetch(`/api/workorder/${this.num}`)
+      .then((resp) => {
+        if (resp.status != 200) {
+          console.log("Could not find work order " + data);
+          throw resp.json();
+        }
+        return resp.json();
+      })
+      .then((json) => {
+        console.log(data);
+        if (json.num != this.num) {
+          console.log("Error: backend returned the wrong work order number");
+        }
+        this.bartdept = json.bartdept;
+        this.description = json.description;
+        this.status = json.status;
+      })
+      .catch((error) => console.log("got error:", error));
   }
 
   async reportDate() {
@@ -101,7 +107,7 @@ class WorkOrderTable {
       .catch((error) => {
         console.log(error);
         this.table.innerHTML = `
-                      <p class="errorMsg"><span style="color:red;">Error</span>: Could not get Work Orders</p>`;
+          <p class="errorMsg"><span style="color:red;">Error</span>: Could not get Work Orders</p>`;
       });
   }
 
@@ -109,7 +115,7 @@ class WorkOrderTable {
     for (let i = 0; i < workorder.length; i++) {
       let workorder = workorder[i];
       this.table.innerHTML += `<tr>
-        <td><a href="/asset?assetnum=${workorder.num}">${workorder.num}</a></td>
+        <td><a href="/workorder?workordernum=${workorder.num}">${workorder.num}</a></td>
         <td>${workorder.bartdept}</td>
         <td>${workorder.status}</td>
       </tr>`;

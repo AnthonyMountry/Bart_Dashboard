@@ -10,26 +10,43 @@
 
 body {
   background: white;
+  //min-height:100%;
+  //position: relative;
 }
 
 
 .sideMenu {
     background:#F0F5F8;
     width: 15%;
-    height: 100%;
-    position: absolute;
+    height: 150%;
+    position: fixed;
     left:0;
     top: 0;
     bottom:0;
     outline:2px solid rgb(235, 233, 233);
+    display:block;
+    overflow:visible;
+
+
 
     .logo{
         background-color: $blueDark;
         display: block;
         top:0;
         left:0;
-        height: 10%;
+        height: 8%;
         width:100%;
+
+    }
+
+    .upload{
+        background-color: $greyLight;
+        display: block;
+        text-decoration: none;
+        position: fixed;
+        bottom:0;
+        width:15%;
+
 
     }
 
@@ -152,10 +169,8 @@ header{
         }
 
     }
-
-
-
 }
+
 input:focus, textarea:focus{
     outline: none;
 }

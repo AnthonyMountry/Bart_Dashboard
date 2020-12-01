@@ -2,6 +2,7 @@ from os.path import (
     join as path_join,
     exists as path_exists,
 )
+from flask.helpers import url_for
 
 import pyexcel
 from flask import (
@@ -10,6 +11,7 @@ from flask import (
     send_from_directory,
     current_app,
     render_template,
+    redirect,
 )
 from werkzeug.exceptions import NotFound
 
@@ -41,7 +43,7 @@ static('js')
 static('html')
 
 @blueprint.route('/', defaults={'path': None})
-@blueprint.route('/<path>', methods=['GET'])
+@blueprint.route('/<path>', methods=['GET', 'POST'])
 def home(path):
     '''
     return the home page and any other public files
@@ -49,6 +51,10 @@ def home(path):
     if not path:
         path = 'html/index.html'
     return send_from_directory(STATIC_DIR, path)
+
+@blueprint.route('/dashboard', methods=("GET",))
+def dashboard():
+    return send_from_directory(STATIC_DIR, "html/dash.html")
 
 @blueprint.route('/analytics', methods=['GET'])
 def analytics():
@@ -58,13 +64,21 @@ def analytics():
 def reports():
     return send_from_directory(STATIC_DIR, 'html/Reports.html')
 
-@blueprint.route('/login', methods=('GET', 'POST'))
+
+@blueprint.route('/login', methods=set(['GET', 'POST']))
 def login():
-    if request.mehtod == 'GET':
-        return send_from_directory(STATIC_DIR, 'html/login.html')
-    else:
-        # TODO handle auth
-        raise NotImplementedError
+    if request.method == 'GET':
+        return send_from_directory(STATIC_DIR, 'html/index.html')
+    # TODO handle auth
+    if request.method != "POST":
+        return '''<h1>i dont know whats going on</h1>'''
+
+    us = request.args.get("username")
+    ps = request.args.get('password')
+    if not us or not ps:
+        return send_from_directory(STATIC_DIR, "html/bad_auth.html")
+    return redirect("/dashboard", code=307)
+
 
 @blueprint.route('/asset', methods=('GET', ))
 def route_template():

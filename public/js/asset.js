@@ -16,17 +16,16 @@ async function listAssets(params) {
 class Asset {
   constructor(data) {
     if (typeof data === "number") {
-      this.assetnum = data;
+      this.num = data;
     } else {
-      this.bartdept = data.bartdept;
-      this.assetnum = data.num;
-      this.status = data.status;
-      this.description = data.description;
+      for (const attr in data) {
+        this[attr] = data[attr];
+      }
     }
   }
 
   init() {
-    fetch(`/api/asset/${this.assetnum}`)
+    fetch(`/api/asset/${this.num}`)
       .then((resp) => {
         if (resp.status != 200) {
           console.log("Could not find asset " + data);
@@ -35,7 +34,7 @@ class Asset {
         return resp.json();
       })
       .then((json) => {
-        if (json.num != this.assetnum) {
+        if (json.num != this.num) {
           console.log("Error: wrong asset number recvieved");
         }
         this.bartdept = json.bartdept;
@@ -46,7 +45,7 @@ class Asset {
   }
 
   async readings(graph) {
-    return await fetch(`/api/asset/${this.assetnum}/readings`)
+    return await fetch(`/api/asset/${this.num}/readings`)
       .then((resp) => resp.json())
       .then((json) => {
         let readings = json.meter_readings;
@@ -129,7 +128,7 @@ class AssetTable {
     for (let i = 0; i < assets.length; i++) {
       let asset = assets[i];
       this.table.innerHTML += `<tr>
-        <td><a href="/asset?assetnum=${asset.assetnum}">${asset.assetnum}</a></td>
+        <td><a href="/asset?assetnum=${asset.num}">${asset.num}</a></td>
         <td>${asset.bartdept}</td>
         <td>${asset.status}</td>
       </tr>`;
@@ -138,13 +137,17 @@ class AssetTable {
     if (this.limit > 0 && this.assets.length >= this.limit) {
       return;
     }
-    const id = "showMoreAssets";
-    this.table.innerHTML += `<button id="${id}">show more...</button>`;
-    const more = document.getElementById(id);
+    const moreid = "showMoreAssets";
+    // const lessid = "showLessAssets";
+    this.table.innerHTML += `<button id="${moreid}">show more</button>`;
+    // this.table.innerHTML += `<button id="${lessid}">show less</button>`;
+    const more = document.getElementById(moreid);
+    // const less = document.getElementById(lessid);
 
     const callback = (event) => {
       more.removeEventListener("click", callback); // remove itself
       this.table.removeChild(more);
+      // this.table.removeChild(less);
       listAssets({ limit: 10, offset: this.assets.length }).then((assets) => {
         this.assets = this.assets.concat(assets);
         this.showAssets(assets); // render new and add the more button

@@ -425,10 +425,10 @@ def clean(base_dir, output_dir):
     extract_mpu(book, path_join(output_dir, 'mpu.csv'))
 
     # This takes a very long time.
-    # # filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
-    # filename = path_join(CLEANED, 'all_meterdata.csv')
-    # writer = MeterDataWriter(filename, METER_READING_FILES)
-    # writer.run()
+    ## filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
+    #filename = path_join(CLEANED, 'all_meterdata.csv')
+    #writer = MeterDataWriter(filename, METER_READING_FILES)
+    #writer.run()
 
 # Really just for testing
 def main(base_dir, output_dir):

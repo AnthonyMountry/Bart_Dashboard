@@ -1,6 +1,8 @@
 from flask import current_app, Response
 import traceback
 
+from flask.templating import render_template
+
 
 def Ok(msg, **data):
     resp = {
@@ -51,17 +53,10 @@ def handle_notfound(err):
     print(''.join(tb))
     print(err)
     if 'text/html' in headers['Content-Type']:
-        nl = "\n"
-        return f'''
-<h1>404</h1>
-<h2>Sorry, we couldn'd find this page.</h2>
-<p style="color:red;">{err.description}</p>
-    <div style="background-color: lightgrey">
-        {''.join('<a>' + t.replace(nl, "<br>") + '</a>' for t in tb) }
-    </div>
-<br>
-<p>It was probably the backend guys breaking something 😉.</p>
-''', 404
+        return render_template("404.html",
+            traceback=tb,
+            error=str(err),
+        ), 404
     else:
         return {
             'error': str(err),

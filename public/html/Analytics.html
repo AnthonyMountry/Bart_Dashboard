@@ -1,5 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
+
+    <style>
+        body {font-family: Verdana, Geneva, sans-serif;}
+    </style>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +12,16 @@
         <link rel = "stylesheet" href = "/css/styles.css">
         <link rel = "stylesheet" href = "/css/analyticsContent.css">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
     </head>
 
     <body>
         <section class = "sideMenu">
+            <div class = "logo">
+                <img src = "/public/img/trainLogo.jpg">
+            </div>
             <nav>
-                <a href ="/" ><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
+                <a href ="/dashboard" ><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
              <!--   <a href ="#"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a>  -->
                 <a href ="/analytics" class = "active"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
 
@@ -52,15 +60,19 @@
                 </div>
 
                 <div class = "analyticsGraphic1">
-                    <div>Weekly Visitors</div>
-                    <!-- Data bar graph-->
+                    <span class = "title">
+                        Asset Types
+                    </span>
+                    <canvas id="woDoughnut"></canvas>
                 </div>
             </div>
 
             <div class = "middleSect">
+                <h4>Work Order Status</h4>
                 <div class = "middleGraph">
-                    <span>Inbound/Outbound Bandwidth</span>
+                    <span></span>
                     <!-- Data graph-->
+                    <canvas id="woPiChart"></canvas>
                 </div>
 
             </div>
@@ -71,12 +83,23 @@
                 </div>
 
                 <div class = "newTickets">
-
-
                 </div>
             </div>
         </section>
 
-
     </body>
+    <script src="/js/work_order.js"></script>
+    <script src="/js/graph.js"></script>
+    <script>
+        window.onload = () => {
+            var t0 = performance.now();
+            const pieCtx = document.getElementById("woPiChart").getContext("2d");
+            const polCtx = document.getElementById("woDoughnut").getContext("2d");
+            listWO().then(wos => {
+                renderPiChart(pieCtx, wos);
+                renderDoughnut(polCtx, wos);
+                console.log(`rendered after ${performance.now() - t0}ms`);
+            });
+        }
+    </script>
 </html>

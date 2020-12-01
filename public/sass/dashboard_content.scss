@@ -10,27 +10,24 @@
     bottom:0;
     position: absolute;
 
+    hr{
+        width: 85%;
+        margin-left: 1%;
+        margin-right:8%;
+        color: $greyLight;
 
+
+    }
     .topSection{
-        height:20%;
+        height:15%;
         width:100%;
 
-      /*  .heading{
-            h1{
-                height: 10%;
-                color: $blueDark;
-                //font-size: 1.4rem;
-                //font-weight: 400;
-                //margin-bottom: 20px;
-            }
-        }
-        */
         .firstTotal{
             display: table-cell;
-            vertical-align: top;
+            vertical-align: center;
             background:#BDD4F2;
             color: white;
-            border-radius: 5px;
+            //border-radius: 5px;
             height: 70%;
             width: 30%;
             text-align: left;
@@ -40,10 +37,10 @@
 
         .secondTotal{
             display: table-cell;
-            vertical-align: top;
+            vertical-align: center;
             background:#BDD4F2;
             color: white;
-            border-radius: 5px;
+            //border-radius: 5px;
             height: 70%;
             width: 30%;
             text-align: left;
@@ -53,11 +50,13 @@
     }
 
     .middleSection{
+        margin-top: 50px;
         height:40%;
         width:100%;
+        margin-bottom:50px;
 
         .title{
-            padding-top:10px;
+            //padding-top:10px;
             margin-left: 15px;
             font-size: 18px;
             color:#838383;
@@ -69,7 +68,7 @@
             width: 50%;
             height:100%;
             display: inline-block;
-            outline:0.3px solid black;
+            //outline:0.3px solid black;
             margin-right:5%;
 
         }
@@ -80,12 +79,12 @@
             width: 30%;
             height:100%;
             display: inline-block;
-            outline:0.3px solid $black;
+            //outline:0.3px solid $black;
         }
     }
 
     .bottomSection{
-        height:33%;
+        height:30%;
         width:100%;
         bottom:0px;
         margin-top:20px;

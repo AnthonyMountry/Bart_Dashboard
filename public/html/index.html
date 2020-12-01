@@ -1,120 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
+    <style>
+        body {font-family: Verdana, Geneva, sans-serif;}
+
+        </style>
     <head>
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Home Dashboard</title>
+        <title>Login Page</title>
         <link rel="icon" href="/img/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
-        <link rel="stylesheet" href="/css/styles.css">
-        <link rel="stylesheet" href="/css/dashboard_content.css">
-        <script>
-            // TODO(harry) this variable should be set using a server side template
-            const BASE_URL = 'http://127.0.0.1:5000';
-        </script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <link rel = "stylesheet" href = "/css/login.css">
     </head>
 
     <body>
-
-        <section class = "sideMenu">
-            <div class = "logo">
-                <img src = "/public/img/trainImage.png">
-            </div>
-            <nav>
-                <a href ="/" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
-            <!---  <a href ="/Reports.html"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a> -->
-                <a href ="/analytics"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
-
-            </nav>
-        </section>
-
         <header>
 
-            <div class = "search">
-                <i class="fa fa-search" aria-hidden = "true"></i>
-                <input type = "text" name = "" value = "">
-            </div>
-
-            <div class = "accountInfo">
-                <a href = "#" class = "userName">Name</a>
-                <a href = "#" class = "notifications"><i class="fa fa-bell-o" aria-hidden = "true"></i>
-                    <span class = "notificationNum">
-                        #
-                    </span>
-                </a>
-            </div>
         </header>
+        <section class = "sideBar">
+        </section>
 
-        <section id = "dashContent">
+        <section class = "overlay">
+            <div class ="title">
+                <p>Login</p>
+            </div>
+            <hr class = "line1">
 
-            <div class = "topSection">
-               <!-- <div class = "heading">
-                    <h1>Dashboard</h1>
+            <form action="/dashboard" method ="GET" >
+
+                <div class = "container">
+                    <input id = "username" name = "username" placeholder = "Enter Username" type = "text" required minlength = "8" maxlength = "15">
+                    <input id = "pw" name = "pw" placeholder = "Enter Password" type = "password" required minlength = "8" maxlength = "15">
                 </div>
+
+                <input class = "loginButton" type = "submit" value="Login" href ="/public/html/dash.html">
+
+                <label>
+                    <input type="checkbox" checked="checked" name="remember"> Remember me
+                </label>
+              <!--   <div class="container" style="background-color:#f1f1f1">
+                    <span class="psw">Forgot <a href="#">password?</a></span>
+                  </div>
                 -->
-                <div class = "firstTotal">
-                    <span >Total Sales</span>
-                        value
-                </div>
+            </form>
 
-                <div class = "secondTotal">
-                    <span>Total Income</span>
-                    value
-                 </div>
+            <hr class ="line2">
+        </section>
+    </body>
 
-            </div>
-
-            <div class = "middleSection">
-                    <div class = "dashChart1">
-                        <span class = "title">
-                            Asset Meter Readings
-                        </span>
-                        <canvas id="meterReadingsChart"></canvas>
-                    </div>
-
-                    <div class = "dashChart2">
-                        <span class = "title">
-                            Meter Status
-                        </span>
-                        <canvas id="assetStatusBarChart"></canvas>
-                    </div>
-            </div>
-
-            <div class = "bottomSection">
-                <button id="assetsToggle"><i class="fa fa-chevron-down" aria-hidden = "true"></i>Assets</button>
-                <table class="assetsTable"
-                  id="assetsTable"
-                  style="width: 80%; text-align: left;">
-                    <!-- API call results go here -->
-                </table>
-            </div>
-            </section>
-
-        </body>
-        <script src="/js/graph.js"></script>
-        <script src="/js/asset.js"></script>
-        <script>
-            // render the testing graph when the pages loads
-            window.onload = () => {
-                const statusCtx = document
-                    .getElementById("assetStatusBarChart")
-                    .getContext("2d");
-                listAssets().then((assets) => {
-                    renderBarGraph(statusCtx, assets);
-                })
-                const meterCtx = document
-                    .getElementById('meterReadingsChart')
-                    .getContext('2d');
-                window.myScatter = testGraph(meterCtx);
-                let table = new AssetTable("assetsTable", -1);
-                table.render();
-
-                const assetsToggle = document.getElementById("assetsToggle");
-                assetsToggle.addEventListener("click", (event) => {
-                    table.toggle();
-                });
-            }
-        </script>
-    </div>
 </html>

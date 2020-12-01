@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
+    <title>Page Not Found</title>
+    {% block header %}{% endblock %}
+</head>
+<body>
+    <h1>404</h1>
+    <h2>Sorry, we couldn't find this page.</h2>
+    <p style="color:red;">{{ error }}</p>
+        <div style="background-color: lightgrey">
+            {% autoescape false %}
+            {% for row in traceback %}
+                {{ row | replace("\n", "</br>")}}
+            {% endfor %}
+            {% endautoescape %}
+        </div>
+    <br>
+    <p>It was probably the backend guys breaking something again 😉.</p>
+</body>
+</html>
