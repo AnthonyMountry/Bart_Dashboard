@@ -1,10 +1,9 @@
 #dashContent {
   padding-left: 5%;
-  width: 85%;
-  height: 88%;
-  right: 0;
+  margin-top: 65px;
   bottom: 0;
-  position: absolute; }
+  width: 100%;
+  transition: all 0.3s; }
   #dashContent hr {
     width: 85%;
     margin-left: 1%;

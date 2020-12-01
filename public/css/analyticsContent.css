@@ -1,11 +1,8 @@
 #analyticsContent {
   padding-left: 5%;
-  padding-right: 8%;
-  width: 85%;
-  height: 88%;
-  right: 0;
+  width: 100%;
   bottom: 0;
-  position: absolute; }
+  margin-top: 65px; }
   #analyticsContent .topSect {
     height: 25%;
     width: 100%; }

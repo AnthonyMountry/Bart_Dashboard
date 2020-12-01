@@ -117,6 +117,7 @@ function renderDoughnut(ctx, data) {
 
 function testGraph(ctx, assets) {
   let options = { ...DEFAULT_OPTS };
+  options.plugins.legend = true;
   let statuses = getCounts(assets, "bartdept");
 
   var data = {

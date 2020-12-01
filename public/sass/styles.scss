@@ -1,5 +1,6 @@
 @import "variables";
 //@import "dashboard_content";
+@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 
 * {
@@ -10,11 +11,129 @@
 
 body {
   background: white;
+  font-family: 'Poppins', sans-serif;
   //min-height:100%;
   //position: relative;
 }
 
+p {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+ a{
+     &:hover{
+        &:focus{
+            background: $greyLight;
+            border-left: 5px solid $blueDark;
+            padding: 15px 30px 15px 25px;
+        }
+     }
+ }
 
+.wrapper{
+    display: flex;
+    //width:100%;
+    align-items: stretch;
+}
+
+#sidebar{
+    min-width:250px;
+    max-width: 250px;
+    min-height: 100vh;
+    background-color:#F0F5F8;
+    color: #fff;
+    transition: all 0.3s;
+    position:fixed;
+/*
+    .sidebar-header{
+        padding: 20px;
+        background: #6d7fcc;
+    }
+*/
+
+
+    ul{
+        margin-top: 65px;
+
+        .components{
+            padding: 20px 0;
+
+        }
+
+        p{
+            color: black;
+            padding: 10px;
+        }
+
+        li{
+            a{
+                /*
+                padding: 10px;
+                font-size: 1.1em;
+                display: block;
+                text-decoration: none;
+                */
+                display: block;
+                color: $blueDark;
+                text-decoration: none;
+                padding: 15px 30px;
+                font-weight: 80%;
+                transition: all 0.3s ease-in-out;
+
+
+                &:hover{
+                    background: $greyLight;
+                    border-left: 5px solid $blueDark;
+                    padding: 15px 30px 15px 25px;
+
+                    .fa{
+                        color: $blueDark;
+                    }
+                }
+
+                .fa{
+                    color: $blueDark;
+                    font-size: 1.4rem;
+                    margin-right: 0.6rem;
+                    display: inline-block;
+                    width: 30px;
+                    position: relative;
+                    top: 2px;
+                }
+
+                &.active {
+                    background: $greyLight;
+                    border-left: 5px solid $blueDark;
+                    padding: 15px 30px 15px 25px;
+
+                    .fa{
+                        color: $blueDark;
+                    }
+                }
+
+            }
+        }
+    }
+}
+
+ul{
+    ul{
+        a{
+            font-size: 0.9em !important;
+            padding-left: 30px !important;
+            background-color: $greyLight;
+        }
+    }
+}
+
+#sidebar.active{
+    margin-left: -250px;
+}
+
+/*
 .sideMenu {
     background:#F0F5F8;
     width: 15%;
@@ -96,12 +215,13 @@ body {
     }
 }
 
+*/
 
 
 header{
 
-    position: absolute;
-    width:84.8%;
+    position: fixed;
+    width:100%;
     height: 55px;
     right: 0;
     top: 0;
@@ -109,9 +229,17 @@ header{
     background: white;
     outline:2px solid rgb(235, 233, 233);
 
+    #sidebarCollapse{
+
+        float:left;
+        left:0;
+        margin-right: 15px;
+        color: white;
+        background-color: $blueDark;
+    }
+
     .search{
-        float: left;
-        padding-left: 0px;
+
         width: 60%;
 
         .fa{
@@ -130,15 +258,23 @@ header{
 
             &:hover{
                 background: #e6e7e9;
+
+                transform: perspective(1px) translateZ(0);
+                box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+                transition-duration: 0.5s;
             }
         }
     }
 
     .accountInfo{
-        float: right;
+
+        //float: right;
+        right:0;
+        top: 0;
         padding: 10px;
         display: table-cell;
         vertical-align: middle;
+        position:fixed;
 
 
 

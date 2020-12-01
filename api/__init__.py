@@ -3,7 +3,7 @@ from werkzeug.exceptions import NotFound
 
 import os.path
 
-from api import commands, asset, wo, errors
+from api import commands, asset, wo, errors, ui
 from api.config import read_config
 from api.util import ModelEncoder, ModelResponse
 from api.app import blueprint
@@ -39,6 +39,7 @@ def create_app(conf=None):
 
     app.register_blueprint(asset.blueprint)
     app.register_blueprint(wo.blueprint)
+    app.register_blueprint(ui.blueprint)
     app.register_blueprint(blueprint)
 
     app.register_error_handler(Exception, errors.handle_all)

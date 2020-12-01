@@ -6,96 +6,93 @@
 {% endblock %}
 
 {% block content %}
+        <section id = "dashContent">
             <div class = "topSection">
-               <!-- <div class = "heading">
-                    <h1>Dashboard</h1>
-                </div>
-                -->
                 <div class = "firstTotal">
                     <span >Total Sales</span>
-                        value
                 </div>
 
                 <div class = "secondTotal">
                     <span>Total Income</span>
                     value
-                 </div>
-
+                </div>
             </div>
+
+            <hr>
 
             <div class = "middleSection">
-                <div class = "dashboardCharts">
-                    <div class = "dashChart1">
-                        <span class = title>
-                            Asset Meter Readings
-                        </span>
-                        <canvas id="meterReadingsChart"></canvas>
-                    </div>
+                <div class = "dashChart1">
+                    <span class = "title">
+                        Asset By Dept
+                    </span>
+                    <canvas id="meterReadingsChart"></canvas>
+                </div>
 
-                    <div class = "dashChart2">
-                        <span class = title>
-                            Meter Status
-                        </span>
-                        <canvas id="assetStatusBarChart"></canvas>
-                    </div>
+                <div class = "dashChart2">
+                    <span class = "title">
+                        Meter Status
+                    </span>
+                    <canvas id="assetStatusBarChart"></canvas>
                 </div>
             </div>
 
-            <div class = "bottomSec"ion>
-                <div class = "updateList">
-                    <table class = "updateTable">
-                        <thead>
-                            <tr>
-                                <th>
+            <hr>
 
-                                </th>
-                                <th>
-
-                                </th>
-
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            <tr></tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <button id="assetsToggle">Toggle assets</button>
-                <table
-                class="assetsTable"
-                id="assetsTable"
-                style="width: 80%; text-align: left;"
-                >
+            <div class = "bottomSection">
+                <button id="assetsToggle"><i class="fa fa-chevron-down" aria-hidden = "true"></i>Assets</button>
+                <table class="assetsTable"
+                    id="assetsTable"
+                    style="width: 80%; text-align: left;">
                     <!-- API call results go here -->
                 </table>
-                <!-- <button id="showMoreAssets">show more...</button> -->
+            </div>
+        </section>
 {% endblock %}
 
 {% block scripts %}
-        <script src="/js/graph.js"></script>
-        <script src="/js/asset.js"></script>
-        <script>
-            // render the testing graph when the pages loads
-            window.onload = () => {
-                const statusCtx = document
-                    .getElementById("assetStatusBarChart")
-                    .getContext("2d");
-                listAssets().then((assets) => {
-                    renderBarGraph(statusCtx, assets);
-                })
-                const meterCtx = document
-                    .getElementById('meterReadingsChart')
-                    .getContext('2d');
-                window.myScatter = testGraph(meterCtx);
+    <script src="/js/graph.js"></script>
+    <script src="/js/asset.js"></script>
+    <script src="/js/upload.js"></script>
+    <script>
+        // render the testing graph when the pages loads
+        window.onload = () => {
+            Notification.requestPermission().then((result) => console.log(result));
 
-                let table = new AssetTable("assetsTable");
-                table.render();
-                const assetsToggle = document.getElementById("assetsToggle");
-                assetsToggle.addEventListener("click", (event) => {
-                    table.toggle();
-                });
-            }
-        </script>
+            // document.getElementById("notificationNum").addEventListener("pointerenter", (e) => {
+            //     let note = new Notification('what are you lookin at?? 🧐');
+            // });
+
+            // const statusCtx = document
+            //     .getElementById("assetStatusBarChart")
+            //     .getContext("2d");
+            // listAssets().then((assets) => {
+            //     renderBarGraph(statusCtx, assets);
+            // })
+            // const meterCtx = document
+            //     .getElementById('meterReadingsChart')
+            //     .getContext('2d');
+            // window.myScatter = testGraph(meterCtx);
+            const statusCtx = document.getElementById("assetStatusBarChart").getContext("2d");
+            const meterCtx = document.getElementById('meterReadingsChart').getContext('2d');
+            listAssets().then((assets) => {
+                renderBarGraph(statusCtx, assets);
+                testGraph(meterCtx, assets);
+            })
+
+            let table = new AssetTable("assetsTable", -1);
+            table.render();
+            const assetsToggle = document.getElementById("assetsToggle");
+            assetsToggle.addEventListener("click", (event) => {
+                table.toggle();
+            });
+
+            document
+                .getElementById("fileUpload")
+                .addEventListener("change", handleReadFile);
+            // set a default event listener that does nothing
+            document
+                .getElementById("fileUploadSubmit")
+                .addEventListener("click", (e) => e.preventDefault());
+        }
+    </script>
 {% endblock %}

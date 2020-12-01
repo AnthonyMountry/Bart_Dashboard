@@ -4,11 +4,20 @@
 #dashContent{
     padding-left: 5%;
     //padding-right: 8%;
-    width:85%;
-    height:88%;
-    right:0;
-    bottom:0;
-    position: absolute;
+    // width:100%;
+    //
+    margin-top:65px;
+
+    //height:88%;
+    // right:0;
+     bottom:0;
+     //position: relative;
+
+
+    width: 100%;
+    // padding: 20px;
+    //min-height: 100vh;
+    transition: all 0.3s;
 
     hr{
         width: 85%;

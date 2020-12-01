@@ -21,34 +21,46 @@
     </head>
 
     <body>
-
         <div class = "wrapper">
-            <section class = "sideMenu">
-                <div class = "logo">
-                    <img src = "/img/trainLogo.jpg">
-                </div>
-                <nav>
-                    <a href ="/dashboard" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
-                <!---  <a href ="/Reports.html"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a> -->
-                    <a href ="/analytics"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
+            <nav id = "sidebar">
+                <ul class="list-unstyled components">
+                    <!-- TODO some heading or something -->
+                    <li class="active">
+                        <a href ="/dashboard"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
+                        <!-- TODO sub-menu here maybe?? -->
+                    </li>
+                    <li>
+                        <a href ="/analytics"> <i class = "active"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
+                    </li>
+                </ul>
 
-                </nav>
-                <div class = "upload">
-                    <form enctype="multipart/form-data" action="/api/upload" method="POST">
-                        <input
-                        id="fileUpload"
-                        type="file"
-                        name="file"
-                        placeholder="Upload File"
-                        accept=".csv,.xls,.xlsx,.xlsm"
-                        >
-                        <!-- <button type="submit" id="fileUploadSubmit">Upload</button> -->
-                        <input type="submit" id="fileUploadSubmit">
-                    </form>
-                </div>
-            </section>
+                <ul class="list-unstyled CTAs">
+                    <li>
+                        <form enctype="multipart/form-data" action="/api/upload" method="POST">
+                            <input
+                                id="fileUpload"
+                                type="file"
+                                name="file"
+                                placeholder="Upload File"
+                                accept=".csv,.xls,.xlsx,.xlsm"
+                            >
+                            <button type="submit" id="fileUploadSubmit">Upload</button>
+                        </form>
+                    </li>
+                </ul>
+
+                <!-- <a href ="/dashboard" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a> -->
+                <!-- <a href ="/Reports.html"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a> -->
+                <!-- <a href ="/analytics"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a> -->
+
+            </nav>
+            <!-- <header></header> -->
 
             <header>
+                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                    <i class="fas fa-align-left"></i>
+
+                </button>
 
                 <div class = "search">
                     <i class="fa fa-search" aria-hidden = "true"></i>
@@ -66,40 +78,33 @@
             </header>
 
             <section id = "dashContent">
-
                 <div class = "topSection">
-                <!-- <div class = "heading">
-                        <h1>Dashboard</h1>
-                    </div>
-                    -->
                     <div class = "firstTotal">
                         <span >Total Sales</span>
-                            value
                     </div>
 
                     <div class = "secondTotal">
                         <span>Total Income</span>
                         value
                     </div>
-
                 </div>
 
-            <hr>
+                <hr>
 
                 <div class = "middleSection">
-                        <div class = "dashChart1">
-                            <span class = "title">
-                                Asset By Dept
-                            </span>
-                            <canvas id="meterReadingsChart"></canvas>
-                        </div>
+                    <div class = "dashChart1">
+                        <span class = "title">
+                            Asset By Dept
+                        </span>
+                        <canvas id="meterReadingsChart"></canvas>
+                    </div>
 
-                        <div class = "dashChart2">
-                            <span class = "title">
-                                Meter Status
-                            </span>
-                            <canvas id="assetStatusBarChart"></canvas>
-                        </div>
+                    <div class = "dashChart2">
+                        <span class = "title">
+                            Meter Status
+                        </span>
+                        <canvas id="assetStatusBarChart"></canvas>
+                    </div>
                 </div>
 
                 <hr>
@@ -107,60 +112,68 @@
                 <div class = "bottomSection">
                     <button id="assetsToggle"><i class="fa fa-chevron-down" aria-hidden = "true"></i>Assets</button>
                     <table class="assetsTable"
-                    id="assetsTable"
-                    style="width: 80%; text-align: left;">
+                     id="assetsTable"
+                     style="width: 80%; text-align: left;">
                         <!-- API call results go here -->
                     </table>
                 </div>
-                </section>
-        </div>
-            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-            <script src="/js/graph.js"></script>
-            <script src="/js/asset.js"></script>
-            <script src="/js/upload.js"></script>
+            </section>
+        </div> <!-- class=wrapper -->
 
-            <script>
-                // render the testing graph when the pages loads
-                window.onload = () => {
-                    Notification.requestPermission().then((result) => console.log(result));
-                    document.getElementById("notificationNum").addEventListener("pointerenter", (e) => {
-                        let note = new Notification('what are you lookin at?? 🧐');
-                    });
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="/js/graph.js"></script>
+        <script src="/js/asset.js"></script>
+        <script src="/js/upload.js"></script>
 
-                    // const statusCtx = document
-                    //     .getElementById("assetStatusBarChart")
-                    //     .getContext("2d");
-                    // listAssets().then((assets) => {
-                    //     renderBarGraph(statusCtx, assets);
-                    // })
-                    // const meterCtx = document
-                    //     .getElementById('meterReadingsChart')
-                    //     .getContext('2d');
-                    // window.myScatter = testGraph(meterCtx);
-                    const statusCtx = document.getElementById("assetStatusBarChart").getContext("2d");
-                    const meterCtx = document.getElementById('meterReadingsChart').getContext('2d');
-                    listAssets().then((assets) => {
-                        renderBarGraph(statusCtx, assets);
-                        testGraph(meterCtx, assets);
-                    })
+        <script>
+            // render the testing graph when the pages loads
+            $(document).ready(function () {
+                $('#sidebarCollapse').on('click', function () {
+                    $('#sidebar').toggleClass('active');
+                });
+            });
 
-                    let table = new AssetTable("assetsTable", -1);
-                    table.render();
-                    const assetsToggle = document.getElementById("assetsToggle");
-                    assetsToggle.addEventListener("click", (event) => {
-                        table.toggle();
-                    });
+            window.onload = () => {
+                Notification.requestPermission().then((result) => console.log(result));
 
-                    document
+                // document.getElementById("notificationNum").addEventListener("pointerenter", (e) => {
+                //     let note = new Notification('what are you lookin at?? 🧐');
+                // });
+
+                // const statusCtx = document
+                //     .getElementById("assetStatusBarChart")
+                //     .getContext("2d");
+                // listAssets().then((assets) => {
+                //     renderBarGraph(statusCtx, assets);
+                // })
+                // const meterCtx = document
+                //     .getElementById('meterReadingsChart')
+                //     .getContext('2d');
+                // window.myScatter = testGraph(meterCtx);
+                const statusCtx = document.getElementById("assetStatusBarChart").getContext("2d");
+                const meterCtx = document.getElementById('meterReadingsChart').getContext('2d');
+                listAssets().then((assets) => {
+                    renderBarGraph(statusCtx, assets);
+                    testGraph(meterCtx, assets);
+                })
+
+                let table = new AssetTable("assetsTable", -1);
+                table.render();
+                const assetsToggle = document.getElementById("assetsToggle");
+                assetsToggle.addEventListener("click", (event) => {
+                    table.toggle();
+                });
+
+                document
                     .getElementById("fileUpload")
                     .addEventListener("change", handleReadFile);
-                    // set a default event listener that does nothing
-                    document
+                // set a default event listener that does nothing
+                document
                     .getElementById("fileUploadSubmit")
                     .addEventListener("click", (e) => e.preventDefault());
-                }
-            </script>
+            }
+        </script>
         </body>
 </html>
