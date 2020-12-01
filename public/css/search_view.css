@@ -1,0 +1,83 @@
+.button {
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+
+.search-mpu {
+    background-color: #4CAF50;
+    }
+
+.search-asset {
+    background-color: #008CBA;
+    }
+
+#searchbar {
+    height: 2rem;
+    width: 20rem;
+}
+
+.mpu-id{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.mpu-name{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.mpu-ranking{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.data-view{
+    background-color: #BDD4F2;
+    border: 2px solid black;
+    width: 38rem;
+}
+
+.asset-data-view{
+    background-color: #BDD4F2;
+    border: 2px solid black;
+    width: 38rem;
+}
+
+.asset-num{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.asset-bartdept{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.asset-descrip{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.asset-status{
+    display: flex;
+    flex-direction: row;
+    column-gap: 1rem;
+}
+
+.search{
+    padding-bottom: 2rem; 
+    align-content: center;
+}
