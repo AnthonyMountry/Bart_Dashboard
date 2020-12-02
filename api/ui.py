@@ -74,11 +74,11 @@ def login():
     if request.method != "POST":
         return '''<h1>i dont know whats going on</h1>'''
 
-    us = request.args.get("username")
-    ps = request.args.get('password')
-    if not us or not ps:
+    us = request.form.get("username")
+    pw = request.form.get('password') or request.form.get("pw")
+    if not us or not pw:
         return send_from_directory(STATIC_DIR, "html/bad_auth.html")
-    return redirect("/dashboard", code=307)
+    return redirect("/dashboard")
 
 
 @blueprint.route('/asset', methods=('GET', ))

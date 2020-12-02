@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 
-
     <style>
         body {font-family: Verdana, Geneva, sans-serif;}
 
@@ -22,12 +21,13 @@
         </section>
 
         <section class = "overlay">
+            <img src="/public/img/train_logo.svg">
             <div class ="title">
                 <p>Login</p>
             </div>
             <hr class = "line1">
 
-            <form action="/dashboard" method ="GET" >
+            <form action="/login" method ="POST" >
 
                 <div class = "container">
                     <input id = "username" name = "username" placeholder = "Enter Username" type = "text" required minlength = "8" maxlength = "15">
