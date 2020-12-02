@@ -7,10 +7,7 @@ import pyexcel
 from flask import (
     Blueprint,
     request,
-    send_from_directory,
     current_app,
-    render_template,
-    redirect,
 )
 
 from api.middleware import with_spreadsheet
@@ -19,64 +16,6 @@ from api.database import db
 blueprint = Blueprint('api', __name__)
 
 STATIC_DIR = 'public'
-
-# @blueprint.route('/', defaults={'path': None})
-# @blueprint.route('/<path>', methods=['GET', 'POST'])
-# def home(path):
-#     '''
-#     return the home page and any other public files
-#     '''
-#     if not path:
-#         path = 'html/index.html'
-#     return send_from_directory(STATIC_DIR, path)
-
-# @blueprint.route('/dashboard', methods=("GET",))
-# def dashboard():
-#     return send_from_directory(STATIC_DIR, "html/dash.html")
-
-# @blueprint.route('/analytics', methods=['GET'])
-# def analytics():
-#     # return send_from_directory(STATIC_DIR, 'html/Analytics.html')
-#     return render_template("analytics.html",
-#         page_title=f'Dashboard',
-#         host=request.host_url,
-#     )
-
-# @blueprint.route('/reports', methods=['GET'])
-# def reports():
-#     return send_from_directory(STATIC_DIR, 'html/Reports.html')
-
-
-# @blueprint.route('/login', methods=set(['GET', 'POST']))
-# def login():
-#     if request.method == 'GET':
-#         return send_from_directory(STATIC_DIR, 'html/index.html')
-#     # TODO handle auth
-#     if request.method != "POST":
-#         return '''<h1>i dont know whats going on</h1>'''
-
-#     us = request.args.get("username")
-#     ps = request.args.get('password')
-#     if not us or not ps:
-#         return send_from_directory(STATIC_DIR, "html/bad_auth.html")
-#     return redirect("/dashboard", code=307)
-
-
-# @blueprint.route('/asset', methods=('GET', ))
-# def route_template():
-#     num = request.args.get('assetnum')
-#     return render_template("asset.html",
-#         asset_num=num,
-#         page_title=f'Asset {num}',
-#         host=request.host_url,
-#     )
-
-# @blueprint.route('/_dashboard', methods=("GET",))
-# def _dashboard_route():
-#     return render_template("dashboard.html",
-#         page_title=f'Dashboard',
-#         host=request.host_url,
-#     )
 
 @blueprint.route('/api/rootpath', methods=['GET'])
 def _get_rootpath():
@@ -90,7 +29,8 @@ def api_test():
 @with_spreadsheet
 def handle_data_uploads(book: pyexcel.Book):
     # TODO finish this
-    raise NotImplementedError
+    # raise NotImplementedError
+    return book.get_csv()
 
 
 class Mpu(db.Model):

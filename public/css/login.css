@@ -32,6 +32,9 @@ header {
   right: 0;
   bottom: 0;
   position: absolute; }
+  .overlay img {
+    width: 128px;
+    height: 128px; }
   .overlay .title {
     margin-bottom: 20px; }
     .overlay .title p {

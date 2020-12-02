@@ -34,7 +34,7 @@ p {
  }
 
 .wrapper{
-    display: flex;
+    //display: flex;
     //width:100%;
     align-items: stretch;
 }
@@ -254,15 +254,15 @@ header{
             padding:10px;
             font-weight: 100;
             width: 80%;
-            transition: all 0.3 ease-in-out;
 
-            &:hover{
+            // Hover on
+            &:hover, &:focus, &:active {
                 background: #e6e7e9;
-
-                transform: perspective(1px) translateZ(0);
-                box-shadow: 0 0 1px rgba(0, 0, 0, 0);
                 transition-duration: 0.5s;
+                border-radius: 0.5em;
             }
+            // Hover off
+            transition-duration: 0.5s;
         }
     }
 
