@@ -17,6 +17,7 @@ dist/
 .mypy_cache/
 env/
 venv/
+old*.html
 
 # Database
 *.db

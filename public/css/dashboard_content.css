@@ -1,36 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Oswald:wght@200&display=swap");
 #dashContent {
   padding-left: 5%;
-  margin-top: 65px;
+  margin-top: 55px;
   bottom: 0;
   width: 100%;
-  transition: all 0.3s; }
+  transition: all 0.3s;
+  font-family: 'Poppins', sans-serif;
+  /*
+    .topSection{
+        height:15%;
+        width:100%;
+
+        .firstTotal{
+            display: table-cell;
+            vertical-align: center;
+            background:#BDD4F2;
+            color: white;
+            height: 70%;
+            width: 30%;
+            text-align: left;
+            display: inline-block;
+            margin-right: 8%;
+            }
+
+        .secondTotal{
+            display: table-cell;
+            vertical-align: center;
+            background:#BDD4F2;
+            color: white;
+            //border-radius: 5px;
+            height: 70%;
+            width: 30%;
+            text-align: left;
+            display: inline-block;
+
+        }
+    }*/ }
   #dashContent hr {
-    width: 85%;
-    margin-left: 1%;
-    margin-right: 8%;
-    color: #b7c3db; }
-  #dashContent .topSection {
-    height: 15%;
-    width: 100%; }
-    #dashContent .topSection .firstTotal {
-      display: table-cell;
-      vertical-align: center;
-      background: #BDD4F2;
-      color: white;
-      height: 70%;
-      width: 30%;
-      text-align: left;
-      display: inline-block;
-      margin-right: 8%; }
-    #dashContent .topSection .secondTotal {
-      display: table-cell;
-      vertical-align: center;
-      background: #BDD4F2;
-      color: white;
-      height: 70%;
-      width: 30%;
-      text-align: left;
-      display: inline-block; }
+    width: 95%; }
   #dashContent .middleSection {
     margin-top: 50px;
     height: 40%;
@@ -46,13 +53,15 @@
       width: 50%;
       height: 100%;
       display: inline-block;
-      margin-right: 5%; }
+      margin-right: 5px; }
     #dashContent .middleSection .dashChart2 {
       border-radius: 5px;
       background: white;
-      width: 30%;
+      width: 40%;
       height: 100%;
       display: inline-block; }
+      #dashContent .middleSection .dashChart2 #assetStatusBarChart {
+        margin-top: 45px; }
   #dashContent .bottomSection {
     height: 30%;
     width: 100%;
@@ -60,4 +69,5 @@
     margin-top: 20px; }
     #dashContent .bottomSection .assetsTable {
       height: 100%;
-      width: 90%; }
+      width: 90%;
+      margin-left: 15%; }

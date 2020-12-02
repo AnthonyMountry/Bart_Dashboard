@@ -1,4 +1,4 @@
-@import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 * {
   box-sizing: border-box;
   list-style: none;
@@ -8,18 +8,31 @@ body {
   background: white;
   font-family: 'Poppins', sans-serif; }
 
+footer {
+  width: 100%;
+  background-color: #3D8BF2;
+  height: 5px;
+  position: fixed;
+  bottom: 0; }
+
+/*
 p {
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.1em;
-  font-weight: 300;
-  line-height: 1.7em;
-  color: #999; }
-
-a:hover:focus {
-  background: #b7c3db;
-  border-left: 5px solid #3D8BF2;
-  padding: 15px 30px 15px 25px; }
-
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+ a{
+     &:hover{
+        &:focus{
+            background: $greyLight;
+            border-left: 5px solid $blueDark;
+            padding: 15px 30px 15px 25px;
+        }
+     }
+ }
+*/
 .wrapper {
   align-items: stretch; }
 
@@ -31,26 +44,12 @@ a:hover:focus {
   color: #fff;
   transition: all 0.3s;
   position: fixed;
-  /*
-    .sidebar-header{
-        padding: 20px;
-        background: #6d7fcc;
-    }
-*/ }
+  font-family: 'Poppins', sans-serif; }
   #sidebar ul {
-    margin-top: 65px; }
+    margin-top: 30px; }
     #sidebar ul .components {
       padding: 20px 0; }
-    #sidebar ul p {
-      color: black;
-      padding: 10px; }
     #sidebar ul li a {
-      /*
-                padding: 10px;
-                font-size: 1.1em;
-                display: block;
-                text-decoration: none;
-                */
       display: block;
       color: #3D8BF2;
       text-decoration: none;
@@ -77,98 +76,32 @@ a:hover:focus {
         padding: 15px 30px 15px 25px; }
         #sidebar ul li a.active .fa {
           color: #3D8BF2; }
-
-ul ul a {
-  font-size: 0.9em !important;
-  padding-left: 30px !important;
-  background-color: #b7c3db; }
+    #sidebar ul form {
+      position: fixed;
+      bottom: 0;
+      width: 250px;
+      background-color: #3D8BF2; }
+      #sidebar ul form #fileUpload {
+        margin-left: 5px;
+        color: #fff;
+        font-family: 'Oswald';
+        font-size: 10px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none; }
+      #sidebar ul form #fileUploadSubmit {
+        margin-left: 200px;
+        margin-bottom: 5px;
+        color: black;
+        font-family: 'Oswald';
+        font-size: 10px;
+        text-decoration: none;
+        cursor: pointer;
+        border: none; }
 
 #sidebar.active {
   margin-left: -250px; }
 
-/*
-.sideMenu {
-    background:#F0F5F8;
-    width: 15%;
-    height: 150%;
-    position: fixed;
-    left:0;
-    top: 0;
-    bottom:0;
-    outline:2px solid rgb(235, 233, 233);
-    display:block;
-    overflow:visible;
-
-
-
-    .logo{
-        background-color: $blueDark;
-        display: block;
-        top:0;
-        left:0;
-        height: 8%;
-        width:100%;
-
-    }
-
-    .upload{
-        background-color: $greyLight;
-        display: block;
-        text-decoration: none;
-        position: fixed;
-        bottom:0;
-        width:15%;
-
-
-    }
-
-    nav {
-        padding-top: 15%;
-
-
-        a {
-            display: block;
-            color: $blueDark;
-            text-decoration: none;
-            padding: 15px 30px;
-            font-weight: 80%;
-            transition: all 0.3s ease-in-out;
-
-
-            &:hover{
-                background: $greyLight;
-                border-left: 5px solid $blueDark;
-                padding: 15px 30px 15px 25px;
-
-                .fa{
-                    color: $blueDark;
-                }
-            }
-
-            .fa{
-                color: $blueDark;
-                font-size: 1.4rem;
-                margin-right: 0.6rem;
-                display: inline-block;
-                width: 30px;
-                position: relative;
-                top: 2px;
-            }
-
-             &.active {
-                background: $greyLight;
-                border-left: 5px solid $blueDark;
-                padding: 15px 30px 15px 25px;
-
-                .fa{
-                    color: $blueDark;
-                }
-            }
-        }
-    }
-}
-
-*/
 header {
   position: fixed;
   width: 100%;

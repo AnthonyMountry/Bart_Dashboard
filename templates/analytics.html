@@ -7,63 +7,107 @@
 {% endblock %}
 
 {% block content %}
-    <section id = "analyticsContent">
-        <div class = "topSect">
-            <div class = "values">
-                <div class = "uniqueVisitors">
-                    <span>Unique Visitors</span>
-                    <span>Visitors in the current month</span>
+        <section id = "analyticsContent">
+            <div class = "topSect">
+                <!--<div class = "values">
+                    <div class = "uniqueVisitors">
+                        <span>Unique Visitors</span>
+                        <span>Visitors in the current month</span>
+                    </div>
+                    <div class = "loadTime">
+                        <span>Load Time</span>
+                        <span>Average page load time</span>
+                    </div>
+                    <div class = "newIssues">
+                        <span>New Issues</span>
+                        <span>system incidents and alerts</span>
+                    </div>
+
+                </div>-->
+
+                <!-- <div class = "analyticsGraphic2">
+                    <span class = "title">
+                        Labor Hours
+                    </span>
+                    <canvas id="woHours"></canvas>
+                </div> -->
+
+                <div class = "analyticsGraphic3">
+                <!-- ^^^changing 3 to 1 makes tiny graph^^^ -->
+                    <span class = "title">
+                        Asset Types
+                    </span>
+                    <canvas id="woDoughnut"></canvas>
                 </div>
-                <div class = "loadTime">
-                    <span>Load Time</span>
-                    <span>Average page load time</span>
+            </div>
+
+            <div class = "middleSect">
+                <h4>Work Order Status</h4>
+                <div class = "middleGraph">
+                    <span></span>
+                    <!-- Data graph-->
+                    <canvas id="woPiChart"></canvas>
                 </div>
-                <div class = "newIssues">
-                    <span>New Issues</span>
-                    <span>system incidents and alerts</span>
+
+            </div>
+
+            <div class = "bottomSect">
+                <!-- <div class = "systemLog">
+                </div>
+
+                <div class = "newTickets">
+                </div> -->
+                <div class = "analyticsGraphic2">
+                    <span class = "title">
+                        Labor Hours
+                    </span>
+                    <canvas id="woHours"></canvas>
+                    <div id="slidecontainer">
+                        <input type="range" min="0" max="100" value="0" class="slider" id="slider">
+                    </div>
+                    <div id="x"></div>
                 </div>
             </div>
-
-            <div class = "analyticsGraphic1">
-                <span class = "title">
-                    Asset Types
-                </span>
-                <canvas id="woDoughnut"></canvas>
-            </div>
-        </div>
-
-        <div class = "middleSect">
-            <h4>Work Order Status</h4>
-            <div class = "middleGraph">
-                <span></span>
-                <!-- Data graph-->
-                <canvas id="woPiChart"></canvas>
-            </div>
-
-        </div>
-
-        <div class = "bottomSect">
-            <div class = "systemLog">
-
-            </div>
-
-            <div class = "newTickets">
-            </div>
-        </div>
-    </section>
+        </section>
 {% endblock %}
 
 {% block scripts %}
+    <scripts src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></scripts>
+
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
+    <script src="/js/asset.js"></script>
     <script src="/js/work_order.js"></script>
     <script src="/js/graph.js"></script>
     <script>
+        const PIE_CACHE_KEY = '_pie_data';
+        let g;
+
         window.onload = () => {
             var t0 = performance.now();
             const pieCtx = document.getElementById("woPiChart").getContext("2d");
-            const polCtx = document.getElementById("woDoughnut").getContext("2d");
-            listWO().then(wos => {
+            const DoughnutCtx = document.getElementById("woDoughnut").getContext("2d");
+            const BarCtx = document.getElementById("woHours").getContext("2d");
+            const slider = document.getElementById("slider")
+            slider.addEventListener("change", (event) => {
+                // console.log(g.config.options.scales)
+                // g.config.options.scales.xAxes[0].time.min = event.target.value;
+
+                g.scales['x-axis-1'].max = event.target.value;
+                g.draw();
+
+                // g.scaleService.updateScaleDefaults('linear', {
+                //     ticks: {
+                //         min: 0
+                //     }
+                // });
+            })
+
+            listWO({limit: 5000}).then(wos => {
                 renderPiChart(pieCtx, wos);
-                renderDoughnut(polCtx, wos);
+                renderDoughnut(DoughnutCtx, wos);
+                // renderBarGraph2(BarCtx, wos);
+                g = renderWOCostOverTime(BarCtx, wos);
                 console.log(`rendered after ${performance.now() - t0}ms`);
             });
         }

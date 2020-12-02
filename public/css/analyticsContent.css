@@ -1,34 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap");
 #analyticsContent {
   padding-left: 5%;
   width: 100%;
   bottom: 0;
-  margin-top: 65px; }
+  margin-top: 55px;
+  font-family: 'Poppins', sans-serif; }
   #analyticsContent .topSect {
     height: 25%;
-    width: 100%; }
-    #analyticsContent .topSect .values {
-      display: table-cell;
-      vertical-align: top;
-      background: white;
-      border-radius: 5px;
-      width: 40%;
-      height: 100%;
-      text-align: left;
-      display: inline-block;
-      outline: 0.1px solid black;
-      margin-right: 9.8%; }
-      #analyticsContent .topSect .values .uniqueVisitors {
-        color: black;
-        height: 33.3%;
-        outline: 0.1px solid black; }
-      #analyticsContent .topSect .values .loadTime {
-        color: black;
-        height: 33.3%;
-        outline: 0.1px solid black; }
-      #analyticsContent .topSect .values .newIssues {
-        color: black;
-        height: 33.3%;
-        outline: 0.1px solid black; }
+    width: 100%;
+    /* .values{
+            display: table-cell;
+            vertical-align: top;
+            background:white;
+            border-radius: 5px;
+            width: 40%;
+            height:100%;
+            text-align: left;
+            display: inline-block;
+            margin-right: 9.8%;
+
+
+
+            .uniqueVisitors{
+                color:black;
+                height: 33.3%;
+                outline:0.1px solid black;
+            }
+            .loadTime{
+                color:black;
+                height: 33.3%;
+                outline:0.1px solid black
+            }
+            .newIssues{
+                color:black;
+                height: 33.3%;
+                outline:0.1px solid black;
+            }
+
+        }*/ }
     #analyticsContent .topSect .analyticsGraphic1 {
       display: table-cell;
       vertical-align: top;
@@ -37,8 +46,7 @@
       width: 40%;
       height: 100%;
       text-align: left;
-      display: inline-block;
-      outline: 0.1px solid #0D0D0D; }
+      display: inline-block; }
   #analyticsContent .middleSect {
     height: 35%;
     width: 100%;
@@ -47,8 +55,7 @@
     #analyticsContent .middleSect .middleGraph {
       height: 100%;
       width: 90%;
-      background: white;
-      outline: 0.1px solid #0D0D0D; }
+      background: white; }
   #analyticsContent .bottomSect {
     height: 33%;
     width: 100%;
@@ -63,7 +70,6 @@
       height: 100%;
       text-align: left;
       display: inline-block;
-      outline: 0.1px solid #0D0D0D;
       margin-right: 9.8%; }
     #analyticsContent .bottomSect .newTickets {
       display: table-cell;
@@ -74,5 +80,4 @@
       height: 100%;
       text-align: left;
       display: inline-block;
-      outline: 0.1px solid #0D0D0D;
       bottom: 0; }

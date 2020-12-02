@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block header %}
+  <link rel="stylesheet" href="/css/notifications.css">
+{% endblock %}
+
+{% block content %}
+    <section id = "notificationContent">
+
+        <div class = "headBar">Notifications</div>
+
+        <div class = "notificationList">
+            <table class="table table-striped">
+                <thead>
+                  <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">Work Order #</th>
+                    <th scope="col">Reading Date</th>
+                    <th scope="col">Meter Reading</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <th scope="row">1</th>
+                    <td>17094206</td>
+                    <td>02 Aug 20</td>
+                    <td>901</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">2</th>
+                    <td>17112036</td>
+                    <td>24 Aug 20</td>
+                    <td>7000</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">3</th>
+                    <td>17049372</td>
+                    <td>08 Oct 20</td>
+                    <td>360</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">4</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">5</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">6</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">7</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">8</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">9</th>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </tr>
+                </tbody>
+              </table>
+        </div>
+
+    </section>
+{% endblock %}
+
+{% block scripts %}
+        <script src="/js/graph.js"></script>
+        <script src="/js/asset.js"></script>
+{% endblock %}

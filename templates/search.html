@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block header %}
+    <link rel="stylesheet" href="/css/search_view.css">
+{% endblock %}
+
+{% block content %}
+    <section id = "searchContent">
+        <div class="_heading">Search Records</div>
+
+        <div class="search-params form-row">
+            <div class="form-group">
+                <input id="searchbar" class="form-control" type="text" placeholder="Search records" name="search">
+            </div>
+
+            <div class="form-group">
+                <label for="results-limit">Limit</label>
+                <input type="number" id="results-limit" value="15" min="1">
+            </div>
+
+            <div class="form-group">
+                <label for="search-record-type">Record type</label>
+                <select id="search-record-type" class="_form-control">
+                    <option value="asset">Assets</option>
+                    <option value="mpu">Monthly Project Updates</option>
+                </select>
+            </div>
+            <button id="search-btn" class="btn btn-primary main-search-btn">Search</button>
+        </div>
+        <div class="container search-results" id="data-display">
+            <!-- Search results Here -->
+        </div>
+    </section>
+{% endblock %}
+
+{% block scripts %}
+    <script src="/public/js/asset.js"></script>
+    <script src="/public/js/search.js"></script>
+    <script>
+        const SEARCH_TERM = '{{ search_term }}';
+    </script>
+    <script>
+        (() => {
+            const searchbar = document.getElementById("searchbar")
+            const searchBtn = document.getElementById("search-btn");
+            searchBtn.addEventListener("click", search);
+            window.addEventListener("keydown", (event) => {
+                switch (event.key) {
+                case "Enter":
+                    search();
+                    break;
+                case "/":
+                    event.preventDefault();
+                    searchbar.focus();
+                    // console.log(searchbar.value);
+                    break;
+                case 'Escape':
+                    searchbar.blur();
+                    break;
+                }
+            });
+            if (SEARCH_TERM.length !== 0) {
+                console.log("main script search term:", SEARCH_TERM);
+                search(SEARCH_TERM);
+            }
+        })();
+    </script>
+{% endblock %}

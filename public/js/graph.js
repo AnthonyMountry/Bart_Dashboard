@@ -27,6 +27,14 @@ let DEFAULT_OPTS = {
   plugins: {
     legend: false,
     tooltip: false,
+    labels: {
+      render: "value",
+      fontSize: 14,
+      fontStyle: "bold",
+    },
+  },
+  hover: {
+    animationDuration: 0,
   },
   elements: {
     bar: {
@@ -52,6 +60,30 @@ function colorize(opaque, ctx) {
 function renderBarGraph(ctx, assets) {
   let options = { ...DEFAULT_OPTS };
   let statuses = getCounts(assets, "status");
+
+  var data = {
+    labels: Array.from(statuses.keys()),
+    datasets: [
+      {
+        backgroundColor: [...COLORS],
+        barPercentage: 1,
+        barThickness: "flex",
+        maxBarThickness: 50,
+        minBarLength: 10,
+        data: Array.from(statuses.values()),
+      },
+    ],
+  };
+  return new Chart(ctx, {
+    type: "bar",
+    data: data,
+    options: options,
+  });
+}
+
+function renderBarGraph2(ctx, assets) {
+  let options = { ...DEFAULT_OPTS };
+  let statuses = getCounts(assets, "location");
 
   var data = {
     labels: Array.from(statuses.keys()),
@@ -112,6 +144,64 @@ function renderDoughnut(ctx, data) {
     type: "doughnut",
     data: data,
     options: options,
+  });
+}
+
+function renderWOCostOverTime(ctx, data) {
+  let grouped = groupBy(data, "status");
+  let datasets = [];
+
+  let colors = [...COLORS]; // copy the colors array
+  for (const name in grouped) {
+    let col = colors.pop();
+    datasets.push({
+      label: name,
+      borderColor: col,
+      backgroundColor: Chart.helpers.color(col).alpha(0.2).rgbString(),
+      data: grouped[name].map((x) => x["labor_hours"]),
+      hidden: false,
+    });
+  }
+
+  // let d = [];
+  // for (i in data) {
+  //   let date = new Date(data[i].finish);
+  //   if (date.getFullYear() < 2018) {
+  //     continue;
+  //   }
+  //   d.push({ x: date, y: data[i]["labor_hours"] });
+  // }
+  // let datasets = [
+  //   {
+  //     label: "",
+  //     borderColor: "rgb(255,0,0)",
+  //     backgroundColor: Chart.helpers
+  //       .color("rgb(255,0,0)")
+  //       .alpha(0.2)
+  //       .rgbString(),
+  //     data: d,
+  //   },
+  // ];
+
+  return new Chart(ctx, {
+    type: "scatter",
+    options: {
+      responsive: true,
+      title: { display: false, text: "" },
+      scales: {
+        xAxes: [
+          {
+            type: "time",
+            display: true,
+            scaleLabel: { display: true, labelString: "Date" },
+          },
+        ],
+      },
+    },
+    data: {
+      labels: data.map((r) => new Date(r["finish"])),
+      datasets: datasets,
+    },
   });
 }
 
@@ -191,27 +281,3 @@ function renderMeterReadings(ctx, readings) {
     },
   });
 }
-
-// function testDataPoints() {
-//   return [
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//     { x: Math.random(), y: Math.random() },
-//   ];
-// }

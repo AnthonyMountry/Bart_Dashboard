@@ -1,0 +1,35 @@
+@import "variables";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+
+#notificationContent{
+    margin-top:55px;
+    bottom:0;
+    width: 100%;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+
+    .headBar{
+        height:50px;
+        width:100%;
+        background-color:$blueDark;
+        color: white;
+        font-size:1.5em;
+        text-align:center;
+
+
+
+    }
+
+    .notificationList{
+        margin-top: 80px;
+        height:80%;
+        width:70%;
+
+        .table{
+            margin-left:20%;
+
+        }
+
+
+    }
+}

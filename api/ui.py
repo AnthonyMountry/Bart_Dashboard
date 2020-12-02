@@ -49,17 +49,33 @@ def home(path):
 def dashboard():
     return send_from_directory(STATIC_DIR, "html/dash.html")
 
-@blueprint.route('/search', methods=("GET",))
+
+@blueprint.route('/search', methods=("GET", "POST"))
 def search():
-    return send_from_directory(STATIC_DIR, "html/search.html")
+    if request.method == 'POST':
+        print('form:', request.form)
+        print('args:', request.args)
+        print('data:', request.data)
+
+    search_term = request.args.get('search') or request.args.get('q') or ''
+    return render_template("search.html",
+        page_title='Search',
+        host=request.host_url,
+        search_term=search_term,
+    )
 
 @blueprint.route('/analytics', methods=['GET'])
 def analytics():
-    return send_from_directory(STATIC_DIR, 'html/Analytics.html')
-    # return render_template("analytics.html",
-    #     page_title=f'Dashboard',
-    #     host=request.host_url,
-    # )
+    return render_template("analytics.html",
+        page_title='Analytics',
+        host=request.host_url,
+    )
+
+@blueprint.route('/notifications', methods=("GET",))
+def notifications():
+    return render_template("notifications.html",
+        page_title='Notifacations',
+    )
 
 @blueprint.route('/reports', methods=['GET'])
 def reports():

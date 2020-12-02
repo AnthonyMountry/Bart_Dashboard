@@ -1,5 +1,3 @@
-const encode = encodeURIComponent; // bc i dont want to write the whole thing every time
-
 async function listAssets(params) {
   let url;
   if (params === undefined) {

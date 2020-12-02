@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from sqlalchemy import or_
 
 from ..errors import Ok
 from .models import Asset, MeterReading
@@ -8,15 +9,25 @@ blueprint = Blueprint('asset', __name__)
 @blueprint.route('/api/assets', methods=['GET'])
 def list_assets():
     # Return all assets as a list of json objects
+    search = request.args.get("search")
+    if search:
+        key = f'%{search}%'
+        res = Asset.query.filter(or_(
+            Asset.description.like(key),
+            Asset.bartdept.like(key),
+            Asset.status.like(key),
+            Asset.num == search,
+        ))
+    else:
+        res = Asset.query
     return Ok(
         msg='assets successfully listed',
-        assets= Asset.query.limit(
-            request.args.get('limit')
+        assets=res.limit(
+            request.args.get("limit")
         ).offset(
-            request.args.get('offset')
+            request.args.get("offset")
         ).all(),
     )
-
 
 @blueprint.route('/api/asset/<assetnum>', methods=['GET'])
 def get_asset(assetnum):

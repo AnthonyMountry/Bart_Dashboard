@@ -7,7 +7,6 @@
         <link rel="icon" type="image/x-icon" href="/img/favicon.ico">
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
         <link rel="stylesheet" href="/public/css/styles.css">
-
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
         <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/solid.js" integrity="sha384-tzzSw1/Vo+0N5UhStP3bvwWPq+uvzCMfrN1fEFe+xBmv1C/AtVX5K0uZtmcHitFZ" crossorigin="anonymous"></script>
@@ -17,15 +16,18 @@
     </head>
     <body>
         <div class = "wrapper">
-            <nav id = "sidebar">
+            <nav id = "sidebar" class="active">
                 <ul class="list-unstyled components">
                     <!-- TODO some heading or something -->
                     <li>
-                        <a href = "/dashboard" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
+                        <a href = "/dashboard"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a>
                         <!-- TODO sub-menu here maybe?? -->
                     </li>
                     <li>
                         <a href = "/analytics"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
+                    </li>
+                    <li>
+                        <a href ="/search"><i class="fa fa-search" aria-hidden = "true"></i> Search </a>
                     </li>
                 </ul>
 
@@ -45,36 +47,53 @@
                 </ul>
             </nav>
             <header>
-                <button type="button" id="sidebarCollapse" class="btn btn-info">
+                <button type="button" id="sidebarCollapse" class="btn">
                     <i class="fas fa-align-left"></i>
                 </button>
 
-                <div class = "search">
-                    <i class="fa fa-search" aria-hidden = "true"></i>
-                    <input type = "text" name = "" value = "">
-                </div>
+                <form action="/search" method="GET" name="search">
+                    <div class = "search">
+                        <i class="fa fa-search" aria-hidden = "true"></i>
+                        <input type="text" name="q">
+                    </div>
+                </form>
 
                 <div class = "accountInfo">
                     <a href = "#" class = "userName">Name</a>
-                    <a href = "#" class = "notifications"><i class="fa fa-bell-o" aria-hidden = "true"></i>
+                    <a href = "/notifications" class = "notifications"><i class="fa fa-bell-o" aria-hidden = "true"></i>
                         <span class = "notificationNum" id="notificationNum">
                             #
                         </span>
                     </a>
                 </div>
             </header>
-            {% block content %}{% endblock %}
-            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-            <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-            {% block scripts %}{% endblock %}
-            <script>
-                $(document).ready(function () {
-                    $('#sidebarCollapse').on('click', function () {
-                        $('#sidebar').toggleClass('active');
-                    });
-                });
-            </script>
         </div>
+        {% block content %}{% endblock %}
+        <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+        <script src="/js/upload.js"></script>
+        {% block scripts %}{% endblock %}
+
+        <script>
+            (() => {
+                const sidebar = document.getElementById("sidebar")
+                document.getElementById("sidebarCollapse").addEventListener("click", () => {
+                    sidebar.classList.toggle("active");
+                })
+                document
+                    .getElementById("fileUpload")
+                    .addEventListener("change", handleReadFile);
+                // set a default event listener that does nothing
+                document
+                    .getElementById("fileUploadSubmit")
+                    .addEventListener("click", (e) => e.preventDefault());
+            })();
+            // $(document).ready(function () {
+            //     $('#sidebarCollapse').on('click', function () {
+            //         $('#sidebar').toggleClass('active');
+            //     });
+            // });
+        </script>
     </body>
 </html>

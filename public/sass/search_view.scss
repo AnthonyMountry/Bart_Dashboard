@@ -1,0 +1,90 @@
+@import "variables";
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap');
+#searchContent{
+    margin-top:55px;
+    bottom:0;
+    width: 100%;
+    transition: all 0.3s;
+    font-family: 'Poppins', sans-serif;
+
+    ._heading{
+        height:50px;
+        width:100%;
+        background-color:$blueDark;
+        color: white;
+        font-size:1.5em;
+        text-align:center;
+    }
+
+    .button {
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        text-align: center;
+        text-decoration: none;
+        display: block;
+        font-size: 16px;
+        margin: 4px 2px;
+        cursor: pointer;
+        margin-right:10px;
+    }
+
+    .search-params {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        min-height: 20vh;
+
+        #searchbar {
+            height: 2rem;
+            width: 20rem;
+            margin-right: 30px;
+
+        }
+    }
+
+    .search-results {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        min-height: 40vh;
+
+        .mpu-data-view {
+            background-color: #BDD4F2;
+            border: 1px solid black;
+            width: 38rem;
+
+            .mpu-id,
+            .mpu-name,
+            .mpu-ranking {
+                display: flex;
+                flex-direction: row;
+                column-gap: 1rem;
+            }
+        }
+
+        .asset-data-view{
+            border: 1px solid black;
+            margin: 1em;
+            width: 38rem;
+
+            .asset-num,
+            .asset-bartdept,
+            .asset-descrip,
+            .asset-status {
+                display: flex;
+                flex-direction: row;
+                column-gap: 1rem;
+            }
+        }
+    }
+
+
+    .search{
+        padding-bottom: 2rem;
+        align-content: center;
+    }
+}
