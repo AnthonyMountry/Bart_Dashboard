@@ -186,6 +186,10 @@ def extract_mpu(book, csv_file: str):
         for i, c in enumerate(mpu.column[name]):
             if c == '--' or c == '-':
                 mpu[i, name] = ''
+    for name in ['ranking', 'monthly_burn_rate']:
+        for i, c in enumerate(mpu.column[name]):
+            if c == '--' or c == '-':
+                mpu[i, name] = '0'
     if any(map(lambda c: c=='Full Scope', mpu.column['remaining_budget'])):
         raise ValueError('expected a number but got a string')
     mpu.colnames = []
