@@ -9,7 +9,11 @@ async function listWO(params) {
     let query = new URLSearchParams(params);
     url = `/api/workorders?${query}`;
   }
-  return await fetch(url)
+  return await fetch(url, {
+    headers: {
+      "Accept-Encoding": "gzip",
+    },
+  })
     .then((resp) => resp.json())
     .then((json) => {
       let results = json["workorders"].map((raw) => new WorkOrder(raw));

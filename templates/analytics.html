@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 
 {% block header %}
-    <link rel = "stylesheet" href = "/css/analyticsContent.css">
+    <link rel = "stylesheet" href = "/public/css/analyticsContent.css">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 {% endblock %}
@@ -47,9 +47,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/moment@2.24.0"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
-    <script src="/js/asset.js"></script>
-    <script src="/js/work_order.js"></script>
-    <script src="/js/graph.js"></script>
+    <script src="/public/js/asset.js"></script>
+    <script src="/public/js/work_order.js"></script>
+    <script src="/public/js/graph.js"></script>
     <script>
         const PIE_CACHE_KEY = '_pie_data';
         let g;
@@ -74,6 +74,7 @@
                 // });
             })
 
+            // listWO().then(wos => {
             listWO({limit: 5000}).then(wos => {
                 renderPiChart(pieCtx, wos);
                 renderDoughnut(DoughnutCtx, wos);
