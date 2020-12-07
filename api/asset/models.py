@@ -1,4 +1,4 @@
-from api.database import db
+from api.extensions import db
 
 STATUS_DECOMMISSIONED = 'DECOMMISSIONED'
 STATUS_OPERATING = 'OPERATING'

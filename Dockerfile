@@ -17,6 +17,7 @@ FROM python:3.8.6-alpine3.12
 RUN apk add --update \
     postgresql-dev \
     gcc \
+    g++ \
     musl-dev \
     linux-headers \
     curl

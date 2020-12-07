@@ -7,9 +7,9 @@ from api import commands, asset, wo, errors, ui
 from api.config import read_config
 from api.util import ModelEncoder, ModelResponse
 from api.app import blueprint
+from flask_compress import Compress
 
 app_context = None
-
 
 def create_app(conf=None):
     app = Flask(
@@ -24,17 +24,8 @@ def create_app(conf=None):
         conf = read_config('api.ini')
 
     app.root_path = os.getcwd()
-    # app.root_path = os.path.dirname(app.root_path)
-    # app.config['STATIC_DIR'] = 'public'
-
-    from api.database import db, migrate
-    with app.app_context():
-        app.config.from_mapping(conf)
-        db.init_app(app)
-        migrate.init_app(app, db)
 
     app.json_encoder = ModelEncoder
-    # app.response_class =  ModelResponse
     app_context = app.app_context
 
     app.register_blueprint(asset.blueprint)
@@ -50,6 +41,12 @@ def create_app(conf=None):
     app.cli.add_command(commands.load_db_cmd)
     app.cli.add_command(commands.test_cmd)
     app.cli.add_command(commands.config)
+
+    from api.extensions import db, migrate, compress
+    app.config.from_mapping(conf)
+    db.init_app(app)
+    migrate.init_app(app, db)
+    compress.init_app(app)
     return app
 
 

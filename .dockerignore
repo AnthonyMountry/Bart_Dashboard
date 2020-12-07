@@ -18,3 +18,4 @@ db/*.db
 docker-compose.yml
 
 # !db/bart_data.zip # We need the data
+**/*.csv

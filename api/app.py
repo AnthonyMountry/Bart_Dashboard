@@ -11,7 +11,7 @@ from flask import (
 )
 
 from api.middleware import with_spreadsheet
-from api.database import db
+from api.extensions import db
 
 blueprint = Blueprint('api', __name__)
 
@@ -62,19 +62,19 @@ class ProjectMeter(db.Model):
 
 
 class Mpu(db.Model):
-    id = db.Column(db.String(14), primary_key=True)
-    name = db.Column(db.String(128))
-    short_name = db.Column(db.String(128))
-    ranking = db.Column(db.Integer)
+    id          = db.Column(db.String(14), primary_key=True)
+    name        = db.Column(db.String(128))
+    short_name  = db.Column(db.String(128))
+    ranking     = db.Column(db.Integer)
     description = db.Column(db.Text)
-    location = db.Column(db.String(32))
+    location    = db.Column(db.String(128))
     sub_location = db.Column(db.String(128))
     district_location = db.Column(db.String(32))
     mpu_phase = db.Column(db.String(32))
-    budget_amount = db.Column(db.Float)
-    expended_amount = db.Column(db.Float)
+    budget_amount    = db.Column(db.Float)
+    expended_amount  = db.Column(db.Float)
     remaining_budget = db.Column(db.Float)
-    funding_level = db.Column(db.String(16))
+    funding_level    = db.Column(db.String(16))
     end_date = db.Column(db.Date)
     rr_funded = db.Column(db.Boolean)
     monthly_burn_rate = db.Column(db.Float)
@@ -82,7 +82,7 @@ class Mpu(db.Model):
     project_group = db.Column(db.String(50))
     project_manager = db.Column(db.Text)
     program = db.Column(db.String(32))
-    review_format = db.Column(db.String(16))
+    review_format = db.Column(db.String(24))
 
 
 class MeterReadings: # (db.Model)

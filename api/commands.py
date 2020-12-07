@@ -24,30 +24,30 @@ def config(args):
         pprint(current_app.config)
 
 
-@click.command('load-db', short_help='Clean the data and load it into the database')
-@click.option("--db", default='db/dashboard.db', help='output database file', show_default=True)
+@click.command('clean-data')
 @click.option('--clean-meters', is_flag=True, default=False, help='generate meter data (takes a long time)')
-@click.option('--skip-insert', default=False, is_flag=True, help='skip inserts')
-@with_appcontext
-def load_db_cmd(db, clean_meters, skip_insert):
+def clean_data(clean_meters):
     click.echo('cleaning data...')
     clean('db/UC Merced 2020 SE Project', 'db/cleaned', clean_meters)
-
-    click.echo("loading data...")
-    if not skip_insert:
-        type = current_app.config['DATABASE_TYPE']
-        if type == 'postgres' or type == 'postgresql':
-            args = [
-                'psql',
-                current_app.config['SQLALCHEMY_DATABASE_URI'],
-                '-c', '\i db/postgres/02-load.sql',
-            ]
-        elif  type == 'sqlite' or type == 'sqlite3':
-            args = ["sqlite3", db, ".read db/load.sql"]
-        else:
-            args = []
-        subprocess.run(args)
     click.echo('done.')
+    pass
+
+
+@click.command('load-db', short_help='Clean the data and load it into the database')
+@with_appcontext
+def load_db_cmd():
+    type = current_app.config['DATABASE_TYPE']
+    if type == 'postgres' or type == 'postgresql':
+        args = [
+            'psql',
+            current_app.config['SQLALCHEMY_DATABASE_URI'],
+            '-c', '\i db/pg_load.sql',
+        ]
+    elif  type == 'sqlite' or type == 'sqlite3':
+        args = ["sqlite3", current_app.config['SQLALCHEMY_DATABASE_URI'], ".read db/load.sql"]
+    else:
+        args = []
+    subprocess.run(args)
 
 
 @click.command('init', short_help='Run all the api setup in one command')

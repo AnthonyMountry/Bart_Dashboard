@@ -13,6 +13,9 @@ def read_config(filename):
         'DEBUG': False,
         'TESTING': False,
         'STATIC_DIR':  '../public',
+        'JSON_SORT_KEYS': False,
+        'JSONIFY_PRETTYPRINT_REGULAR': False,
+        'COMPRESS_REGISTER': True,
     }
     if not os.path.exists(filename):
         return config

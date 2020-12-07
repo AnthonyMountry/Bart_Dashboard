@@ -1,4 +1,4 @@
-from api.database import db
+from api.extensions import db
 
 class WorkOrder(db.Model):
     num = db.Column(db.Integer, primary_key=True)

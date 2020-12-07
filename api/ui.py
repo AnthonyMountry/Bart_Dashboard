@@ -15,7 +15,7 @@ blueprint = Blueprint('ui', __name__)
 
 STATIC_DIR = 'public'
 
-def static(folder):
+def newstatic(folder):
     base = STATIC_DIR
     target = path_join(base, folder)
     def fn(file):
@@ -31,10 +31,10 @@ def static(folder):
     )
 
 
-static('css')
-static('img')
-static('js')
-static('html')
+# newstatic('css')
+# newstatic('img')
+# newstatic('js')
+# newstatic('html')
 
 
 @blueprint.route('/', defaults={'path': None})

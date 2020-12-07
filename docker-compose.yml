@@ -3,7 +3,7 @@ version: "3.8"
 services:
   db:
     container_name: bart-dashboard-postgres
-    image: postgres:12.2-alpine
+    image: postgres:13.1-alpine
     environment:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
@@ -14,31 +14,36 @@ services:
         published: 3456 # host machine
         protocol: tcp
         mode: bridge
-    # volumes:
-    #   - ./db/cleaned:/db/cleaned:ro # data
-    #   - ./db/postgres:/docker-entrypoint-initdb.d:ro # init scripts
+    volumes:
+      - ./db/postgres:/docker-entrypoint-initdb.d:ro # init scripts
+      # - ./db/cleaned:/db/cleaned:ro # data
 
   backend:
     container_name: bart-dashboard-backend
     build:
       context: .
       dockerfile: Dockerfile
-    command: ["wait-for", "localhost:3456", "--", "docker/entrypoint.sh", "flask", "run", "--with-threads"]
     command:
-      - wait-for
-      - localhost:3456
+      - 'wait-for'
+      - 'localhost:3456'
       - '--'
-      - docker/entrypoint.sh
-      - flask
-      - run
-      - '--with-threads'
+      - 'docker/entrypoint.sh'
+      - 'gunicorn'
+      - '-w'
+      - '8'
+      - '-b'
+      - '0.0.0.0:5000'
+      - 'wsgi:app'
       - '--reload'
+      - '--access-logfile'
+      - '-'
     restart: unless-stopped
     environment:
       POSTGRES_HOST: localhost
       POSTGRES_PORT: 3456
       POSTGRES_USER: ${POSTGRES_USER}
-      FLASK_ENV: development
+      FLASK_ENV: ${FLASK_ENV}
+      FLASK_DEBUG: ${FLASK_DEBUG}
     working_dir: '/app/src'
     volumes:
       - .:/app/src
@@ -50,3 +55,6 @@ services:
         published: 5000
         protocol: tcp
         mode: host
+    depends_on:
+      - db
+
