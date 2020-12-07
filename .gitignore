@@ -9,8 +9,6 @@ __pycache__/
 api.ini
 
 # Misc
-*.log
-*.sh
 node_modules/
 dist/
 .vscode/
@@ -19,6 +17,9 @@ dist/
 env/
 venv/
 old*.html
+*.log
+*.sh
+!docker/entrypoint.sh
 
 # Database
 *.db

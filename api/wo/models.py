@@ -4,7 +4,7 @@ class WorkOrder(db.Model):
     num = db.Column(db.Integer, primary_key=True)
     report_date = db.Column(db.Date)
     alias = db.Column(db.String(24))
-    location = db.Column(db.String(12))
+    location = db.Column(db.String(24))
     work_type = db.Column(db.String(8))
     description = db.Column(db.Text)
     asset_type = db.Column(db.String(32))

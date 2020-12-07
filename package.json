@@ -11,7 +11,7 @@
     "test": "pytest",
     "api": "python -m flask run --with-threads",
     "build": "node-sass public/sass -o public/css",
-    "watch": "node-sass --include-path public/sass -w public/sass -o public/css"
+    "watch": "node-sass --include-path public/sass -o public/css -w public/sass"
   },
   "repository": {
     "type": "git",

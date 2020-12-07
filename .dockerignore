@@ -1,0 +1,20 @@
+!db/UC Merced 2020 SE Project/
+node_modules/
+.git/
+.pytest_cache/
+**/__pycache__/
+doc/
+migrations/
+tests/
+public/css/
+db/dashboard.db
+db/test.db
+db/*.db
+*.db
+**/*.zip
+**/*.sqlite
+**/*.pdf
+.dockerignore
+docker-compose.yml
+
+# !db/bart_data.zip # We need the data

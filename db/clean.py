@@ -216,7 +216,7 @@ def parse_date(d):
     return datetime.strptime(d, '%d-%b-%y') if d else datetime(MINYEAR, 1, 1)
 
 
-def _process_sheet(sheet: Sheet) -> Sheet:
+def _process_meter_sheet(sheet: Sheet) -> Sheet:
     # Skip this sheet if it doesn't
     # have the right column length
     # or its an SQL sheet.
@@ -247,22 +247,36 @@ def _process_sheet(sheet: Sheet) -> Sheet:
 # https://stackoverflow.com/questions/13446445/python-multiprocessing-safely-writing-to-a-file
 class MeterDataWriter:
 
-    def __init__(self, filename: str, datafiles: list):
+    def __init__(self, filename: str, datafiles: list, logging: bool=False):
         self.filename = filename
         self.datafiles = datafiles
-        with open(self.filename, 'w'): pass
+        self.nfiles = len(self.datafiles)
+        self.logging = logging
+        with open(self.filename, 'w'):
+            pass # create the file if it does not exist
 
-    @staticmethod
-    def _worker(bookname, q):
+    # @staticmethod
+
+    def _worker(self, bookname, q):
+        '''
+        handles all the data processing
+        '''
         book = pe.get_book(file_name=bookname)
         for sheet in book:
-            s = _process_sheet(sheet)
+            s = _process_meter_sheet(sheet)
             if s is None:
                 continue
             else:
+                if self.logging:
+                    print('processed:', s.name)
                 q.put(s.get_csv())
+        if self.logging:
+            print('processed file:', bookname)
 
     def _listener(self, q):
+        '''
+        write to the output file
+        '''
         with open(self.filename, 'w') as f:
             while True:
                 data = q.get()
@@ -273,7 +287,7 @@ class MeterDataWriter:
                 f.write(data)
                 f.flush()
 
-    def run(self):
+    def run(self, logging=False):
         manager = mp.Manager()
         q = manager.Queue()
         pool = mp.Pool(
@@ -303,7 +317,7 @@ def combine_all_meterdata(data_dir: str, csv_file: str):
         filename = path_join(data_dir, f)
         book = pe.get_book(file_name=filename)
         for sheet in book:
-            s = _process_sheet(sheet)
+            s = _process_meter_sheet(sheet)
             if s is None:
                 continue
             else:
@@ -448,6 +462,10 @@ def main(base_dir, output_dir):
         elif argv[0] == 'output-dir':
             print(output_dir)
             sys.exit(0)
+    book_filename = path_join(base_dir, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
+    book = pe.get_book(file_name=book_filename)
+    extract_mpu(book, path_join(output_dir, 'mpu.csv'))
+    sys.exit(1)
 
     name = path_join(base_dir, "C25 A65 Meters", "11-4-20 All Location Meter Data.xlsx")
     sheet = extract_project_meters(name)
@@ -497,7 +515,7 @@ def main(base_dir, output_dir):
     # extract_asset_aliases(path_join(CLEANED, 'tmp_asset_aliases.csv'))
 
 
-def clean(base_dir, output_dir):
+def clean(base_dir, output_dir, meters=False):
     filename = path_join(base_dir, "Power", "POWER WOs 9-22-2018 to 9-21-2020.xlsx")
     with open(path_join(output_dir, 'work_order.csv'), 'w') as f:
         f.write(extract_work_orders(filename).get_csv())
@@ -518,10 +536,10 @@ def clean(base_dir, output_dir):
     extract_mpu(book, path_join(output_dir, 'mpu.csv'))
 
     # This takes a very long time.
-    ## filename = path_join(BASE_DIR, 'Fares NonRevVehicles/all_meterdata.csv')
-    #filename = path_join(CLEANED, 'all_meterdata.csv')
-    #writer = MeterDataWriter(filename, METER_READING_FILES)
-    #writer.run()
+    if meters:
+        filename = path_join(output_dir, 'all_meterdata.csv')
+        writer = MeterDataWriter(filename, [path_join(base_dir, f) for f in METER_READING_FILES], logging=True)
+        writer.run()
 
 
 if __name__ == '__main__':

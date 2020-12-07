@@ -11,12 +11,12 @@ SELECT "work_order loaded";
 CREATE TABLE meter_reading_tmp (
     bartdept      varchar(8),
     assetnum      int,
-    description   varchar(100),
+    description   TEXT,
     status        varchar(16),
     metername     varchar(16),
     readingsource varchar(32),
-    reading       int,
-    delta         int,
+    reading       FLOAT,
+    delta         FLOAT,
     readingdate   date,
     enterdate     date
 );
@@ -24,13 +24,29 @@ CREATE TABLE meter_reading_tmp (
 
 .import "db/cleaned/all_meterdata.csv" "meter_reading_tmp"
 
-INSERT INTO asset
-    SELECT assetnum as num, bartdept, description, status
-    FROM meter_reading_tmp
-    GROUP BY num;
-INSERT INTO meter_reading
-    SELECT DISTINCT assetnum, metername, readingsource, reading, delta, readingdate, enterdate
-    FROM meter_reading_tmp;
+UPDATE meter_reading_tmp SET delta   = 0 WHERE delta   IS NULL;
+UPDATE meter_reading_tmp SET reading = 0 WHERE reading IS NULL;
+
+INSERT INTO
+    asset
+SELECT DISTINCT
+    assetnum as num,
+    bartdept,
+    description,
+    status
+FROM meter_reading_tmp;
+
+INSERT INTO
+	meter_reading
+SELECT DISTINCT
+	assetnum,
+	metername,
+	readingsource,
+	reading,
+	delta,
+	readingdate,
+	enterdate
+FROM meter_reading_tmp;
 
 DROP TABLE meter_reading_tmp;
 
@@ -78,5 +94,4 @@ CREATE TABLE _tmp_project_meter (
 .import "db/cleaned/project_meter.csv" "_tmp_project_meter"
 
 SELECT 'project_meter loaded';
-
 
