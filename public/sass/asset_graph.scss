@@ -1,17 +1,16 @@
 @import "variables";
 
-#content{
+#content {
     padding-left: 5%;
-    padding-right: 8%;
-    width:85%;
-    height:88%;
-    right:0;
+    width:100%;
     bottom:0;
-    position: absolute;
+    margin-top:55px;
+    font-family: 'Poppins', sans-serif;
 
     transition: all 0.3s;
 
-    // margin-top:55px;
-    // bottom:0;
-    // width: 100%;
+    .graphCanvas {
+        width: 80%;
+        height: 100vh;
+    }
 }

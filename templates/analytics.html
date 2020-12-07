@@ -8,55 +8,26 @@
 
 {% block content %}
         <section id = "analyticsContent">
+
             <div class = "topSect">
-                <!--<div class = "values">
-                    <div class = "uniqueVisitors">
-                        <span>Unique Visitors</span>
-                        <span>Visitors in the current month</span>
-                    </div>
-                    <div class = "loadTime">
-                        <span>Load Time</span>
-                        <span>Average page load time</span>
-                    </div>
-                    <div class = "newIssues">
-                        <span>New Issues</span>
-                        <span>system incidents and alerts</span>
-                    </div>
-
-                </div>-->
-
-                <!-- <div class = "analyticsGraphic2">
-                    <span class = "title">
-                        Labor Hours
-                    </span>
-                    <canvas id="woHours"></canvas>
-                </div> -->
-
                 <div class = "analyticsGraphic3">
-                <!-- ^^^changing 3 to 1 makes tiny graph^^^ -->
+
                     <span class = "title">
                         Asset Types
                     </span>
                     <canvas id="woDoughnut"></canvas>
                 </div>
-            </div>
 
-            <div class = "middleSect">
-                <h4>Work Order Status</h4>
                 <div class = "middleGraph">
-                    <span></span>
-                    <!-- Data graph-->
+                    <span class = "title">
+                        Title
+                    </span>
                     <canvas id="woPiChart"></canvas>
                 </div>
-
             </div>
-
+            <hr>
             <div class = "bottomSect">
-                <!-- <div class = "systemLog">
-                </div>
 
-                <div class = "newTickets">
-                </div> -->
                 <div class = "analyticsGraphic2">
                     <span class = "title">
                         Labor Hours
@@ -112,4 +83,7 @@
             });
         }
     </script>
+    <footer>
+        <p></p>
+    </footer>
 {% endblock %}

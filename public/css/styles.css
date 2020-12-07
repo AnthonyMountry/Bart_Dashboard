@@ -7,6 +7,12 @@
 body {
   background: white;
   font-family: 'Poppins', sans-serif; }
+  body .top {
+    width: 100%;
+    background-color: #3D8BF2;
+    height: 5px;
+    position: fixed;
+    top: 0; }
 
 footer {
   width: 100%;

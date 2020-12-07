@@ -30,10 +30,12 @@ def static(folder):
         methods=['GET']
     )
 
+
 static('css')
 static('img')
 static('js')
 static('html')
+
 
 @blueprint.route('/', defaults={'path': None})
 @blueprint.route('/<path>', methods=['GET', 'POST'])
@@ -44,6 +46,22 @@ def home(path):
     if not path:
         path = 'html/index.html'
     return send_from_directory(STATIC_DIR, path)
+
+
+@blueprint.route('/login', methods=set(['GET', 'POST']))
+def login():
+    if request.method == 'GET':
+        return send_from_directory(STATIC_DIR, 'html/index.html')
+    # TODO handle auth
+    if request.method != "POST":
+        return '''<h1>i dont know whats going on</h1>'''
+
+    us = request.form.get("username")
+    pw = request.form.get('password') or request.form.get("pw")
+    if not us or not pw:
+        return send_from_directory(STATIC_DIR, "html/bad_auth.html")
+    return redirect("/dashboard")
+
 
 @blueprint.route('/dashboard', methods=("GET",))
 def dashboard():
@@ -64,6 +82,7 @@ def search():
         search_term=search_term,
     )
 
+
 @blueprint.route('/analytics', methods=['GET'])
 def analytics():
     return render_template("analytics.html",
@@ -71,30 +90,17 @@ def analytics():
         host=request.host_url,
     )
 
+
 @blueprint.route('/notifications', methods=("GET",))
 def notifications():
     return render_template("notifications.html",
         page_title='Notifacations',
     )
 
+
 @blueprint.route('/reports', methods=['GET'])
 def reports():
     return send_from_directory(STATIC_DIR, 'html/Reports.html')
-
-
-@blueprint.route('/login', methods=set(['GET', 'POST']))
-def login():
-    if request.method == 'GET':
-        return send_from_directory(STATIC_DIR, 'html/index.html')
-    # TODO handle auth
-    if request.method != "POST":
-        return '''<h1>i dont know whats going on</h1>'''
-
-    us = request.form.get("username")
-    pw = request.form.get('password') or request.form.get("pw")
-    if not us or not pw:
-        return send_from_directory(STATIC_DIR, "html/bad_auth.html")
-    return redirect("/dashboard")
 
 
 @blueprint.route('/asset', methods=('GET', ))
@@ -103,20 +109,5 @@ def route_template():
     return render_template("asset.html",
         asset_num=num,
         page_title=f'Asset {num}',
-        host=request.host_url,
-    )
-
-@blueprint.route('/_dashboard', methods=("GET",))
-def _dashboard_route():
-    return render_template("dashboard.html",
-        page_title=f'Dashboard',
-        host=request.host_url,
-    )
-
-@blueprint.route('/_analytics', methods=['GET'])
-def _analytics():
-    # return send_from_directory(STATIC_DIR, 'html/Analytics.html')
-    return render_template("analytics.html",
-        page_title=f'Dashboard',
         host=request.host_url,
     )

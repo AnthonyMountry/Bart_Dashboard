@@ -22,7 +22,8 @@ const COLORS = [
 ];
 
 let DEFAULT_OPTS = {
-  responsive: true,
+  responsive: false,
+  title: { display: false, text: "" },
   maintainAspectRatio: true, // DON'T CHANGE this will do very weird things
   plugins: {
     legend: false,
@@ -163,41 +164,20 @@ function renderWOCostOverTime(ctx, data) {
     });
   }
 
-  // let d = [];
-  // for (i in data) {
-  //   let date = new Date(data[i].finish);
-  //   if (date.getFullYear() < 2018) {
-  //     continue;
-  //   }
-  //   d.push({ x: date, y: data[i]["labor_hours"] });
-  // }
-  // let datasets = [
-  //   {
-  //     label: "",
-  //     borderColor: "rgb(255,0,0)",
-  //     backgroundColor: Chart.helpers
-  //       .color("rgb(255,0,0)")
-  //       .alpha(0.2)
-  //       .rgbString(),
-  //     data: d,
-  //   },
-  // ];
+  let opts = { ...DEFAULT_OPTS };
+  opts.scales = {
+    xAxes: [
+      {
+        type: "time",
+        display: true,
+        scaleLabel: { display: true, labelString: "Date" },
+      },
+    ],
+  };
 
   return new Chart(ctx, {
     type: "scatter",
-    options: {
-      responsive: true,
-      title: { display: false, text: "" },
-      scales: {
-        xAxes: [
-          {
-            type: "time",
-            display: true,
-            scaleLabel: { display: true, labelString: "Date" },
-          },
-        ],
-      },
-    },
+    options: opts,
     data: {
       labels: data.map((r) => new Date(r["finish"])),
       datasets: datasets,
@@ -259,22 +239,19 @@ function renderMeterReadings(ctx, readings) {
       hidden: false,
     });
   }
-
+  let opts = { ...DEFAULT_OPTS };
+  opts.scales = {
+    xAxes: [
+      {
+        type: "time",
+        display: true,
+        scaleLabel: { display: true, lagelString: "Date" },
+      },
+    ],
+  };
   return new Chart(ctx, {
     type: "line",
-    options: {
-      responsive: true,
-      title: { display: false, text: "" },
-      scales: {
-        xAxes: [
-          {
-            type: "time",
-            display: true,
-            scaleLabel: { display: true, labelString: "Date" },
-          },
-        ],
-      },
-    },
+    options: opts,
     data: {
       labels: readings.map((r) => r.x),
       datasets: datasets,

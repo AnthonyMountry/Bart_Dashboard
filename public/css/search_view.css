@@ -51,16 +51,12 @@
         flex-direction: row;
         column-gap: 1rem; }
     #searchContent .search-results .asset-data-view {
-      border: 1px solid black;
-      margin: 1em;
-      width: 38rem; }
+      width: 32rem; }
       #searchContent .search-results .asset-data-view .asset-num,
       #searchContent .search-results .asset-data-view .asset-bartdept,
       #searchContent .search-results .asset-data-view .asset-descrip,
       #searchContent .search-results .asset-data-view .asset-status {
-        display: flex;
-        flex-direction: row;
-        column-gap: 1rem; }
+        text-align: left; }
   #searchContent .search {
     padding-bottom: 2rem;
     align-content: center; }

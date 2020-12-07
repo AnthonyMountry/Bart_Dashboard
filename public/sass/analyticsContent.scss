@@ -3,104 +3,69 @@
 
 #analyticsContent{
     padding-left: 5%;
-    width:100%;
-    bottom:0;
     margin-top:55px;
+    bottom:0;
+    width: 100%;
+    transition: all 0.3s;
     font-family: 'Poppins', sans-serif;
 
-    .topSect{
-        height:25%;
-        width:100%;
-
-       /* .values{
-            display: table-cell;
-            vertical-align: top;
-            background:white;
-            border-radius: 5px;
-            width: 40%;
-            height:100%;
-            text-align: left;
-            display: inline-block;
-            margin-right: 9.8%;
-
-
-
-            .uniqueVisitors{
-                color:black;
-                height: 33.3%;
-                outline:0.1px solid black;
-            }
-            .loadTime{
-                color:black;
-                height: 33.3%;
-                outline:0.1px solid black
-            }
-            .newIssues{
-                color:black;
-                height: 33.3%;
-                outline:0.1px solid black;
-            }
-
-        }*/
-
-        .analyticsGraphic1{
-
-            display: table-cell;
-            vertical-align: top;
-            background:white;
-            border-radius: 5px;
-            width: 40%;
-            height:100%;
-            text-align: left;
-            display: inline-block;
-
-
-
-
-        }
+    hr{
+        width: 95%;
+        margin-right:8%;
+       // margin-left:5%;
     }
 
-    .middleSect{
-        height:35%;
+    .topSect{
+        margin-top: 65px;
+        height:300px;
         width:100%;
-        margin-right:60px;
-        margin-top: 20px;
-        .middleGraph{
-            height:100%;
-            width:90%;
+
+        .analyticsGraphic3{
+
+
             background: white;
+            width: 40%;
+            height:100%;
+            display: inline-block;
+            margin-right: 70px;
+            margin-left:8%;
+
+
+            #woDoughnut{
+                width:80%;
+                height:80%;
+            }
+        }
+
+
+        .middleGraph{
+            border-radius: 5px;
+            background: white;
+            width: 40%;
+            height:100%;
+            display: inline-block;
+
+
+            #woPiChart{
+                width:80%;
+                height:80%;
+            }
 
         }
+
     }
 
     .bottomSect{
-        height:33%;
+        height:400px;
         width:100%;
         bottom:0px;
-        margin-top: 20px;
-        .systemLog{
-            display: table-cell;
-            vertical-align: top;
-            background:white;
-            border-radius: 5px;
-            width: 40%;
-            height:100%;
-            text-align: left;
-            display: inline-block;
-            margin-right: 9.8%;
+        margin-top: 50px;
 
-        }
 
-        .newTickets{
-            display: table-cell;
-            vertical-align: top;
-            background:white;
-            border-radius: 5px;
-            width: 40%;
-            height:100%;
-            text-align: left;
-            display: inline-block;
-            bottom:0;
+        #woHours{
+            height:70%;
+            width:75%;
+            margin-left:8%;
         }
     }
 }

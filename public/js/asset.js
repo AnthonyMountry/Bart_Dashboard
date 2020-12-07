@@ -22,8 +22,8 @@ class Asset {
     }
   }
 
-  init() {
-    fetch(`/api/asset/${this.num}`)
+  async init() {
+    return await fetch(`/api/asset/${this.num}`)
       .then((resp) => {
         if (resp.status != 200) {
           console.log("Could not find asset " + data);
@@ -38,6 +38,7 @@ class Asset {
         this.bartdept = json.bartdept;
         this.description = json.description;
         this.status = json.status;
+        return this;
       })
       .catch((error) => console.log("got error:", error));
   }
@@ -100,11 +101,12 @@ class AssetTable {
       lim = 10;
     }
     // if there are assets in the cache then use them
-    this.table.innerHTML = `<tr>
+    this.table.innerHTML = `<thead><tr>
       <th>Asset</th>
       <th>Department</th>
       <th>Status</th>
-    </tr>`;
+      <th>Description</th>
+    </thead></tr>`;
     if (this.assets.length != 0) {
       this.showAssets(this.assets);
       return;
@@ -123,14 +125,17 @@ class AssetTable {
   }
 
   showAssets(assets) {
+    this.table.innerHTML += "<tbody>";
     for (let i = 0; i < assets.length; i++) {
       let asset = assets[i];
       this.table.innerHTML += `<tr>
-        <td><a href="/asset?assetnum=${asset.num}">${asset.num}</a></td>
+        <td scope="row"><a href="/asset?assetnum=${asset.num}">${asset.num}</a></td>
         <td>${asset.bartdept}</td>
         <td>${asset.status}</td>
+        <td>${asset.description}</td>
       </tr>`;
     }
+    this.table.innerHTML += "</tbody>";
     // limit of -1 == no limit
     if (this.limit > 0 && this.assets.length >= this.limit) {
       return;

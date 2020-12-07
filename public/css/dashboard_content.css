@@ -5,55 +5,31 @@
   bottom: 0;
   width: 100%;
   transition: all 0.3s;
-  font-family: 'Poppins', sans-serif;
-  /*
-    .topSection{
-        height:15%;
-        width:100%;
-
-        .firstTotal{
-            display: table-cell;
-            vertical-align: center;
-            background:#BDD4F2;
-            color: white;
-            height: 70%;
-            width: 30%;
-            text-align: left;
-            display: inline-block;
-            margin-right: 8%;
-            }
-
-        .secondTotal{
-            display: table-cell;
-            vertical-align: center;
-            background:#BDD4F2;
-            color: white;
-            //border-radius: 5px;
-            height: 70%;
-            width: 30%;
-            text-align: left;
-            display: inline-block;
-
-        }
-    }*/ }
+  font-family: 'Poppins', sans-serif; }
   #dashContent hr {
-    width: 95%; }
+    width: 95%;
+    margin-right: 8%; }
   #dashContent .middleSection {
-    margin-top: 50px;
+    margin-top: 60px;
     height: 40%;
     width: 100%;
     margin-bottom: 50px; }
     #dashContent .middleSection .title {
       margin-left: 15px;
       font-size: 18px;
-      color: #838383; }
+      color: #838383;
+      margin-left: 5%; }
     #dashContent .middleSection .dashChart1 {
       border-radius: 5px;
       background: white;
       width: 50%;
       height: 100%;
       display: inline-block;
-      margin-right: 5px; }
+      margin-right: 5px;
+      margin-left: 5%; }
+      #dashContent .middleSection .dashChart1 #meterReadingsChart {
+        height: 80%;
+        width: 80%; }
     #dashContent .middleSection .dashChart2 {
       border-radius: 5px;
       background: white;
@@ -61,7 +37,9 @@
       height: 100%;
       display: inline-block; }
       #dashContent .middleSection .dashChart2 #assetStatusBarChart {
-        margin-top: 45px; }
+        margin-top: 45px;
+        height: 80%;
+        width: 80%; }
   #dashContent .bottomSection {
     height: 30%;
     width: 100%;

@@ -95,18 +95,18 @@ function searchAssets(input) {
           div.classList.add("row");
         }
         const search_box = `
-        <div class="asset-data-view col-sm">
-            <div class="asset-num">
-                <p>Asset: </p> <p id="num${i}"></p>
+        <div class="asset-data-view col-sm card">
+            <div class="asset-num card-header">
+                <p>Asset: </p><span id="num${i}"></span>
             </div>
-            <div class="asset-bartdept">
-                <p> BART DEPT: </p><p id="bartdept${i}"></p>
+            <div class="asset-bartdept card-text">
+                <p> Department: </p><p id="bartdept${i}"></p>
             </div>
-            <div class="asset-descrip">
-                <p>DESCRIPTION: </p><p id="description${i}"></p>
+            <div class="asset-descrip card-text">
+                <p>Description: </p><p id="description${i}"></p>
             </div>
-            <div class="asset-status">
-                <p>STATUS: </p> <p id="status${i}"></p>
+            <div class="asset-status card-text">
+                <p>Status: </p> <p id="status${i}"></p>
             </div>
         </div>`;
         div.innerHTML += search_box;

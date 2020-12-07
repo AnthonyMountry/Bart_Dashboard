@@ -14,7 +14,9 @@
 function handleReadFile(event) {
   const file = this.files[0]; // get the first file object
   const button = document.getElementById("fileUploadSubmit");
+
   const handleUpload = (e) => {
+    console.log(e);
     var t0 = performance.now();
 
     e.preventDefault(); // prevent redirect

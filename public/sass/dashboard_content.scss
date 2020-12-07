@@ -12,53 +12,23 @@
 
     hr{
         width: 95%;
-        //margin-left: 1%;
-       // margin-right:5%;
+        margin-right:8%;
 
 
-
-    }/*
-    .topSection{
-        height:15%;
-        width:100%;
-
-        .firstTotal{
-            display: table-cell;
-            vertical-align: center;
-            background:#BDD4F2;
-            color: white;
-            height: 70%;
-            width: 30%;
-            text-align: left;
-            display: inline-block;
-            margin-right: 8%;
-            }
-
-        .secondTotal{
-            display: table-cell;
-            vertical-align: center;
-            background:#BDD4F2;
-            color: white;
-            //border-radius: 5px;
-            height: 70%;
-            width: 30%;
-            text-align: left;
-            display: inline-block;
-
-        }
-    }*/
-
+    }
     .middleSection{
-        margin-top: 50px;
+        margin-top: 60px;
         height:40%;
         width:100%;
         margin-bottom:50px;
+
 
         .title{
             //padding-top:10px;
             margin-left: 15px;
             font-size: 18px;
             color:#838383;
+            margin-left:5%;
         }
 
         .dashChart1{
@@ -67,8 +37,16 @@
             width: 50%;
             height:100%;
             display: inline-block;
-            //outline:0.3px solid black;
             margin-right:5px;
+            margin-left:5%;
+
+
+
+            #meterReadingsChart{
+                height:80%;
+                width:80%;
+            }
+
 
         }
 
@@ -78,10 +56,11 @@
             width: 40%;
             height:100%;
             display: inline-block;
-            //outline:0.3px solid $black;
 
             #assetStatusBarChart{
-                margin-top:45px;
+               margin-top:45px;
+               height:80%;
+               width:80%;
             }
         }
     }

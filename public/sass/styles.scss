@@ -13,6 +13,14 @@ body {
   font-family: 'Poppins', sans-serif;
   //min-height:100%;
   //position: relative;
+
+  .top{
+    width:100%;
+    background-color:$blueDark;
+    height: 5px;
+    position:fixed;
+    top:0;
+  }
 }
 
 footer{

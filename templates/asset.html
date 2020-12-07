@@ -10,6 +10,8 @@
 {% block content %}
     <section class="content" id="content">
         <h1>Asset {{ asset_num }}</h1>
+        <p id="asset-desc"></p>
+        <p id="asset-status"></p>
         <canvas class="graphCanvas" id="meterGraph"></canvas>
         <div id="stuff"></div>
     </section>
@@ -19,12 +21,22 @@
 <script src="/js/asset.js"></script>
 <script src="/js/graph.js"></script>
 <script>
-    let asset = new Asset(ASSET_NUM);
-    let graph;
-    asset.readings(true).then(readings => {
-        const ctx = document.getElementById("meterGraph").getContext("2d");
-        // TODO change the graph title so it has the asset number/name
-        graph = renderMeterReadings(ctx, readings);
-    });
+    (() => {
+        let asset = new Asset(ASSET_NUM);
+        let graph;
+        asset.readings(true).then(readings => {
+            const ctx = document.getElementById("meterGraph").getContext("2d");
+            // TODO change the graph title so it has the asset number/name
+            graph = renderMeterReadings(ctx, readings);
+        });
+        asset.init().then((a) => {
+            console.log(asset);
+            document.getElementById("asset-desc").innerHTML = asset.description;
+            document.getElementById("asset-status").innerHTML = `Status: ${asset.status}`
+        });
+    })();
 </script>
+<footer>
+    <p></p>
+</footer>
 {% endblock %}

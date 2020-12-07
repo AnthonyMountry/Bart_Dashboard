@@ -33,6 +33,34 @@ def handle_data_uploads(book: pyexcel.Book):
     return book.get_csv()
 
 
+class ProjectMeter(db.Model):
+    project                  = db.Column(db.String(3))
+    department               = db.Column(db.String(20))
+    meter_location           = db.Column(db.String(8))
+    metername                = db.Column(db.String(10))
+    meter_description        = db.Column(db.String(128))
+    meter_reading            = db.Column(db.Integer, default=0)
+    reading_date             = db.Column(db.Date)
+    meter_units_sql          = db.Column(db.String(4))
+    meter_units_from_project = db.Column(db.String(22))
+    meter_units              = db.Column(db.String(22))
+    goal                     = db.Column(db.Integer)
+    completion_percent       = db.Column(db.String(8)) # TODO remove this
+    goal_group               = db.Column(db.String(32))
+    workorder_num            = db.Column(db.Integer, primary_key=True)
+    description              = db.Column(db.String(128))
+    current_status           = db.Column(db.String(20))
+    reported_date            = db.Column(db.Date)
+    type                     = db.Column(db.Text)
+    tpid                     = db.Column(db.Integer, primary_key=True)
+    ps_project               = db.Column(db.Text)
+    ps_project_description   = db.Column(db.Text)
+    ps_activity              = db.Column(db.Text)
+    ps_activity_description  = db.Column(db.Text)
+
+# class ProjectMeter(db.Model): pass
+
+
 class Mpu(db.Model):
     id = db.Column(db.String(14), primary_key=True)
     name = db.Column(db.String(128))
@@ -57,7 +85,7 @@ class Mpu(db.Model):
     end_date = db.Column(db.Date)
 
 
-class MeterReadings(db.Model):
+class MeterReadings: # (db.Model)
     project = db.Column(db.String(14), primary_key=True)
     department= db.Column(db.String(32))
     meter_name = db.Column(db.String(32))
@@ -200,35 +228,35 @@ def put_mpu_criteria(id):
 
 #Start of Meter Reading API
 #Meter list
-@blueprint.route('/api/MeterReadings', methods=['GET'])
-def ListMeterReadings():
-    if request.method == 'GET':
-        #get the list of MeterReadings
-        result = db.execute(
-            # TODO list the MeterReadings data
-            'select * from MeterReadings'
-        )
-        d = dict()
-        for MeterReadings in result:
-            d[MeterReadings[2]] = MeterReadings
-        return d
+# @blueprint.route('/api/MeterReadings', methods=['GET'])
+# def ListMeterReadings():
+#     if request.method == 'GET':
+#         #get the list of MeterReadings
+#         result = db.execute(
+#             # TODO list the MeterReadings data
+#             'select * from MeterReadings'
+#         )
+#         d = dict()
+#         for MeterReadings in result:
+#             d[MeterReadings[2]] = MeterReadings
+#         return d
 
-#MPU Post Meter Reading (Not sure how to implement as many share same ID's, Project, etc)
-@blueprint.route('/api/MeterReadings/<project>', methods=['POST'])
-def post_MeterReadings(project):
-    raise NotImplemented
+# #MPU Post Meter Reading (Not sure how to implement as many share same ID's, Project, etc)
+# @blueprint.route('/api/MeterReadings/<project>', methods=['POST'])
+# def post_MeterReadings(project):
+#     raise NotImplemented
 
-#MPU get MeterReadings
-@blueprint.route('/api/MeterReadings/<project>', methods=['GET'])
-def get_MeterReadings(project):
-    raise NotImplemented
+# #MPU get MeterReadings
+# @blueprint.route('/api/MeterReadings/<project>', methods=['GET'])
+# def get_MeterReadings(project):
+#     raise NotImplemented
 
-#MPU Delete MeterReadings
-@blueprint.route('/api/MeterReadings/<project>', methods=['DELETE'])
-def del_MeterReadings(project):
-    raise NotImplemented
+# #MPU Delete MeterReadings
+# @blueprint.route('/api/MeterReadings/<project>', methods=['DELETE'])
+# def del_MeterReadings(project):
+#     raise NotImplemented
 
-#MPU Put MeterReadings
-@blueprint.route('/api/MeterReadings/<project>', methods=['PUT'])
-def put_MeterReadings(project):
-    raise NotImplemented
+# #MPU Put MeterReadings
+# @blueprint.route('/api/MeterReadings/<project>', methods=['PUT'])
+# def put_MeterReadings(project):
+#     raise NotImplemented
