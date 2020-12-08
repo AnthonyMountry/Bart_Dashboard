@@ -11,7 +11,7 @@ services:
     restart: unless-stopped
     ports:
       - target: 5432 # in container
-        published: 3456 # host machine
+        published: ${POSTGRES_PORT} # host machine
         protocol: tcp
         mode: bridge
     volumes: [./db/postgres:/docker-entrypoint-initdb.d:ro]
@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
     command:
       - 'wait-for'
-      - 'localhost:3456'
+      - 'localhost:${POSTGRES_PORT}'
       - '--'
       - 'scripts/entrypoint.sh'
       # - 'init'
@@ -39,13 +39,13 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_HOST: localhost
-      POSTGRES_PORT: 3456
+      POSTGRES_PORT: ${POSTGRES_PORT}
       POSTGRES_USER: ${POSTGRES_USER}
       FLASK_ENV: ${FLASK_ENV}
       FLASK_DEBUG: ${FLASK_DEBUG}
-    working_dir: '/app/src'
+    working_dir: '/app/vol/src'
     volumes:
-      - .:/app/src
+      - .:/app/vol/src
     expose:
       - 5000
     network_mode: host

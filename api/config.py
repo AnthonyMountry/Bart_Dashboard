@@ -2,8 +2,6 @@ import os
 from os.path import join as path_join
 from iniconfig import IniConfig
 
-from dotenv import load_dotenv
-load_dotenv()
 
 
 def read_config(filename):
@@ -40,11 +38,11 @@ def read_config(filename):
             config['SQLALCHEMY_DATABASE_URI'] = path_join('sqlite:///', dbfile)
             config['SQLITE_FILE'] = dbfile
     elif dbtype.lower() == 'postgres' or dbtype in {'postgres', 'postgresql'}:
-        u = ini.get('database', 'username', os.getenv("POSTGRES_USER"))
-        p = ini.get('database', 'password', os.getenv('POSTGRES_PASSWORD'))
+        u = ini.get('database', 'username') or os.getenv("POSTGRES_USER")
+        p = ini.get('database', 'password') or os.getenv('POSTGRES_PASSWORD')
         h = ini.get('database', 'host', 'localhost')
         port = ini.get('database', 'port', os.getenv('POSTGRES_PORT')) or 5432
-        name = ini.get('database', 'name', os.getenv('POSTGRES_DB'))
+        name = ini.get('database', 'name') or os.getenv('POSTGRES_DB')
         url = path_join(f'{h}:{port}', name)
         config['SQLALCHEMY_DATABASE_URI'] = f'postgresql://{u}:{p}@{url}'
         config['POSTGRES_USER'] = u

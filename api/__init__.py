@@ -1,7 +1,11 @@
 from flask import Flask
 from werkzeug.exceptions import NotFound
 
+from dotenv import load_dotenv
+load_dotenv()
+
 import os.path
+
 
 from api import (
     commands,
