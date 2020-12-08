@@ -11,4 +11,6 @@ class User(db.Model):
     hash = db.Column(db.String(128))
 
     def password_ok(self, pw) -> bool:
-        return bcrypt.check_password_hash(self.hash, pw)
+        if pw is None:
+            return False
+        return bcrypt.check_password_hash(self.hash, pw.encode('utf-8'))

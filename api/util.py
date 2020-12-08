@@ -5,6 +5,7 @@ import traceback
 from .errors import Err, Ok
 from .asset.models import Asset, MeterReading
 from .wo.models import WorkOrder
+from .user.models import User
 
 
 class ModelEncoder(flask.json.JSONEncoder):
@@ -38,6 +39,12 @@ class ModelEncoder(flask.json.JSONEncoder):
                 'finish': obj.finish,
                 'labor_hours': obj.labor_hours,
                 'material_cost': obj.material_cost,
+            }
+        elif isinstance(obj, User):
+            return {
+                'username': obj.username,
+                'email': obj.email,
+                'is_admin': obj.is_admin,
             }
         return super().default(obj)
 

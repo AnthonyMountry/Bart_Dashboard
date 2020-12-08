@@ -63,8 +63,10 @@ def login():
     u = get_user(us)
     if u is None:
         return render_template("login.html", bad_login=True)
-    if not bcrypt.check_password_hash(u.hash, pw.encode('utf8')):
-        return send_from_directory(STATIC_DIR, "html/bad_auth.html")
+    if not u.password_ok(pw):
+        return render_template("login.html", bad_login=True, bad_password=True)
+    # if not bcrypt.check_password_hash(u.hash, pw.encode('utf-8')):
+        # return render_template("login.html", bad_login=True, bad_password=True)
     return redirect("/dashboard")
 
 
