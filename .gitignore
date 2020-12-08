@@ -27,6 +27,7 @@ old*.html
 *.xlsx
 *.csv
 *.zip
+/db/postgres/database.dump
 /db/bart_data
 /db/UC Merced 2020 SE Project
 db/UC Merced 2020 SE Project*
