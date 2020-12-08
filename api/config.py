@@ -30,7 +30,7 @@ def read_config(filename):
     debug = ini.get('server', 'debug')
     if debug is not None:
         config['DEBUG'] = debug.lower() == 'true' or debug.lower() == 'yes'
-    dbtype = ini.get('database', 'type')
+    dbtype = ini.get('database', 'type', os.getenv("DATABASE_TYPE"))
     dbfile = ini.get('database', 'file')
     config['DATABASE_TYPE'] = dbtype
     if dbtype is None or dbtype == 'sqlite':
@@ -38,6 +38,7 @@ def read_config(filename):
             config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
         else:
             config['SQLALCHEMY_DATABASE_URI'] = path_join('sqlite:///', dbfile)
+            config['SQLITE_FILE'] = dbfile
     elif dbtype.lower() == 'postgres' or dbtype in {'postgres', 'postgresql'}:
         u = ini.get('database', 'username', os.getenv("POSTGRES_USER"))
         p = ini.get('database', 'password', os.getenv('POSTGRES_PASSWORD'))

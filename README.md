@@ -6,6 +6,12 @@ An internal analytics dashboard and project management system for BART.
 
 ### Run the Backend
 
+```
+docker-compose up
+```
+
+Or run naively.
+
 - [Install python 3](https://www.python.org/downloads/release/python-386/)
 - Install dependencies
 

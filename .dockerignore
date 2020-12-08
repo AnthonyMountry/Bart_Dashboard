@@ -1,8 +1,9 @@
-!db/UC Merced 2020 SE Project/
+db/UC Merced 2020 SE Project/
 node_modules/
 .git/
 .pytest_cache/
 **/__pycache__/
+.vscode/
 doc/
 migrations/
 tests/
@@ -17,5 +18,11 @@ db/*.db
 .dockerignore
 docker-compose.yml
 
-# !db/bart_data.zip # We need the data
 **/*.csv
+
+TODO.md
+*.sh
+.env
+
+!*.py
+!scripts/entrypoint.sh

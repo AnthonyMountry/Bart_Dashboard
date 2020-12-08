@@ -16,17 +16,21 @@ def list_assets():
             Asset.description.like(key),
             Asset.bartdept.like(key),
             Asset.status.like(key),
-            Asset.num == search,
         ))
+        # Asset.num == search, # TODO check that the search param is an int
     else:
         res = Asset.query
+
+    limit = request.args.get("limit")
+    offset = request.args.get('offset')
+    if limit:
+        res  = res.limit(limit)
+    if offset:
+        res = res.offset(offset)
+
     return Ok(
         msg='assets successfully listed',
-        assets=res.limit(
-            request.args.get("limit")
-        ).offset(
-            request.args.get("offset")
-        ).all(),
+        assets=res.all(),
     )
 
 @blueprint.route('/api/asset/<assetnum>', methods=['GET'])

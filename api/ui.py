@@ -11,6 +11,9 @@ from flask import (
     send_from_directory,
 )
 
+from .user import get_user
+from .extensions import bcrypt
+
 blueprint = Blueprint('ui', __name__)
 
 STATIC_DIR = 'public'
@@ -51,14 +54,16 @@ def home(path):
 @blueprint.route('/login', methods=set(['GET', 'POST']))
 def login():
     if request.method == 'GET':
-        return send_from_directory(STATIC_DIR, 'html/index.html')
-    # TODO handle auth
-    if request.method != "POST":
-        return '''<h1>i dont know whats going on</h1>'''
-
+        return render_template("login.html")
     us = request.form.get("username")
     pw = request.form.get('password') or request.form.get("pw")
+
     if not us or not pw:
+        return send_from_directory(STATIC_DIR, "html/bad_auth.html")
+    u = get_user(us)
+    if u is None:
+        return render_template("login.html", bad_login=True)
+    if not bcrypt.check_password_hash(u.hash, pw.encode('utf8')):
         return send_from_directory(STATIC_DIR, "html/bad_auth.html")
     return redirect("/dashboard")
 

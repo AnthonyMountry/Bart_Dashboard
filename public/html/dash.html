@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="/public/css/styles.css">
         <link rel="stylesheet" href="/public/css/dashboard_content.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+        <script defer src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -31,7 +31,8 @@
                         <!-- TODO sub-menu here maybe?? -->
                     </li>
                     <li>
-                        <a href ="/analytics"> <i class = "active"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a>
+                        <a href ="/analytics"> <i class = "active">
+                            <i class="fa fa-cube" aria-hidden ="true"></i> Analytics</a>
                     </li>
                     <li>
                         <a href ="/search"><i class="fa fa-search" aria-hidden = "true"></i> Search </a>
@@ -75,7 +76,7 @@
                 </form>
 
                 <div class = "accountInfo">
-                    <a href = "#" class = "userName">Name</a>
+                    <a href = "#" class = "userName">Admin</a>
                     <a href = "/notifications" class = "notifications">
                         <i class="fa fa-bell" aria-hidden = "true"></i>
                         <span class = "notificationNum" id="notificationNum">
@@ -108,7 +109,6 @@
                 <div class = "bottomSection">
                     <button id="assetsToggle"><i class="fa fa-chevron-down" aria-hidden = "true"></i>Assets</button>
                     <table
-                     data-toggle="collapse"
                      class="assetsTable table"
                      id="assetsTable"
                      style="width: 80%; text-align: left;"
@@ -162,8 +162,7 @@
                 table.render();
                 const assetsToggle = document.getElementById("assetsToggle");
                 assetsToggle.addEventListener("click", (event) => {
-                    // table.toggle();
-                    // $("#assetTable").toggleClass("active")
+                    table.toggle();
                 });
 
                 // file upload stuff

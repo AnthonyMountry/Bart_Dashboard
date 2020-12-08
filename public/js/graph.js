@@ -239,7 +239,9 @@ function renderMeterReadings(ctx, readings) {
       hidden: false,
     });
   }
+  //let opts = { ...DEFAULT_OPTS };
   let opts = { ...DEFAULT_OPTS };
+  opts.plugins.legend = true;
   opts.scales = {
     xAxes: [
       {

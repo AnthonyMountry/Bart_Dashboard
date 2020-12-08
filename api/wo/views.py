@@ -31,3 +31,5 @@ def get_work_order(wonum):
             return Ok(f'successfully deleted work order {wonum}')
         else:
             return Err(f'could not delete work order {wonum}', 404), 404
+
+# @blueprint.route('/api/workorder', )

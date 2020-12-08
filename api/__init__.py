@@ -3,13 +3,19 @@ from werkzeug.exceptions import NotFound
 
 import os.path
 
-from api import commands, asset, wo, errors, ui
+from api import (
+    commands,
+    asset,
+    wo,
+    errors,
+    ui,
+    project,
+    user
+)
 from api.config import read_config
-from api.util import ModelEncoder, ModelResponse
-from api.app import blueprint
-from flask_compress import Compress
+from api.util import ModelEncoder
+from api.app import blueprint, api
 
-app_context = None
 
 def create_app(conf=None):
     app = Flask(
@@ -24,14 +30,15 @@ def create_app(conf=None):
         conf = read_config('api.ini')
 
     app.root_path = os.getcwd()
-
     app.json_encoder = ModelEncoder
-    app_context = app.app_context
 
+    app.register_blueprint(project.blueprint)
     app.register_blueprint(asset.blueprint)
     app.register_blueprint(wo.blueprint)
     app.register_blueprint(ui.blueprint)
-    app.register_blueprint(blueprint)
+    app.register_blueprint(user.blueprint)
+    app.register_blueprint(api)
+    # app.register_blueprint(blueprint)
 
     app.register_error_handler(Exception, errors.handle_all)
     app.register_error_handler(NotFound, errors.handle_notfound)
@@ -48,9 +55,3 @@ def create_app(conf=None):
     migrate.init_app(app, db)
     compress.init_app(app)
     return app
-
-
-def _read_only_db(*args, **kwargs):
-    # https://writeonly.wordpress.com/2009/07/16/simple-read-only-sqlalchemy-sessions/
-    # for testing, maybe
-    return # do nothing

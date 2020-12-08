@@ -44,7 +44,7 @@ def load_db_cmd():
             '-c', '\i db/pg_load.sql',
         ]
     elif  type == 'sqlite' or type == 'sqlite3':
-        args = ["sqlite3", current_app.config['SQLALCHEMY_DATABASE_URI'], ".read db/load.sql"]
+        args = ["sqlite3", current_app.config['SQLITE_FILE'], ".read db/load.sql"]
     else:
         args = []
     subprocess.run(args)

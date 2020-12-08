@@ -1,8 +1,4 @@
-from os.path import (
-    join as path_join,
-    exists as path_exists,
-)
-
+from datetime import datetime
 import pyexcel
 from flask import (
     Blueprint,
@@ -13,19 +9,24 @@ from flask import (
 from api.middleware import with_spreadsheet
 from api.extensions import db
 
-blueprint = Blueprint('api', __name__)
 
+api = Blueprint('api', __name__)
 STATIC_DIR = 'public'
 
-@blueprint.route('/api/rootpath', methods=['GET'])
+@api.route('/api/rootpath', methods=['GET'])
 def _get_rootpath():
     return current_app.root_path
 
-@blueprint.route('/api/test', methods=['GET', 'POST'])
+@api.route('/api/test', methods=['GET', 'POST'])
 def api_test():
-    return {'testing': 'testing 123'}
+    print(request.form)
+    print(request.json)
+    print(request.get_json())
+    print(request.json.get('test'))
+    print(request.json.get('name'))
+    return {'testing': 'testing 123', 'date': datetime.now()}
 
-@blueprint.route('/api/upload', methods=('POST',))
+@api.route('/api/upload', methods=('POST',))
 @with_spreadsheet
 def handle_data_uploads(book: pyexcel.Book):
     # TODO finish this
@@ -33,56 +34,8 @@ def handle_data_uploads(book: pyexcel.Book):
     return book.get_csv()
 
 
-class ProjectMeter(db.Model):
-    project                  = db.Column(db.String(3))
-    department               = db.Column(db.String(20))
-    meter_location           = db.Column(db.String(8))
-    metername                = db.Column(db.String(10))
-    meter_description        = db.Column(db.String(128))
-    meter_reading            = db.Column(db.Integer, default=0)
-    reading_date             = db.Column(db.Date)
-    meter_units_sql          = db.Column(db.String(4))
-    meter_units_from_project = db.Column(db.String(22))
-    meter_units              = db.Column(db.String(22))
-    goal                     = db.Column(db.Integer)
-    completion_percent       = db.Column(db.String(8)) # TODO remove this
-    goal_group               = db.Column(db.String(32))
-    workorder_num            = db.Column(db.Integer, primary_key=True)
-    description              = db.Column(db.String(128))
-    current_status           = db.Column(db.String(20))
-    reported_date            = db.Column(db.Date)
-    type                     = db.Column(db.Text)
-    tpid                     = db.Column(db.Integer, primary_key=True)
-    ps_project               = db.Column(db.Text)
-    ps_project_description   = db.Column(db.Text)
-    ps_activity              = db.Column(db.Text)
-    ps_activity_description  = db.Column(db.Text)
-
+blueprint = Blueprint('_api', __name__)
 # class ProjectMeter(db.Model): pass
-
-
-class Mpu(db.Model):
-    id          = db.Column(db.String(14), primary_key=True)
-    name        = db.Column(db.String(128))
-    short_name  = db.Column(db.String(128))
-    ranking     = db.Column(db.Integer)
-    description = db.Column(db.Text)
-    location    = db.Column(db.String(128))
-    sub_location = db.Column(db.String(128))
-    district_location = db.Column(db.String(32))
-    mpu_phase = db.Column(db.String(32))
-    budget_amount    = db.Column(db.Float)
-    expended_amount  = db.Column(db.Float)
-    remaining_budget = db.Column(db.Float)
-    funding_level    = db.Column(db.String(16))
-    end_date = db.Column(db.Date)
-    rr_funded = db.Column(db.Boolean)
-    monthly_burn_rate = db.Column(db.Float)
-    accomplishments = db.Column(db.Text)
-    project_group = db.Column(db.String(50))
-    project_manager = db.Column(db.Text)
-    program = db.Column(db.String(32))
-    review_format = db.Column(db.String(24))
 
 
 class MeterReadings: # (db.Model)
@@ -107,17 +60,6 @@ class MeterReadings: # (db.Model)
     ps_proj_description = db.Column(db.String(256))
     ps_activity = db.Column(db.String(16))
     ps_activity_description =db.Column(db.String(256))
-
-# Start of MPU API
-#MPU
-#MPU list
-@blueprint.route('/api/mpus', methods=['GET'])
-def listMPU():
-    return {
-        'mpus': Mpu.query.limit(
-            request.args.get('limit')
-        ).all()
-    }, 200
 
 
 #MPU IDs

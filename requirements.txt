@@ -1,10 +1,13 @@
 alembic==1.4.3
 attrs==20.2.0
+bcrypt==3.2.0
 Brotli==1.0.9
 certifi==2020.6.20
+cffi==1.14.4
 click==7.1.2
 et-xmlfile==1.0.1
 Flask==1.1.2
+Flask-Bcrypt==0.7.1
 Flask-Compress==1.8.0
 Flask-Migrate==2.5.3
 Flask-SQLAlchemy==2.4.4
@@ -21,6 +24,7 @@ packaging==20.4
 pluggy==0.13.1
 psycopg2-binary==2.8.6
 py==1.9.0
+pycparser==2.20
 pyexcel==0.6.5
 pyexcel-io==0.6.3
 pyexcel-xls==0.6.1

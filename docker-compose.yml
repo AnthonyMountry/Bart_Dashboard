@@ -14,9 +14,7 @@ services:
         published: 3456 # host machine
         protocol: tcp
         mode: bridge
-    volumes:
-      - ./db/postgres:/docker-entrypoint-initdb.d:ro # init scripts
-      # - ./db/cleaned:/db/cleaned:ro # data
+    volumes: [./db/postgres:/docker-entrypoint-initdb.d:ro]
 
   backend:
     container_name: bart-dashboard-backend
@@ -27,7 +25,8 @@ services:
       - 'wait-for'
       - 'localhost:3456'
       - '--'
-      - 'docker/entrypoint.sh'
+      - 'scripts/entrypoint.sh'
+      # - 'init'
       - 'gunicorn'
       - '-w'
       - '8'
