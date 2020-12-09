@@ -21,12 +21,14 @@ old*.html
 *.sh
 !docker/entrypoint.sh
 
-# Database
+# Data
 *.db
 *.db-journal
 *.xlsx
 *.csv
 *.zip
+*.tar.gz
+*.tar.xz
 /db/postgres/database.dump
 /db/bart_data
 /db/UC Merced 2020 SE Project

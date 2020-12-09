@@ -84,6 +84,7 @@ See [database documentation](doc/db/README.md).
 | [`/api/asset/<id>`](#Assets "/api/asset")               | `GET`, `POST`, `DELETE`, `PUT` | Manage a single asset                 |
 | [`/api/asset/<id>/readings`](#Assets "/api/asset")      | `GET`                          | List an asset's meter readings        |
 | [`/api/workorder/<id>`](#work-order "/api/workorder")   | `GET`, `POST`, `DELETE`, `PUT` | Manage work orders                    |
+| [`/api/user`](#user)                                    | `GET`, `POST`, `DELETE`, `PUT` | user stuff                            |
 
 ### File Uploads
 
@@ -348,7 +349,6 @@ If and endpoint does not return data, then it should return an error response as
   "code": 1234   // error code (0 for success)
 }
 ```
-
 
 
 ## TODO

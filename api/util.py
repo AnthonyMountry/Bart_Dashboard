@@ -6,6 +6,7 @@ from .errors import Err, Ok
 from .asset.models import Asset, MeterReading
 from .wo.models import WorkOrder
 from .user.models import User
+from .project.models import Mpu
 
 
 class ModelEncoder(flask.json.JSONEncoder):
@@ -45,6 +46,30 @@ class ModelEncoder(flask.json.JSONEncoder):
                 'username': obj.username,
                 'email': obj.email,
                 'is_admin': obj.is_admin,
+            }
+        elif isinstance(obj, Mpu):
+            return {
+                'id': obj.id,
+                'name': obj.name,
+                'short_name': obj.short_name,
+                'ranking': obj.ranking,
+                'description': obj.description,
+                'location': obj.location,
+                'sub_location': obj.sub_location,
+                'district_location': obj.district_location,
+                'mpu_phase': obj.mpu_phase,
+                'budget_amount': obj.budget_amount,
+                'expended_amount': obj.expended_amount,
+                'remaining_budget': obj.remaining_budget,
+                'funding_level': obj.funding_level,
+                'end_date': obj.end_date,
+                'rr_funded': obj.rr_funded,
+                'monthly_burn_rate': obj.monthly_burn_rate,
+                'accomplishments': obj.accomplishments,
+                'project_group': obj.project_group,
+                'project_manager': obj.project_manager,
+                'program': obj.program,
+                'review_format': obj.review_format,
             }
         return super().default(obj)
 

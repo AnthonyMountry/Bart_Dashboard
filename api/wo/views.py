@@ -1,31 +1,60 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request as req, jsonify
+from sqlalchemy import func, distinct
 
 from ..errors import Err, Ok
+from ..extensions import db
 from .models import WorkOrder
-
 
 blueprint = Blueprint('work_order', __name__)
 
 
 @blueprint.route('/api/workorders', methods=('GET',))
 def list_workorders():
+    search = req.args.get('search')
+    if search:
+        term = '|'.join(search.split(' '))
+        res = WorkOrder.query.filter(
+            func.to_tsvector(
+                func.coalesce(WorkOrder.description, '').op('||')(' ') \
+                .op('||')(WorkOrder.location).op('||')(' ')            \
+                .op('||')(WorkOrder.asset_type).op('||')(' ')          \
+                .op('||')(WorkOrder.bartdept)
+            ).op('@@')(func.to_tsquery(term))
+        )
+    else:
+        res = WorkOrder.query
+
+    if 'asset_type' in req.args:
+        res = res.filter_by(asset_type=req.args.get('asset_type'))
+    if 'status' in req.args:
+        res = res.filter_by(status=req.args.get('status'))
+
+    if 'limit' in req.args:
+        res = res.limit(req.args.get('limit'))
+    if 'offset' in req.args:
+        res = res.offset(req.args.get('offset'))
+    return {'workorders': res.all()}, 200
+
+
+@blueprint.route('/api/workorder/statuses', methods=('GET',))
+def workorder_statuses():
     return {
-        'workorders': WorkOrder.query           \
-            .limit(request.args.get("limit"))   \
-            .offset(request.args.get("offset")) \
-            .all()
-    }, 200
+        'statuses': [
+            s[0] for s in
+            db.session.query(distinct(WorkOrder.status)).all()
+        ]
+    }
 
 
 @blueprint.route('/api/workorder/<wonum>', methods=('GET', 'DELETE'))
 def get_work_order(wonum):
     res = WorkOrder.query.filter_by(num=wonum)
-    if request.method == 'GET':
+    if req.method == 'GET':
         res = res.all()
         if len(res) != 1:
             return jsonify(Err(f"did not find {wonum}")), 404
         return jsonify(res[0])
-    elif request.method == 'DELETE':
+    elif req.method == 'DELETE':
         ok = res.delete()
         if ok:
             return Ok(f'successfully deleted work order {wonum}')

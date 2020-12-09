@@ -50,6 +50,7 @@ def create_app(conf=None):
 
     app.cli.add_command(commands.init_cmd)
     app.cli.add_command(commands.load_db)
+    app.cli.add_command(commands.clean_data)
     app.cli.add_command(commands.test_cmd)
     app.cli.add_command(commands.config)
     app.cli.add_command(commands.add_user)

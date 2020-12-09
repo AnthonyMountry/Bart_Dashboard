@@ -111,7 +111,7 @@ class AssetTable {
       this.showAssets(this.assets);
       return;
     }
-    listAssets({ limit: lim, offset: 0 })
+    listAssets({ limit: lim, offset: self.assets.length })
       .then((assets) => {
         this.assets = assets; // cache the result
         this.showAssets(assets);

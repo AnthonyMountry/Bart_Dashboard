@@ -453,6 +453,20 @@ def extract_project_meters(filename: str) -> Sheet:
     sheet: Sheet = pe.get_book(file_name=filename).sheet_by_index(0)
     sheet.name_columns_by_row(0)
     sheet.delete_named_column_at('Location of Meter-1')
+
+    assert sheet.colnames[6] == 'Reading Date'
+    assert sheet.colnames[18] == 'TPID'
+    assert sheet.colnames[13] == 'WO #'
+    assert sheet.colnames[10] == 'Goal'
+
+    sheet.column[6] = list(map(parse_date, sheet.named_column_at('Reading Date')))
+    # for i in range(sheet.number_of_rows()):
+    #     if sheet.column[18][i] == 'NO LISTED PROJECT WO':
+    #         sheet.column[18][i] = -1
+    #     if sheet.column[13][i] == 'NO LISTED PROJECT WO':
+    #         sheet.column[13][i] = -1
+    #     if sheet.column[10][i] == 'NO KNOWN GOAL':
+    #         sheet.column[10][i] = -1
     return sheet
 
 
@@ -466,17 +480,13 @@ def main(base_dir, output_dir):
         elif argv[0] == 'output-dir':
             print(output_dir)
             sys.exit(0)
-    book_filename = path_join(base_dir, 'Monthly Project Update - MPU/MPU_July 20_20200820.xlsm')
-    book = pe.get_book(file_name=book_filename)
-    extract_mpu(book, path_join(output_dir, 'mpu.csv'))
-    sys.exit(1)
 
     name = path_join(base_dir, "C25 A65 Meters", "11-4-20 All Location Meter Data.xlsx")
     sheet = extract_project_meters(name)
-    print(sheet)
     sheet.colnames = []
     with open(path_join(output_dir, "project_meter.csv"), "w") as f:
         f.write(sheet.get_csv())
+    sys.exit(0)
 
     files = [
         "11-4-20 All Location Meter Data.xlsx",
@@ -486,9 +496,6 @@ def main(base_dir, output_dir):
     sheets = (pe.get_book(file_name=f).sheet_by_name('WO info') for f in files)
 
 
-
-
-    sys.exit(0)
     # extract_throw_counts([
     #     path_join(BASE_DIR, 'TC Switch Machines', 'Switch Machine Count Report 8-24-20 r2.xlsx'),
     #     path_join(BASE_DIR, 'TC Switch Machines', 'Quarterly Throw Count Labor Evaluation - 2020-05-19.xlsx'),
@@ -520,6 +527,11 @@ def main(base_dir, output_dir):
 
 
 def clean(base_dir, output_dir, meters=False):
+    if meters: # This takes a very long time.
+        filename = path_join(output_dir, 'all_meterdata.csv')
+        writer = MeterDataWriter(filename, [path_join(base_dir, f) for f in METER_READING_FILES], logging=True)
+        writer.run()
+
     filename = path_join(base_dir, "Power", "POWER WOs 9-22-2018 to 9-21-2020.xlsx")
     with open(path_join(output_dir, 'work_order.csv'), 'w') as f:
         f.write(extract_work_orders(filename).get_csv())
@@ -539,11 +551,11 @@ def clean(base_dir, output_dir, meters=False):
     book = pe.get_book(file_name=book_filename)
     extract_mpu(book, path_join(output_dir, 'mpu.csv'))
 
-    # This takes a very long time.
-    if meters:
-        filename = path_join(output_dir, 'all_meterdata.csv')
-        writer = MeterDataWriter(filename, [path_join(base_dir, f) for f in METER_READING_FILES], logging=True)
-        writer.run()
+    name = path_join(base_dir, "C25 A65 Meters", "11-4-20 All Location Meter Data.xlsx")
+    sheet = extract_project_meters(name)
+    sheet.colnames = []
+    with open(path_join(output_dir, "project_meter.csv"), "w") as f:
+        f.write(sheet.get_csv())
 
 
 if __name__ == '__main__':

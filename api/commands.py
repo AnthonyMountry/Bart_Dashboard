@@ -31,7 +31,6 @@ def clean_data(clean_meters):
     click.echo('cleaning data...')
     clean('db/UC Merced 2020 SE Project', 'db/cleaned', clean_meters)
     click.echo('done.')
-    pass
 
 
 @click.command('load-db', short_help='Clean the data and load it into the database')
