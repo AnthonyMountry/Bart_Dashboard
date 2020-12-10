@@ -1,5 +1,5 @@
 @import "variables" ;
-@import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200&display=swap');
+// @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@200&display=swap');
 
 
 #dashContent{
@@ -13,9 +13,8 @@
     hr{
         width: 95%;
         margin-right:8%;
-
-
     }
+
     .middleSection{
         margin-top: 60px;
         height:40%;
@@ -71,14 +70,15 @@
         bottom:0px;
         margin-top:20px;
 
+        padding-bottom: 10px;
+        margin-bottom: 2rem;
+
         .assetsTable{
            height: 100%;
            width:90%;
            margin-left:15%;
 
             // outline: 0.3px solid $black;
-
-
         }
     }
 

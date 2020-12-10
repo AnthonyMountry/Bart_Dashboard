@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
     <style>
-        body {font-family: Verdana, Geneva, sans-serif;}
+        /* body {font-family: Verdana, Geneva, sans-serif;} */
      </style>
     <head>
         <meta charset="UTF-8">
@@ -12,7 +12,6 @@
         <link rel="stylesheet" href="/public/css/styles.css">
         <link rel="stylesheet" href="/public/css/dashboard_content.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <script defer src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
@@ -39,7 +38,7 @@
                     </li>
                 </ul>
 
-                <ul class="list-unstyled CTAs">
+                <ul class="list-unstyled">
                     <li>
                         <form enctype="multipart/form-data" action="/api/upload" method="POST">
                             <input
@@ -107,29 +106,58 @@
                 <hr>
 
                 <div class = "bottomSection">
-                    <button id="assetsToggle"><i class="fa fa-chevron-down" aria-hidden = "true"></i>Assets</button>
-                    <table
+                    <div class="container">
+                        <form id="asset-table-form">
+                            <div class="row justify-content-md-center">
+                                <div class="col col-lg">
+                                </div>
+                                <div class="col col-lg-5 input-group">
+                                    <div class="input-group-prepend">
+                                        <span id="asset-table-search-btn" class="input-group-text btn btn-light" type="button">Search</span>
+                                    </div>
+                                    <input id="asset-table-search" type="text" class="search form-control" />
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="container table-container">
+                        <table id="asset-table" class="table table-sm table-striped table-bordered" cellspacing="0" width="100%"></table>
+                        <button id="asset-table-first" class="btn btn-outline-dark">first</button>
+                        <button id="asset-table-last" class="btn btn-outline-dark">last</button>
+                        <button id="asset-table-prev" class="btn btn-outline-primary" disabled>0</button>
+                        <button id="asset-table-current" class="btn btn-secondary" disabled>1</button>
+                        <button id="asset-table-next" class="btn btn-outline-primary">2</button>
+                    </div>
+
+                    <!-- <button id="assetsToggle"><i class="fa fa-chevron-down" aria-hidden = "true"></i>Assets</button> -->
+                    <!-- <table
                      class="assetsTable table"
                      id="assetsTable"
                      style="width: 80%; text-align: left;"
-                    >
-                        <!-- API call results go here -->
-                    </table>
+                    > </table> -->
                 </div>
             </section>
+            <footer>
+                <p></p>
+            </footer>
         </div> <!-- class=wrapper -->
 
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
         <script src="/public/js/graph.js"></script>
         <script src="/public/js/asset.js"></script>
         <script src="/public/js/upload.js"></script>
+        <script src="/public/js/table.js"></script>
 
         <script>
             // render everything when the page is done loading
+            let tab;
+
             (() => {
                 $('#sidebarCollapse').on('click', function () {
                     $('#sidebar').toggleClass('active');
@@ -151,19 +179,52 @@
                 //     .getContext('2d');
                 // window.myScatter = testGraph(meterCtx);
 
+
+                const tableSettings = {
+                    colnames: ['Asset', 'Department', 'Status', 'Description'],
+                    column_mapping: {
+                        0: 'num',
+                        1: 'bartdept',
+                        2: 'status',
+                        3: 'description',
+                    },
+                    renderCell: (tag, asset, key) => {
+                        let elem = document.createElement(tag);
+                        if (key === 'num') {
+                            elem.innerHTML = `<a href="/asset?assetnum=${asset[key]}">${asset[key]}</a>`;
+                        } else {
+                            elem.innerHTML = asset[key];
+                        }
+                        return elem
+                    }
+                }
                 const statusCtx = document.getElementById("assetStatusBarChart").getContext("2d");
                 const meterCtx = document.getElementById('meterReadingsChart').getContext('2d');
                 listAssets().then((assets) => {
                     renderBarGraph(statusCtx, assets);
                     testGraph(meterCtx, assets);
-                })
-
-                let table = new AssetTable("assetsTable", -1);
-                table.render();
-                const assetsToggle = document.getElementById("assetsToggle");
-                assetsToggle.addEventListener("click", (event) => {
-                    table.toggle();
+                    // tableSettings.rows = assets;
+                    tab = new Table("asset-table", tableSettings);
+                    tab.setRows(assets);
+                    tab.render();
                 });
+                const asset_search = (event) => {
+                    event.preventDefault();
+                    let text = document.getElementById("asset-table-search").value;
+                    listAssets({search: text}).then((assets)=>{
+                        tab.teardown();
+                        // tableSettings.rows = assets;
+                        tab = new Table("asset-table", tableSettings);
+                        tab.setRows(assets);
+                        tab.render();
+                    });
+                }
+                document.getElementById("asset-table-search-btn")
+                  .addEventListener("click", asset_search);
+                document.getElementById("asset-table-form")
+                  .addEventListener("submit", asset_search);
+
+                let s = ''.toUpperCase
 
                 // file upload stuff
                 document
@@ -175,9 +236,7 @@
                     .addEventListener("click", (e) => e.preventDefault());
             })();
         </script>
-        <footer>
-            <p></p>
-        </footer>
+
     </body>
 
 </html>

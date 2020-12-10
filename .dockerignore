@@ -1,28 +1,29 @@
+# Data
 db/UC Merced 2020 SE Project/
+db/*.db
+*.db
+**/*.db
+**/*.csv
+**/*.zip
+**/*.sqlite
+**/*.tar.gz
+**/*.tar.xz
+!scripts/entrypoint.sh
+
+# Tools
+**/*.pdf
+**/__pycache__/
 node_modules/
 .git/
 .pytest_cache/
-**/__pycache__/
 .vscode/
 doc/
 migrations/
 tests/
 public/css/
-db/dashboard.db
-db/test.db
-db/*.db
-*.db
-**/*.zip
-**/*.sqlite
-**/*.pdf
-.dockerignore
 docker-compose.yml
+.dockerignore
 
-**/*.csv
-
+# Misc
 TODO.md
-*.sh
 .env
-
-!*.py
-!scripts/entrypoint.sh

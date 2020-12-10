@@ -28,7 +28,7 @@ function searchMPU() {
   input = input.toLowerCase();
 
   const retrieveData = async (input) => {
-    const response = await fetch("http://127.0.0.1:5000/api/mpu/" + input); //calling MPU api with provided id to get the data
+    const response = await fetch("/api/mpu/" + input); //calling MPU api with provided id to get the data
     const myJson = await response.json(); //extract JSON from the http response
     return myJson;
   };

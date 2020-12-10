@@ -30,6 +30,7 @@ old*.html
 *.tar.gz
 *.tar.xz
 /db/postgres/database.dump
+!/db/postgres/*sh
 /db/bart_data
 /db/UC Merced 2020 SE Project
 db/UC Merced 2020 SE Project*
