@@ -99,7 +99,8 @@ CREATE TABLE _tmp_project_meter (
 	ps_activity_description  TEXT
 );
 
-\copy _tmp_project_meter FROM 'db/cleaned/project_meter.csv' DELIMITER ',' CSV;
+-- TODO This still has type errors
+-- \copy _tmp_project_meter FROM 'db/cleaned/project_meter.csv' DELIMITER ',' CSV;
 
 --  UPDATE _tmp_project_meter SET tpid = -1            WHERE tpid = 'NO LISTED PROJECT WO';
 --  UPDATE _tmp_project_meter SET workorder_num = -1   WHERE workorder_num = 'NO LISTED PROJECT';

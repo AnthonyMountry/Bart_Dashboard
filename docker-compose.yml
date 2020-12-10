@@ -26,7 +26,6 @@ services:
       - 'localhost:${POSTGRES_PORT}'
       - '--'
       - 'scripts/entrypoint.sh'
-      # - 'init'
       - 'gunicorn'
       - '-w'
       - '8'

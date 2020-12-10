@@ -19,7 +19,7 @@ def list_assets():
         #         .op('||')(Asset.bartdept)
         #     ).op('@@')(func.to_tsquery(term)),
         # )
-        res = Asset.query.filter(column('text_document').op('@@')(func.to_tsquery(term)))
+        res = Asset.query.filter(column('search_vec').op('@@')(func.to_tsquery(term)))
 
     else:
         res = Asset.query

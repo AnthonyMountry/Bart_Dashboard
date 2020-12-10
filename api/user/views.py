@@ -10,19 +10,35 @@ from .models import User
 
 blueprint = Blueprint('user', __name__)
 
+def create_user(name, email, pw, admin=False):
+    u = User(
+        username=name,
+        email=email,
+        is_admin=admin,
+        hash=bcrypt.generate_password_hash(pw.encode("utf-8")).decode("utf-8"),
+    )
+    db.session.add(u)
+    db.session.commit()
+    return u
+
 @blueprint.route('/api/user', methods=('GET', 'PUT', 'DELETE'))
 def user():
     username = req.args.get('username') or req.args.get('user') or req.args.get('u')
     email = req.args.get('email')
     if not username and not email:
         return {'error': 'no information given'}, 400
-    res = User.query.filter(or_(
-        User.username == username,
-        User.email == email,
-    )).all()
+    q = User.query
+    if username:
+        q = q.filter(User.username == username)
+    if email:
+        q = q.filter(User.email == email)
 
+    res = q.all()
     if not res:
         return {'error': 'could not find user'}, 404
+    elif len(res) > 1:
+        return {'error': 'duplicate user, give more inforamtion'}, 401
+
     u = res[0]
 
     pw = req.args.get('password') or req.args.get('pw') or req.args.get('p')

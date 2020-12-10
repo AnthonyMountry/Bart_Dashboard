@@ -57,7 +57,16 @@ def test_bad_workorder(client):
     assert resp.status_code == 404
 
 def test_login(client):
-    pass
+    resp = client.get('/api/user?u=test-user&pw=testing1234')
+    assert resp.status_code == 200
+    assert resp.json
+    assert resp.json['username'] == 'test-user'
+    resp = client.get('/api/user?u=test-user&pw=wrongpassword')
+    assert resp.status_code == 401
+    resp = client.get('/api/user')
+    assert resp.status_code == 400
+    resp = client.get('/api/user?username=__nonexistant_test_user__')
+    assert resp.status_code == 404
 
 def test_search(client):
     resp: Response = client.get('/api/assets?search=swat')
