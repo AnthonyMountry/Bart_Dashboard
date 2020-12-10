@@ -6,13 +6,9 @@ import click
 from flask.cli import with_appcontext
 from flask import current_app
 from db.clean import clean
-import json
 from pprint import pprint
 from api.user import create_user
 
-@click.command("test", short_help='test', hidden=True)
-def test_cmd():
-    ...
 
 @click.command('config', short_help='get config info')
 @click.argument('args', nargs=-1)
@@ -38,25 +34,12 @@ def clean_data(clean_meters):
 def load_db():
     type = current_app.config['DATABASE_TYPE']
     if type == 'postgres' or type == 'postgresql':
-        args = [
-            'psql',
-            current_app.config['SQLALCHEMY_DATABASE_URI'],
-            '-c', '\i db/pg_load.sql',
-        ]
+        args = ['psql', current_app.config['SQLALCHEMY_DATABASE_URI'], '-c', '\i db/pg_load.sql']
     elif  type == 'sqlite' or type == 'sqlite3':
         args = ["sqlite3", current_app.config['SQLITE_FILE'], ".read db/load.sql"]
     else:
         args = []
     subprocess.run(args)
-
-
-@click.command('init', short_help='Run all the api setup in one command')
-def init_cmd():
-    print('initializing app...')
-    # TODO figure out how to run the database
-    # migration commands here
-
-    print('done')
 
 
 @click.command('add-user', short_help='Add a user')

@@ -33,9 +33,9 @@
                         Labor Hours
                     </span>
                     <canvas id="woHours"></canvas>
-                    <div id="slidecontainer">
+                    <!-- <div id="slidecontainer">
                         <input type="range" min="0" max="100" value="0" class="slider" id="slider">
-                    </div>
+                    </div> -->
                     <div id="x"></div>
                 </div>
             </div>
@@ -59,20 +59,14 @@
             const pieCtx = document.getElementById("woPiChart").getContext("2d");
             const DoughnutCtx = document.getElementById("woDoughnut").getContext("2d");
             const BarCtx = document.getElementById("woHours").getContext("2d");
-            const slider = document.getElementById("slider")
-            slider.addEventListener("change", (event) => {
-                // console.log(g.config.options.scales)
-                // g.config.options.scales.xAxes[0].time.min = event.target.value;
+            // const slider = document.getElementById("slider")
+            // slider.addEventListener("change", (event) => {
+            //     // console.log(g.config.options.scales)
+            //     // g.config.options.scales.xAxes[0].time.min = event.target.value;
 
-                g.scales['x-axis-1'].max = event.target.value;
-                g.draw();
-
-                // g.scaleService.updateScaleDefaults('linear', {
-                //     ticks: {
-                //         min: 0
-                //     }
-                // });
-            })
+            //     g.scales['x-axis-1'].max = event.target.value;
+            //     g.draw();
+            // })
 
             // listWO().then(wos => {
             listWO({limit: 5000}).then(wos => {

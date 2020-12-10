@@ -4,7 +4,7 @@ from iniconfig import IniConfig
 
 
 
-def read_config(filename):
+def read_config(filename): # pragma no cover
     config = {
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
         'SQLALCHEMY_DATABASE_URI': 'sqlite:///:memory:',

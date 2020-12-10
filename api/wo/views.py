@@ -24,7 +24,7 @@ def list_workorders():
         res = res.filter_by(asset_type=req.args.get('asset_type'))
     if 'status' in req.args:
         res = res.filter_by(status=req.args.get('status'))
-
+    res = res.order_by(WorkOrder.finish.desc())
     if 'limit' in req.args:
         res = res.limit(req.args.get('limit'))
     if 'offset' in req.args:

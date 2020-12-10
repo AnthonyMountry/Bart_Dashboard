@@ -4,6 +4,7 @@ async function listAssets(params) {
     url = "/api/assets";
   } else {
     let query = new URLSearchParams(params);
+    console.log(query);
     url = `/api/assets?${query}`;
   }
   return await fetch(url)

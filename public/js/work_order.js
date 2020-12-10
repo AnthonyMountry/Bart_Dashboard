@@ -11,7 +11,7 @@ async function listWO(params) {
   }
   return await fetch(url, {
     headers: {
-      // "Accept-Encoding": "gzip", // for some reason gzip makes it slower on localhost
+      "Accept-Encoding": "br", // for some reason gzip makes it slower on localhost
     },
   })
     .then((resp) => resp.json())

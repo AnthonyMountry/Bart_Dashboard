@@ -5,7 +5,6 @@ from flask.testing import FlaskClient
 from flask.wrappers import Response
 
 def test_upload(client: FlaskClient):
-    pytest.skip('upload endpoint not finished')
     resp: Response = client.post(
         '/api/upload',
         data={

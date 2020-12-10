@@ -4,9 +4,9 @@ function search(input) {
     input = document.getElementById("searchbar").value;
   }
   if (type === "asset") {
-    searchAssets(input);
+    searchAssets(input, listAssets);
   } else if (type === "mpu") {
-    searchMPU();
+    searchMPU(intput);
   }
 }
 
@@ -15,7 +15,7 @@ function removeElement(elementId) {
   return document.getElementById(elementId).remove();
 }
 
-function searchMPU() {
+function searchMPU(intput) {
   if (!!document.getElementById("data")) {
     removeElement("data");
     removeElement("tableHeading");
@@ -64,21 +64,14 @@ function searchMPU() {
 }
 
 // FUNCTION TO PERFORM SEARCH USING INPUT IN SEARCH BAR FOR ASSET
-function searchAssets(input) {
-  //   if (!!document.getElementById("data")) {
-  //     removeElement("data");
-  //   }
-  //   if (!!document.getElementById("tableHeading")) {
-  //     removeElement("tableHeading");
-  //   }
-
+function searchAssets(input, fn) {
   let dataElement = document.getElementById("data-display");
   if (!input) {
     dataElement.innerHTML = `No search term`;
     return;
   }
   // fetch the search api
-  listAssets({ limit: 10, search: input })
+  fn({ limit: 10, search: input })
     .then((assets) => {
       if (assets.length === 0) {
         dataElement.innerHTML = `Could not find \"${input}\"`;
@@ -127,11 +120,6 @@ function searchAssets(input) {
       console.log(error);
       // TODO render an error message
     });
-  return;
-
-  var Table = document.getElementById("readings-table");
-  Table.innerHTML = "";
-  //   createAssetTable(resultJson["meter_readings"]);
 }
 
 // TO CREATE A ASSET READING TABLE AND POPULATING IT WITH DATA USING THE RESPONSE JSON.

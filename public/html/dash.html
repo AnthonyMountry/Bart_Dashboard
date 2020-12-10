@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Home Dashboard</title>
         <link rel="icon" href="/public/img/favicon.ico" type="image/x-icon">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+        <!-- <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous"> -->
         <link rel="stylesheet" href="/public/css/styles.css">
         <link rel="stylesheet" href="/public/css/dashboard_content.css">
         <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -53,18 +53,12 @@
                     </li>
                 </ul>
 
-                <!-- <a href ="/dashboard" class = "active"><i class="fa fa-home" aria-hidden = "true"></i> Dashboard </a> -->
-                <!-- <a href ="/Reports.html"><i class="fa fa-sticky-note-o" aria-hidden = "true"></i> Reports </a> -->
-                <!-- <a href ="/analytics"><i class="fa fa-bar-chart" aria-hidden = "true"></i> Analytics</a> -->
-
             </nav>
-            <!-- <header></header> -->
 
             <header>
 
                 <button type="button" id="sidebarCollapse" class="btn">
                     <i class="fas fa-align-left"></i>
-
                 </button>
 
                 <form action="/search" method="GET" name="search">
@@ -113,14 +107,16 @@
                                 </div>
                                 <div class="col col-lg-5 input-group">
                                     <div class="input-group-prepend">
-                                        <span id="asset-table-search-btn" class="input-group-text btn btn-light" type="button">Search</span>
+                                        <span
+                                         id="asset-table-search-btn"
+                                         class="input-group-text btn btn-light"
+                                         type="button">Search</span>
                                     </div>
                                     <input id="asset-table-search" type="text" class="search form-control" />
                                 </div>
                             </div>
                         </form>
                     </div>
-
                     <div class="container table-container">
                         <table id="asset-table" class="table table-sm table-striped table-bordered" cellspacing="0" width="100%"></table>
                         <button id="asset-table-first" class="btn btn-outline-dark">first</button>
@@ -143,11 +139,11 @@
             </footer>
         </div> <!-- class=wrapper -->
 
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/gh/emn178/chartjs-plugin-labels/src/chartjs-plugin-labels.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
         <script src="/public/js/graph.js"></script>
         <script src="/public/js/asset.js"></script>
@@ -162,7 +158,7 @@
                 $('#sidebarCollapse').on('click', function () {
                     $('#sidebar').toggleClass('active');
                 });
-                Notification.requestPermission().then((result) => console.log(result));
+                // Notification.requestPermission().then((result) => console.log(result));
 
                 // document.getElementById("notificationNum").addEventListener("pointerenter", (e) => {
                 //     let note = new Notification('what are you lookin at?? 🧐');
@@ -179,15 +175,19 @@
                 //     .getContext('2d');
                 // window.myScatter = testGraph(meterCtx);
 
-
                 const tableSettings = {
-                    colnames: ['Asset', 'Department', 'Status', 'Description'],
-                    column_mapping: {
-                        0: 'num',
-                        1: 'bartdept',
-                        2: 'status',
-                        3: 'description',
-                    },
+                    colnames: [
+                        'Asset',
+                        'Department',
+                        'Description',
+                        'Status',
+                    ],
+                    column_mapping: [
+                        'num',
+                        'bartdept',
+                        'description',
+                        'status',
+                    ],
                     renderCell: (tag, asset, key) => {
                         let elem = document.createElement(tag);
                         if (key === 'num') {
@@ -198,6 +198,7 @@
                         return elem
                     }
                 }
+
                 const statusCtx = document.getElementById("assetStatusBarChart").getContext("2d");
                 const meterCtx = document.getElementById('meterReadingsChart').getContext('2d');
                 listAssets().then((assets) => {

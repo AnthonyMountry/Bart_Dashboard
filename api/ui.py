@@ -12,7 +12,6 @@ from flask import (
 )
 
 from .user import get_user
-from .extensions import bcrypt
 
 blueprint = Blueprint('ui', __name__)
 
@@ -65,8 +64,6 @@ def login():
         return render_template("login.html", bad_login=True)
     if not u.password_ok(pw):
         return render_template("login.html", bad_login=True, bad_password=True)
-    # if not bcrypt.check_password_hash(u.hash, pw.encode('utf-8')):
-        # return render_template("login.html", bad_login=True, bad_password=True)
     return redirect("/dashboard")
 
 
@@ -77,11 +74,6 @@ def dashboard():
 
 @blueprint.route('/search', methods=("GET", "POST"))
 def search():
-    if request.method == 'POST':
-        print('form:', request.form)
-        print('args:', request.args)
-        print('data:', request.data)
-
     search_term = request.args.get('search') or request.args.get('q') or ''
     return render_template("search.html",
         page_title='Search',

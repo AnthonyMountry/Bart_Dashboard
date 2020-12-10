@@ -53,7 +53,7 @@ func main() {
 		ch            = make(chan int64, workers)
 	)
 	if compress {
-		req.Header.Set("Accept-Encoding", "gzip")
+		req.Header.Set("Accept-Encoding", "br")
 	}
 
 	wg.Add(1)
@@ -62,7 +62,7 @@ func main() {
 		close(ch)
 	}()
 	for i < n {
-		for w = i; w < workers; w++ {
+		for w = i; w < workers && i < n; w++ {
 			wg.Add(1)
 			go func(a int64) {
 				tm := time.Now()
@@ -79,7 +79,8 @@ func main() {
 					panic(err)
 				}
 				ch <- time.Now().Sub(tm).Nanoseconds()
-			}(i + int64(w))
+			}(i)
+			i++
 		}
 	}
 

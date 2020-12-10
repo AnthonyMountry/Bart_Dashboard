@@ -13,17 +13,8 @@ from api.extensions import db
 api = Blueprint('api', __name__)
 STATIC_DIR = 'public'
 
-@api.route('/api/rootpath', methods=['GET'])
-def _get_rootpath():
-    return current_app.root_path
-
 @api.route('/api/test', methods=['GET', 'POST'])
 def api_test():
-    print(request.form)
-    print(request.json)
-    print(request.get_json())
-    print(request.json.get('test'))
-    print(request.json.get('name'))
     return {'testing': 'testing 123', 'date': datetime.now()}
 
 @api.route('/api/upload', methods=('POST',))

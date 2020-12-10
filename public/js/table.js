@@ -36,7 +36,7 @@ class Table {
     this.rows = [];
     this.page = 0;
 
-    this.column_mapping = options["column_mapping"] || {};
+    this.column_mapping = options["column_mapping"] || null;
 
     if ("renderCell" in options) {
       this.renderCell = options["renderCell"];
@@ -109,8 +109,14 @@ class Table {
   }
 
   teardown() {
-    this.table.removeChild(this.body);
-    this.table.removeChild(this.head);
+    try {
+      if (this.body !== null) {
+        this.table.removeChild(this.body);
+      }
+      this.table.removeChild(this.head);
+    } catch (err) {
+      console.log(err);
+    }
     this.body = null;
   }
 
@@ -188,8 +194,14 @@ class Table {
 
   _newRow(obj) {
     let row = document.createElement("tr");
-    for (let attr in obj) {
-      row.appendChild(this.renderCell("td", obj, attr));
+    if (this.column_mapping !== null) {
+      for (i in this.column_mapping) {
+        row.appendChild(this.renderCell("td", obj, this.column_mapping[i]));
+      }
+    } else {
+      for (let attr in obj) {
+        row.appendChild(this.renderCell("td", obj, attr));
+      }
     }
     return row;
   }

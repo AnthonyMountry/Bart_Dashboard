@@ -37,6 +37,10 @@ db/UC Merced 2020 SE Project*
 # might change this later
 /migrations
 
+# Testing
+/htmlcov/
+.coverage
+
 # Notes
 *.pdf
 TODO

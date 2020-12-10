@@ -131,6 +131,7 @@ switch_machine_workorder_files = [
     'TC Switch Machines/Switch Machine WO By Quarter 8-5-2020 v2.xlsx'
 ]
 
+# pragma no cover
 
 # ----- Utilities ------
 
