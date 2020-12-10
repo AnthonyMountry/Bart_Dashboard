@@ -12,15 +12,10 @@ def list_assets():
     search = request.args.get("search")
     if search:
         term = '|'.join(search.split(' '))
-        # res = Asset.query.filter(
-        #     func.to_tsvector(
-        #         Asset.description.op('||')(' ')       \
-        #         .op('||')(Asset.status).op('||')(' ') \
-        #         .op('||')(Asset.bartdept)
-        #     ).op('@@')(func.to_tsquery(term)),
-        # )
-        res = Asset.query.filter(column('search_vec').op('@@')(func.to_tsquery(term)))
-
+        # WARNING this will only work with postgres
+        #   see db/postgres/text_search.sql
+        res = Asset.query.filter(
+            column('search_vec').op('@@')(func.to_tsquery(term)))
     else:
         res = Asset.query
 

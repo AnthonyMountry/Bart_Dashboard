@@ -10,6 +10,9 @@ An internal analytics dashboard and project management system for BART.
 docker-compose up
 ```
 
+> Note: it will take a second to load the database file (db/postgres/database.dump)
+
+
 Or run naively.
 
 - [Install python 3](https://www.python.org/downloads/release/python-386/)
@@ -84,7 +87,7 @@ See [database documentation](doc/db/README.md).
 | [`/api/asset/<id>`](#Assets "/api/asset")               | `GET`, `POST`, `DELETE`, `PUT` | Manage a single asset                 |
 | [`/api/asset/<id>/readings`](#Assets "/api/asset")      | `GET`                          | List an asset's meter readings        |
 | [`/api/workorder/<id>`](#work-order "/api/workorder")   | `GET`, `POST`, `DELETE`, `PUT` | Manage work orders                    |
-| [`/api/user`](#user)                                    | `GET`, `POST`, `DELETE`, `PUT` | user stuff                            |
+| [`/api/user`](#Users)                                   | `GET`, `POST`, `DELETE`, `PUT` | user stuff                            |
 
 ### File Uploads
 
@@ -108,6 +111,7 @@ Url Parameter:
 
 * `?limit=5` Limits the number of asset objects returned.
 * `?offset=3` Offsets the response by the given number.
+* `?search=<text>` Search for a keyword
 
 <a name="example-assets-json">Example response:</a>
 
@@ -178,12 +182,52 @@ Responds with an [error response](#error-responses)
 
 ---
 
+### Users
+
+**GET** `/api/user` Get a user
+
+* `?username=<username>` __Required__ username parameter
+* `?password=<password>` __Required__ password parameter
+* `?email=<email>` Sign in with email (alternative to `?username`)
+
+**POST** `/api/user` Create a user.
+
+Data must be sent as a JSON body. Returns status 201 on success.
+
+```
+POST /api/user
+Content-Type: application/json
+
+{
+  "username": "test-user",
+  "password": "<password>",
+  "email": "test@test.com"
+}
+```
+
+**PUT** `/api/user` Update a user
+
+The new data for the user should be passed as a JSON request body.
+
+* `?username=<username>` __Required__ username parameter
+* `?password=<password>` __Required__ password parameter
+* `?email=<email>` Sign in with email (alternative to `?username`)
+
+**DELETE** `/api/user` Delete a user from the database
+
+* `?username=<username>` __Required__ username parameter
+* `?password=<password>` __Required__ password parameter
+* `?email=<email>` Sign in with email (alternative to `?username`)
+
+---
+
 ### Work Order
 
 **GET** `/api/workorders` Get a list of assets
 
 * `?limit=5` Limits the number of workorder objects returned.
 * `?offset=3` Offsets the response by the given number.
+* `?search=<text>` Search for a keyword
 
 ```json
 [
@@ -246,9 +290,6 @@ Responds with an [error response](#error-responses)
 
 ---
 
-<details>
-  <summary>Not yet implemented...</summary>
-
 ### MPU
 
 MPU - Monthly Project Updates.
@@ -259,6 +300,7 @@ Url Parameter:
 
 * `?limit=5` Limits the number of MPU objects returned.
 * `?offset=3` Offsets the response by the given number.
+* `?search=<text>` Search for a keyword.
 
 Example response:
 
@@ -277,6 +319,7 @@ Example response:
   ...
 ]
 ```
+
 
 **GET** `/api/mpu/<id>` Get an MPU by id.
 
@@ -300,7 +343,11 @@ Returns an [error response](#error-responses)
 
 **PUT** `/api/mpu` Create a project record.
 
+
 ---
+<details>
+  <summary>Not yet implemented...</summary>
+
 
 #### MPU Milestones
 
@@ -353,21 +400,21 @@ If and endpoint does not return data, then it should return an error response as
 
 ## TODO
 
-- [ ] Write an `Error` class that will make returning json error easier (see [error responses](#error-responses)).
   - [ ] Think of other useful error fields that can be included in the [error responses](#error-responses) JSON response.
 - [ ] Replace the MPU spreadsheets with a page on the dashboard (if bart wants that)
   - [ ] Add api endpoints that would replace all the excel macros in `UC Merced 2020 SE Project/Monthly Project Update - MPU/MPU_July 20_20200820.xlsm`
 - [ ] Full database design and implementation
-  - [ ] Monthly Project Updates
+  - [x] Monthly Project Updates
   - [ ] Switch Throw counts
   - [x] Work orders
   - [x] Assets
   - [x] Meter readings
-  - [ ] Maybe a users table
+  - [x] Maybe a users table
 - [ ] Authentication and authorization, see [this tutorial](https://dev.to/paurakhsharma/flask-rest-api-part-3-authentication-and-authorization-5935)
-  - use `flask_bcrypt` for hashing passwords
+  - [x] use `flask_bcrypt` for hashing passwords
   - add different permission levels for BART employees
 - [x] write a script that will populate the development database with the data from the excel spreadsheets
+- [x] Write an `Error` class that will make returning json error easier (see [error responses](#error-responses)).
 - [x] Use [pyexcel](https://github.com/pyexcel/pyexcel) for in-memory excel spreadsheets, [tutorial](http://docs.pyexcel.org/en/latest/tutorial06.html)
 
 ## Notes

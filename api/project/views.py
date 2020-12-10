@@ -9,21 +9,10 @@ def list_mpu():
     search = req.args.get('search')
     if search:
         term = '|'.join(search.split(' '))
+        # WARNING this will only work with postgres
+        #   see db/postgres/text_search.sql
         res = Mpu.query.filter(
-            func.to_tsvector(
-                Mpu.name.op('||')(' ')                       \
-                .op('||')(Mpu.short_name).op('||')(' ')      \
-                .op('||')(Mpu.description).op('||')(' ')     \
-                .op('||')(Mpu.location).op('||')(' ')        \
-                .op('||')(Mpu.sub_location).op('||')(' ')    \
-                .op('||')(Mpu.project_group).op('||')(' ')   \
-                .op('||')(
-                    func.coalesce(Mpu.accomplishments, '')
-                ).op('||')(' ') \
-                .op('||')(Mpu.project_manager)
-            ).op('@@')(func.to_tsquery(term)),
-        )
-        # res = Mpu.query.filter(column('searc'))
+            column('search_vec').op('@@')(func.to_tsquery(term)))
     else:
         res = Mpu.query
 

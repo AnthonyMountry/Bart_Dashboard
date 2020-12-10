@@ -1,5 +1,5 @@
 from flask import Blueprint, request as req, jsonify
-from sqlalchemy import func, distinct
+from sqlalchemy import func, distinct, column
 
 from ..errors import Err, Ok
 from ..extensions import db
@@ -13,14 +13,10 @@ def list_workorders():
     search = req.args.get('search')
     if search:
         term = '|'.join(search.split(' '))
+        # WARNING this will only work with postgres
+        #   see db/postgres/text_search.sql
         res = WorkOrder.query.filter(
-            func.to_tsvector(
-                func.coalesce(WorkOrder.description, '').op('||')(' ') \
-                .op('||')(WorkOrder.location).op('||')(' ')            \
-                .op('||')(WorkOrder.asset_type).op('||')(' ')          \
-                .op('||')(WorkOrder.bartdept)
-            ).op('@@')(func.to_tsquery(term))
-        )
+            column('search_vec').op('@@')(func.to_tsquery(term)))
     else:
         res = WorkOrder.query
 
