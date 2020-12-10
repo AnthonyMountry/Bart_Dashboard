@@ -18,8 +18,9 @@ env/
 venv/
 old*.html
 *.log
-*.sh
+/*.sh
 !docker/entrypoint.sh
+!scripts/entrypoint.sh
 
 # Data
 *.db
