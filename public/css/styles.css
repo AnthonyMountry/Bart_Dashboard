@@ -21,6 +21,24 @@ footer {
   position: fixed;
   bottom: 0; }
 
+/*
+p {
+    font-family: 'Oswald', sans-serif;
+    font-size: 1.1em;
+    font-weight: 300;
+    line-height: 1.7em;
+    color: #999;
+}
+ a{
+     &:hover{
+        &:focus{
+            background: $greyLight;
+            border-left: 5px solid $blueDark;
+            padding: 15px 30px 15px 25px;
+        }
+     }
+ }
+*/
 .wrapper {
   align-items: stretch; }
 

@@ -88,7 +88,7 @@ def test_search(client):
     for mpu in resp.json['mpus']:
         assert mpu['project_manager'] == 'Fields,Bryant'
 
-    resp = client.get('/api/workorders?search=Fare+Gate&limit=20')
+    resp = client.get('/api/workorders?search=Fare+Gate&limit=20&offset=2')
     assert resp.status_code == 200
     assert resp.json
     for wo in resp.json['workorders']:
