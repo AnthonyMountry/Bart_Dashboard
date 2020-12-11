@@ -64,7 +64,7 @@ def handle_notfound(err):
         }, 404
 
 
-def handle_not_impl(e):
+def handle_not_impl(e): # pragma no cover
     tb = traceback.extract_tb(e.__traceback__)
     last = tb[-1]
     path = last.name

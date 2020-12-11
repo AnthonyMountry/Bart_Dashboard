@@ -17,7 +17,7 @@ blueprint = Blueprint('ui', __name__)
 
 STATIC_DIR = 'public'
 
-def newstatic(folder):
+def newstatic(folder): # pragma no cover
     base = STATIC_DIR
     target = path_join(base, folder)
     def fn(file):
@@ -58,12 +58,12 @@ def login():
     pw = request.form.get('password') or request.form.get("pw")
 
     if not us or not pw:
-        return send_from_directory(STATIC_DIR, "html/bad_auth.html")
+        return send_from_directory(STATIC_DIR, "html/bad_auth.html"), 401
     u = get_user(us)
     if u is None:
-        return render_template("login.html", bad_login=True)
+        return render_template("login.html", bad_login=True), 401
     if not u.password_ok(pw):
-        return render_template("login.html", bad_login=True, bad_password=True)
+        return render_template("login.html", bad_login=True, bad_password=True), 401
     return redirect("/dashboard")
 
 

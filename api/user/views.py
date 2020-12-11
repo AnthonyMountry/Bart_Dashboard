@@ -3,12 +3,24 @@ from flask import (
     jsonify,
     request as req,
 )
-from sqlalchemy import or_
 
 from ..extensions import bcrypt, db
 from .models import User
 
 blueprint = Blueprint('user', __name__)
+
+def get_user(username=None, email=None):
+    if not username and not email:
+        return None
+    res = User.query
+    if username:
+        res = res.filter(User.username == username)
+    if email:
+        res = res.filter(User.email == email)
+    user = res.first()
+    if not user:
+        return None
+    return user
 
 def create_user(name, email, pw, admin=False):
     u = User(
@@ -27,19 +39,10 @@ def user():
     email = req.args.get('email')
     if not username and not email:
         return {'error': 'no information given'}, 400
-    q = User.query
-    if username:
-        q = q.filter(User.username == username)
-    if email:
-        q = q.filter(User.email == email)
 
-    res = q.all()
-    if not res:
+    u = get_user(username, email)
+    if not u:
         return {'error': 'could not find user'}, 404
-    elif len(res) > 1:
-        return {'error': 'duplicate user, give more inforamtion'}, 401
-
-    u = res[0]
 
     pw = req.args.get('password') or req.args.get('pw') or req.args.get('p')
     if pw is None:
@@ -52,7 +55,9 @@ def user():
     elif req.method == 'PUT':
         raise NotImplementedError
     elif req.method == 'DELETE':
-        raise NotImplementedError
+        db.session.delete(u)
+        db.session.commit()
+        return {"status": 200, 'msg': "user delete"}, 200
 
 
 @blueprint.route('/api/user', methods=('POST',))
@@ -67,6 +72,8 @@ def new_user():
     if not pw:
         return {'error': 'no password'}, 400
 
+    u = get_user(username, req.json.get('email', None))
+    if u is not None:
+        return {'error': 'user already exists'}, 400
     u = create_user(username, req.json.get('email'), pw, False)
     return jsonify(u), 201
-

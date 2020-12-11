@@ -170,7 +170,7 @@ class Table {
   }
 
   atEnd() {
-    return this.page == 1;
+    return this.page == 1 || this.page == 0;
   }
 
   collapse() {

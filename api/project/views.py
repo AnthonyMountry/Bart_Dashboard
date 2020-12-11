@@ -27,3 +27,31 @@ def list_mpu():
 @blueprint.route('/api/mpu', methods=('POST',))
 def create_mpu():
     pass
+
+
+#Delete MPU by IDs
+@blueprint.route('/api/mpu/<id>', methods=('DELETE', 'PUT', 'GET'))
+def del_mpu(id):
+    raise NotImplementedError
+
+
+#MPU PUT IDs
+#MPU Milestones API
+#MPU Post Milestones
+@blueprint.route('/api/mpu/<id>/milestone', methods=('POST', 'GET', 'DELETE', 'PUT'))
+def post_mpu_milestone(id):
+    raise NotImplementedError
+
+
+#MPU Funds API
+#MPU Post Funds
+@blueprint.route('/api/mpu/<id>/fund', methods=('POST', 'GET', 'DELETE' 'PUT'))
+def post_mpu_fund(id):
+    raise NotImplementedError
+
+
+#MPU Criteria API
+#MPU Post Criteria
+@blueprint.route('/api/mpu/<id>/criteria', methods=('POST', 'GET', 'DELETE', 'PUT'))
+def post_mpu_criteria(id):
+    raise NotImplementedError

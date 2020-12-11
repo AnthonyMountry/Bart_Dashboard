@@ -30,7 +30,9 @@ def read_config(filename): # pragma no cover
         config['DEBUG'] = debug.lower() == 'true' or debug.lower() == 'yes'
     dbtype = ini.get('database', 'type', os.getenv("DATABASE_TYPE"))
     dbfile = ini.get('database', 'file')
-    config['DATABASE_TYPE'] = dbtype
+
+    config['DATABASE_TYPE'] = 'postgres' # dropping support for sqlite
+
     if dbtype is None or dbtype == 'sqlite':
         if dbfile is None:
             config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'

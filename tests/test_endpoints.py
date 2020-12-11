@@ -1,6 +1,7 @@
 import pytest
 
-from flask import Flask
+from flask import Flask, json
+from flask.testing import FlaskClient
 from flask.wrappers import Response
 
 
@@ -52,11 +53,17 @@ def test_workorders(client):
         assert wo['status'] == 'REVIEWCOMP'
         assert wo['asset_type'] == 'FARE GATE'
 
+def test_mpu(client):
+    resp = client.get('/api/mpus?limit=10&offset=5')
+    assert resp.status_code == 200
+    assert resp.json
+    assert len(resp.json['mpus']) == 10
+
 def test_bad_workorder(client):
     resp = client.get('/api/workorder/0')
     assert resp.status_code == 404
 
-def test_login(client):
+def test_api_login(client):
     resp = client.get('/api/user?u=test-user&pw=testing1234')
     assert resp.status_code == 200
     assert resp.json
@@ -100,10 +107,60 @@ def test_asset_search(client):
     assert len(resp.json['assets']) > 0
     assert 'swat' in resp.json['assets'][0]['description'].lower()
 
-
 def test_wo_statuses(client):
     resp = client.get('/api/workorder/statuses')
     assert resp.status_code == 200
     assert resp.json
     assert 'statuses' in resp.json
     assert len(resp.json['statuses']) > 0
+
+def test_post_user(client: FlaskClient):
+    bad_data = [
+        {},
+        {'username': 'tmp_user'},
+        {'password': 'testingtestingtesting'},
+    ]
+    for data in bad_data:
+        resp = client.post(
+            '/api/user',
+            content_type='application/json',
+            json=data,
+        )
+        assert resp.status_code == 400
+
+    resp = client.post(
+        '/api/user',
+        content_type='application/json',
+        json={
+            'user': 'tmp_user',
+            'password': 'tmp_password',
+            'email': 'test@test.com',
+        },
+    )
+    assert resp.status_code == 201
+    assert resp.json
+    created_id = resp.json['id']
+    assert resp.json['email'] == 'test@test.com'
+    assert resp.json['username'] == 'tmp_user'
+    assert not resp.json['is_admin']
+
+    resp = client.post(
+        '/api/user',
+        content_type='application/json',
+        json={
+            'user': 'tmp_user',
+            'password': 'tmp_password',
+            'email': 'test@test.com',
+        },
+    )
+    assert resp.status_code == 400
+
+    resp = client.get('/api/user?email=test@test.com&pw=tmp_password')
+    assert resp.status_code == 200
+    assert resp.json
+    if resp.json:
+        assert resp.json['username'] == 'tmp_user'
+        assert resp.json['id'] == created_id
+
+    resp = client.delete('/api/user?username=tmp_user&pw=tmp_password')
+    assert resp.status_code == 200

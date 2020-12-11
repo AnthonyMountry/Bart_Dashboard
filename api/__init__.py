@@ -18,7 +18,7 @@ from api import (
 )
 from api.config import read_config
 from api.util import ModelEncoder
-from api.app import blueprint, api
+from api.app import api
 
 
 def create_app(conf=None):
@@ -42,7 +42,6 @@ def create_app(conf=None):
     app.register_blueprint(ui.blueprint)
     app.register_blueprint(user.blueprint)
     app.register_blueprint(api)
-    # app.register_blueprint(blueprint)
 
     app.register_error_handler(Exception, errors.handle_all)
     app.register_error_handler(NotFound, errors.handle_notfound)

@@ -43,6 +43,7 @@ class ModelEncoder(flask.json.JSONEncoder):
             }
         elif isinstance(obj, User):
             return {
+                'id': obj.id,
                 'username': obj.username,
                 'email': obj.email,
                 'is_admin': obj.is_admin,

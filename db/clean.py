@@ -438,7 +438,7 @@ def extract_work_orders(filename):
 
 
 def extract_throw_counts(files: List[str]):
-    sheet_pat = re.compile('\d+-\d+(-\d+)?.Data')
+    sheet_pat = re.compile(r'\d+-\d+(-\d+)?.Data')
     books: List[Book] = (pe.get_book(file_name=f) for f in files)
     sheets: Generator[Sheet] = (b.sheet_by_name(s) for b in books for s in b.sheet_names() if sheet_pat.match(s))
     visited = {}

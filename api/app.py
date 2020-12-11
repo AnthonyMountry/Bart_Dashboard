@@ -1,20 +1,14 @@
 from datetime import datetime
 import pyexcel
-from flask import (
-    Blueprint,
-    request,
-    current_app,
-)
+from flask import Blueprint
 
 from api.middleware import with_spreadsheet
 from api.extensions import db
 
-
 api = Blueprint('api', __name__)
-STATIC_DIR = 'public'
 
 @api.route('/api/test', methods=['GET', 'POST'])
-def api_test():
+def api_test(): # pragma no cover
     return {'testing': 'testing 123', 'date': datetime.now()}
 
 @api.route('/api/upload', methods=('POST',))
@@ -24,9 +18,6 @@ def handle_data_uploads(book: pyexcel.Book):
     # raise NotImplementedError
     return book.get_csv()
 
-
-blueprint = Blueprint('_api', __name__)
-# class ProjectMeter(db.Model): pass
 
 
 class MeterReadings: # (db.Model)
@@ -52,112 +43,7 @@ class MeterReadings: # (db.Model)
     ps_activity = db.Column(db.String(16))
     ps_activity_description =db.Column(db.String(256))
 
-
-#MPU IDs
-#MPU post IDs
-@blueprint.route('/api/mpu', methods=['POST'])
-def create_new_mpu():
-    # insert the new asset into the db
-    result = db.execute(
-        '''
-        INSERT INTO mpu
-        ... whatever the rest of this query is...''',
-        (id, ),
-    )
-
-
-#MPU get IDs
-@blueprint.route('/api/mpu/<id>', methods=['GET'])
-def get_mpu(id):
-    #get MPUS with ID
-    result = db.execute(
-       '''
-        SELECT *
-        FROM mpu
-        WHERE
-            id = ?''',
-        (id, ),
-    )
-    return result
-
-#Delete MPU by IDs
-@blueprint.route('/api/mpu/<id>', methods=['DELETE'])
-def del_mpu(id):
-    #Delete ID
-    result = db.execute(
-        #TODO remove ID
-    )
-
-#MPU PUT IDs
-@blueprint.route('/api/mpu/<id>', methods=['PUT'])
-def put_mpu(id):
-    #Put MPUs
-        result = db.execute(
-        #TODO PUT ID
-    )
-
-#MPU Milestones API
-#MPU Post Milestones
-@blueprint.route('/api/mpu/<id>/milestone', methods=['POST'])
-def post_mpu_milestone(id):
-    raise NotImplementedError
-
-#MPU get Milestones
-@blueprint.route('/api/mpu/<id>/milestone', methods=['GET'])
-def get_mpu_milestone(id):
-    raise NotImplementedError
-
-#MPU Delete Milestones
-@blueprint.route('/api/mpu/<id>/milestone', methods=['DELETE'])
-def del_mpu_milestone(id):
-    raise NotImplementedError
-
-#MPU Put Milestones
-@blueprint.route('/api/mpu/<id>/milestone', methods=['PUT'])
-def put_mpu_milestone(id):
-    raise NotImplementedError
-
-#MPU Funds API
-#MPU Post Funds
-@blueprint.route('/api/mpu/<id>/fund', methods=['POST'])
-def post_mpu_fund(id):
-    raise NotImplementedError
-
-#MPU get Funds
-@blueprint.route('/api/mpu/<id>/fund', methods=['GET'])
-def get_mpu_fund(id):
-    raise NotImplementedError
-
-#MPU Delete Funds
-@blueprint.route('/api/mpu/<id>/fund', methods=['DELETE'])
-def del_mpu_fund(id):
-    raise NotImplementedError
-
-#MPU Put Funds
-@blueprint.route('/api/mpu/<id>/fund', methods=['PUT'])
-def put_mpu_fund(id):
-    raise NotImplementedError
-
-#MPU Criteria API
-#MPU Post Criteria
-@blueprint.route('/api/mpu/<id>/criteria', methods=['POST'])
-def post_mpu_criteria(id):
-    raise NotImplementedError
-
-#MPU get Criteria
-@blueprint.route('/api/mpu/<id>/criteria', methods=['GET'])
-def get_mpu_criteria(id):
-    raise NotImplementedError
-
-#MPU Delete Criteria
-@blueprint.route('/api/mpu/<id>/criteria', methods=['DELETE'])
-def del_mpu_criteria(id):
-    raise NotImplementedError
-
-#MPU Put Criteria
-@blueprint.route('/api/mpu/<id>/criteria', methods=['PUT'])
-def put_mpu_criteria(id):
-    raise NotImplementedError
+# blueprint = Blueprint('_api', __name__)
 
 #Start of Meter Reading API
 #Meter list
