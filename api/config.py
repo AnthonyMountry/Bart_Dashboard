@@ -31,6 +31,7 @@ def read_config(filename): # pragma no cover
     dbtype = ini.get('database', 'type', os.getenv("DATABASE_TYPE"))
     dbfile = ini.get('database', 'file')
 
+    dbtype = 'postgres'
     config['DATABASE_TYPE'] = 'postgres' # dropping support for sqlite
 
     if dbtype is None or dbtype == 'sqlite':

@@ -1,19 +1,39 @@
 # BART Dashboard
 
+This project can be found at <https://github.com/harrybrwn/bart-dashboard>
+
+
 An internal analytics dashboard and project management system for BART.
 
 ## Development
 
 ### Run the Backend
 
+There are two options for setup:
+
+1. [Run with docker and docker-compose](#setup-with-docker)
+2. [Manual setup](#manual-setup)
+
+> Note: setup will require access to a terminal to run the setup commands.
+
+#### Setup with docker
+
+- Install [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/)
+- Create a `.env` file (see our example .env.example)
+- Run the following command in a terminal in the bart-dashboard folder
+
 ```
 docker-compose up
 ```
 
+And that's all the setup needed using docker.
+
 > Note: it will take a second to load the database file (db/postgres/database.dump)
 
 
-Or run naively.
+#### Manual Setup
+
+If you don't have docker installed it is more involved.
 
 - [Install python 3](https://www.python.org/downloads/release/python-386/)
 - Install dependencies
@@ -25,7 +45,6 @@ pip install -r requirements.txt
 - Setup the database (first unzip the example data and put it in `/db`)
 
 ```sh
-# setup the tables
 flask db init
 flask db migrate
 flask db upgrade
@@ -39,7 +58,7 @@ flask load-db
 flask run --with-threads
 ```
 
-### Build the Frontend
+Now we need build the frontend.
 
 - [Install npm](https://www.npmjs.com/get-npm)
 
@@ -87,7 +106,7 @@ See [database documentation](doc/db/README.md).
 | [`/api/asset/<id>`](#Assets "/api/asset")               | `GET`, `POST`, `DELETE`, `PUT` | Manage a single asset                 |
 | [`/api/asset/<id>/readings`](#Assets "/api/asset")      | `GET`                          | List an asset's meter readings        |
 | [`/api/workorder/<id>`](#work-order "/api/workorder")   | `GET`, `POST`, `DELETE`, `PUT` | Manage work orders                    |
-| [`/api/user`](#Users)                                   | `GET`, `POST`, `DELETE`, `PUT` | user stuff                            |
+| [`/api/user`](#Users)                                   | `GET`, `POST`, `DELETE`, `PUT` | Manages users of the dashboard        |
 
 ### File Uploads
 
@@ -344,7 +363,9 @@ Returns an [error response](#error-responses)
 **PUT** `/api/mpu` Create a project record.
 
 
----
+------------------
+
+
 <details>
   <summary>Not yet implemented...</summary>
 
@@ -400,9 +421,6 @@ If and endpoint does not return data, then it should return an error response as
 
 ## TODO
 
-  - [ ] Think of other useful error fields that can be included in the [error responses](#error-responses) JSON response.
-- [ ] Replace the MPU spreadsheets with a page on the dashboard (if bart wants that)
-  - [ ] Add api endpoints that would replace all the excel macros in `UC Merced 2020 SE Project/Monthly Project Update - MPU/MPU_July 20_20200820.xlsm`
 - [ ] Full database design and implementation
   - [x] Monthly Project Updates
   - [ ] Switch Throw counts
@@ -412,10 +430,13 @@ If and endpoint does not return data, then it should return an error response as
   - [x] Maybe a users table
 - [ ] Authentication and authorization, see [this tutorial](https://dev.to/paurakhsharma/flask-rest-api-part-3-authentication-and-authorization-5935)
   - [x] use `flask_bcrypt` for hashing passwords
-  - add different permission levels for BART employees
+  - [ ] add different permission levels for BART employees
 - [x] write a script that will populate the development database with the data from the excel spreadsheets
 - [x] Write an `Error` class that will make returning json error easier (see [error responses](#error-responses)).
+  - [ ] Think of other useful error fields that can be included in the [error responses](#error-responses) JSON response.
 - [x] Use [pyexcel](https://github.com/pyexcel/pyexcel) for in-memory excel spreadsheets, [tutorial](http://docs.pyexcel.org/en/latest/tutorial06.html)
+- [ ] Replace the MPU spreadsheets with a page on the dashboard (if bart wants that)
+  - [ ] Add api endpoints that would replace all the excel macros in `UC Merced 2020 SE Project/Monthly Project Update - MPU/MPU_July 20_20200820.xlsm`
 
 ## Notes
 * Here is the [query documentation](https://docs.sqlalchemy.org/en/13/orm/query.html) for interacting with the database using the ORM (SQLAlchemy). And here is a [tutorial](https://hackersandslackers.com/database-queries-sqlalchemy-orm/).

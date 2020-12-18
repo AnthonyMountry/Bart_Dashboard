@@ -6,7 +6,6 @@ __pycache__/
 # Config
 .env
 *env
-api.ini
 
 # Misc
 node_modules/

@@ -14,7 +14,6 @@ RUN npm run build # css files should be in /app/tmp/build/public/css
 # Build Stage
 FROM python:3.8.6-alpine3.12 as builder
 
-
 RUN apk add --update \
     postgresql-dev   \
     gcc              \
@@ -38,6 +37,7 @@ RUN curl -s https://raw.githubusercontent.com/eficode/wait-for/master/wait-for \
     -o /usr/local/bin/wait-for && \
   chmod +x /usr/local/bin/wait-for
 
+# Why does this not work, this would make the image way smaller
 # COPY --from=builder /wheels /wheels
 
 RUN pip install -U pip && \
